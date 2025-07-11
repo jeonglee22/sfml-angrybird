@@ -10,6 +10,13 @@
 #include <algorithm>
 #include <functional>
 
+// Box2d
+#include "box2d/box2d.h"
+#include "box2d/collision.h"
+#include "box2d/math_functions.h"
+#include "box2d/id.h"
+#include "box2d/base.h"
+
 // SFML
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
@@ -26,4 +33,3 @@
 #include "SceneMgr.h"
 #include "SoundMgr.h"
 #include "Framework.h"
-

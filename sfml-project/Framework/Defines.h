@@ -1,6 +1,7 @@
 #pragma once
 
 #define DEF_DEV
+#define SCALE 30.f
 
 enum class SortingLayers
 {

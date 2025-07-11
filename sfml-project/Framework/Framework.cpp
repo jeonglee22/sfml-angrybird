@@ -3,7 +3,10 @@
 
 void Framework::Init(int w, int h, const std::string& t)
 {
-	window.create(sf::VideoMode(w, h), t);
+    window.create(sf::VideoMode(w, h), t);
+
+    worldDef.gravity = gravity;
+    worldId = b2CreateWorld(&worldDef);
 
 	TEXTURE_MGR.Load(texIds);
 	FONT_MGR.Load(fontIds);
