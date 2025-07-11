@@ -9,6 +9,8 @@ class SceneCollision : public Scene
 protected:
 	sf::RectangleShape ground;
 	Ball* ball;
+	Ball* object1;
+	Ball* object2;
 	Block* block;
 	sf::RectangleShape start;
 

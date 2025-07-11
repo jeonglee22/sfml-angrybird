@@ -46,7 +46,6 @@ void Block::Init()
 	sortingLayer = SortingLayers::Foreground;
 	sortingOrder = 0;
 
-	restitution = 0.3f;
 	body.setFillColor(sf::Color::Green);
 	
 	hitBox.SetType(HitBox::Type::Rectangle);

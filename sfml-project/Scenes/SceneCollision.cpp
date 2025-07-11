@@ -27,6 +27,22 @@ void SceneCollision::Init()
 	ball->SetOrigin(Origins::MC);
 	ball->SetPosition({ 100.f, 100.f });
 
+	/*object1 = (Ball*)AddGameObject(new Ball("Object1"));
+	object1->GetBody().setRadius(50.f);
+	object1->SetOrigin(Origins::MC);
+	object1->SetPosition({ 100.f, 400.f });
+	object1->SetDirection({1.f,0.f});
+	object1->SetColor(sf::Color::Red);
+	object1->SetMass(100.f);
+
+	object2 = (Ball*)AddGameObject(new Ball("Object2"));
+	object2->GetBody().setRadius(50.f);
+	object2->SetOrigin(Origins::MC);
+	object2->SetPosition({ 400.f, 700.f });
+	object2->SetDirection({0.f,-1.f});
+	object2->SetColor(sf::Color::Blue);
+	object2->SetMass(1000.f);*/
+
 	Scene::Init();
 }
 
