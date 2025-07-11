@@ -46,6 +46,7 @@ void Ball::Init()
 	sortingOrder = 0;
 
 	restitution = 0.3f;
+	speed = 150.f;
 
 	isShoot = false;
 
@@ -59,12 +60,13 @@ void Ball::Release()
 void Ball::Reset()
 {	
 	SetVelocity(400.f);
-	SetDirection({ 0.f,0.f });
+	//SetDirection({ 0.f,0.f });
 	SetScale({ 1.f,1.f });
 	SetRotation(0.f);
 	if(SCENE_MGR.GetCurrentSceneId() == SceneIds::Collision)
 	{
 		block = (Block*)SCENE_MGR.GetCurrentScene()->FindGameObject("Block");
+		ball2 = (Ball*)SCENE_MGR.GetCurrentScene()->FindGameObject("Object2");
 	}
 }
 
@@ -83,7 +85,7 @@ void Ball::Update(float dt)
 			SetShoot(false);
 			Reset();
 		}
-		if (GetPosition().y >= 590.f)
+		/*if (GetPosition().y >= 590.f)
 		{
 			SetPosition({ position.x, 590.f });
 			SetDirection({ direction.x,direction.y * -1.f });
@@ -92,7 +94,7 @@ void Ball::Update(float dt)
 			{
 				speed = 0.f;
 			}
-		}
+		}*/
 		float radius = body.getRadius();
 		hitBox.UpdateTransform(body, radius);
 
@@ -109,6 +111,16 @@ void Ball::Update(float dt)
 		{
 			isCollision = false;
 		}
+
+		/*if (Utils::CheckCircleCollision(ball2->GetPosition(), ball2->GetRadius(), position, radius) && !isCollision && this->name != "Object2")
+		{
+			Physics::Collision(*this, *ball2);
+			isCollision = true;
+		}
+		else if (!Utils::CheckCircleCollision(ball2->GetPosition(), ball2->GetRadius(), position, radius) && isCollision && this->name != "Object2")
+		{
+			isCollision = false;
+		}*/
 	}
 }
 

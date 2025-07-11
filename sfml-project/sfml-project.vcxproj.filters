@@ -81,7 +81,7 @@
     <ClCompile Include="Block.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Physics.cpp">
+    <ClCompile Include="Framework\Physics.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -161,7 +161,7 @@
     <ClInclude Include="Block.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Physics.h">
+    <ClInclude Include="Framework\Physics.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

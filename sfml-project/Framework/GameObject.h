@@ -13,7 +13,9 @@ protected:
 
 	float mass = 100.f;
 	float friction = 0.5f;
-	float restitution = 0.5f;
+
+	sf::Vector2f direction = { 0.f,0.f };
+	float speed = 0.f;
 
 	Origins originPreset = Origins::TL;
 
@@ -57,6 +59,15 @@ public:
 	{
 		return { 0.f, 0.f, 0.f, 0.f };
 	}
+
+	float GetMass() const { return mass; }
+	virtual void SetMass(float m) { mass = m; }
+	float GetFriction() const { return friction; }
+	virtual void SetFriction(float f) { friction = f; }
+	float GetSpeed() const { return speed; }
+	virtual void SetSpeed(float s) { speed = s; }
+	sf::Vector2f GetDirection() const { return direction; }
+	virtual void SetDirection(const sf::Vector2f& dir) { direction = dir; }
 
 	virtual void Init() = 0;
 	virtual void Release() = 0;

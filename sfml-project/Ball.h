@@ -12,13 +12,13 @@ protected:
 	sf::CircleShape body;
 	HitBox hitBox;
 
-	sf::Vector2f direction;
-	float speed = 150.f;
-
 	bool isShoot = false;
 	bool isCollision = false;
 
+	float restitution = 0.f;
+
 	Block* block = nullptr;
+	Ball* ball2= nullptr;
 
 public:
 	Ball(const std::string& name = "");
@@ -44,5 +44,8 @@ public:
 	sf::Vector2f GetDirection() { return direction; }
 	void SetVelocity(float s) { speed = s; }
 	float GetVelocity() { return speed; }
+	float GetRadius() { return body.getRadius(); }
+
+	void SetColor(sf::Color c) { body.setFillColor(c); }
 };
 
