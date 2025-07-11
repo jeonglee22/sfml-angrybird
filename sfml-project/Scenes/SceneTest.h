@@ -14,7 +14,9 @@ protected:
 	b2BodyId groundBodyId;
 
 	b2BodyDef bodyDef;
+	b2BodyDef bodyDef2;
 	b2BodyId bodyId;
+	b2BodyId bodyId2;
 
 	int subStepCount = 4;
 	float timeStep = 1.0f / 60.0f;
