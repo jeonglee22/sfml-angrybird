@@ -23,7 +23,7 @@ int Utils::RandomRange(int min, int maxExclude)
         return min;
     }
     std::uniform_int_distribution<int> dist(min, maxExclude - 1);
-	return dist(gen);
+    return dist(gen);
 }
 
 float Utils::RandomRange(float min, float max)
@@ -39,7 +39,7 @@ sf::Vector2f Utils::RandomOnUnitCircle()
     {
         point = RandomInUnitCircle();
     } while (SqrMagnitude(point) < std::numeric_limits<float>::epsilon());
-    
+
     return GetNormal(point);
 }
 
@@ -50,7 +50,7 @@ sf::Vector2f Utils::RandomInUnitCircle()
     {
         point = RandomPointInRect(sf::FloatRect(-1.f, -1.f, 2.f, 2.f));
     } while (SqrMagnitude(point) > 1.f);
-    
+
     return point;
 }
 
@@ -196,6 +196,11 @@ float Utils::Angle(const sf::Vector2f& vec)
     return RadianToDegree(AngleRadian(vec));
 }
 
+sf::Vector2f Utils::Direction(float angle)
+{
+    return Utils::GetNormal(sf::Vector2f(cos(angle), sin(angle)));
+}
+
 float Utils::Dot(const sf::Vector2f& a, const sf::Vector2f& b)
 {
     return a.x * b.x + a.y * b.y;
@@ -205,10 +210,36 @@ bool Utils::CheckCollision(const sf::Sprite& shapeA, const sf::Sprite& shapeB)
 {
     if (!shapeA.getGlobalBounds().intersects(shapeB.getGlobalBounds()))
         return false;
-    
+
     auto pointsA = GetShapePoints(shapeA);
     auto pointsB = GetShapePoints(shapeB);
     return PolygonsIntersect(pointsA, shapeA.getTransform(), pointsB, shapeB.getTransform());
+}
+
+bool Utils::CheckCollision(const sf::RectangleShape& shapeA, const sf::Vector2f& centerB, float radiusB)
+{
+    sf::Transform inverse = shapeA.getInverseTransform();
+    sf::Vector2f localCircleCenter = inverse.transformPoint(centerB);
+
+    sf::Vector2f rectCenter = shapeA.getPosition();
+    sf::Vector2f localRectCenter = inverse.transformPoint(rectCenter);
+
+    sf::Vector2f circleDistance;
+    circleDistance.x = std::abs(localCircleCenter.x - localRectCenter.x);
+    circleDistance.y = std::abs(localCircleCenter.y - localRectCenter.y);
+
+    if (circleDistance.x > (shapeA.getLocalBounds().width / 2.f + radiusB)) { return false; }
+    if (circleDistance.y > (shapeA.getLocalBounds().height / 2.f + radiusB)) { return false; }
+
+    if (circleDistance.x <= (shapeA.getLocalBounds().width / 2.f)) { return true; }
+    if (circleDistance.y <= (shapeA.getLocalBounds().height / 2.f)) { return true; }
+
+    float xValue = circleDistance.x - shapeA.getLocalBounds().width / 2.f;
+    float yValue = circleDistance.y - shapeA.getLocalBounds().height / 2.f;
+
+    float cornerDistance_sq = xValue * xValue + yValue * yValue;
+
+    return (cornerDistance_sq <= (radiusB * radiusB));
 }
 
 
@@ -216,7 +247,7 @@ bool Utils::CheckCollision(const sf::RectangleShape& shapeA, const sf::Rectangle
 {
     if (!shapeA.getGlobalBounds().intersects(shapeB.getGlobalBounds()))
         return false;
-    
+
     auto pointsA = GetShapePoints(shapeA);
     auto pointsB = GetShapePoints(shapeB);
     return PolygonsIntersect(pointsA, shapeA.getTransform(), pointsB, shapeB.getTransform());
@@ -262,19 +293,19 @@ bool Utils::PolygonsIntersect(const std::vector<sf::Vector2f>& polygonA, const s
 {
     std::vector<sf::Vector2f> axes;
     axes.reserve(polygonA.size() + polygonB.size());
-    
+
     int countA = polygonA.size();
     for (int i = 0; i < countA; ++i)
     {
         sf::Vector2f p1 = transformA.transformPoint(polygonA[i]);
         sf::Vector2f p2 = transformA.transformPoint(polygonA[(i + 1) % countA]);
         sf::Vector2f edge = p2 - p1;
-        
+
         if (SqrMagnitude(edge) < std::numeric_limits<float>::epsilon())
             continue;
-            
+
         sf::Vector2f normal(-edge.y, edge.x);
-        
+
         bool isDuplicate = false;
         for (const auto& axis : axes)
         {
@@ -285,7 +316,7 @@ bool Utils::PolygonsIntersect(const std::vector<sf::Vector2f>& polygonA, const s
                 break;
             }
         }
-        
+
         if (!isDuplicate)
             axes.push_back(normal);
     }
@@ -296,12 +327,12 @@ bool Utils::PolygonsIntersect(const std::vector<sf::Vector2f>& polygonA, const s
         sf::Vector2f p1 = transformB.transformPoint(polygonB[i]);
         sf::Vector2f p2 = transformB.transformPoint(polygonB[(i + 1) % countB]);
         sf::Vector2f edge = p2 - p1;
-        
+
         if (SqrMagnitude(edge) < std::numeric_limits<float>::epsilon())
             continue;
-            
+
         sf::Vector2f normal(-edge.y, edge.x);
-        
+
         bool isDuplicate = false;
         for (const auto& axis : axes)
         {
@@ -312,7 +343,7 @@ bool Utils::PolygonsIntersect(const std::vector<sf::Vector2f>& polygonA, const s
                 break;
             }
         }
-        
+
         if (!isDuplicate)
             axes.push_back(normal);
     }

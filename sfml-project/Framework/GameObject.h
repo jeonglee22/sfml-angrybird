@@ -11,6 +11,10 @@ protected:
 	sf::Vector2f scale = { 1.f, 1.f };
 	sf::Vector2f origin;
 
+	float mass = 100.f;
+	float friction = 0.5f;
+	float restitution = 0.5f;
+
 	Origins originPreset = Origins::TL;
 
 public:

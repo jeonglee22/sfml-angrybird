@@ -48,11 +48,13 @@ public:
 
 	static float AngleRadian(const sf::Vector2f& vec);
 	static float Angle(const sf::Vector2f& vec);
+	static sf::Vector2f Direction(float angle);
 
 	static float Dot(const sf::Vector2f& a, const sf::Vector2f& b);
 
 	static bool CheckCollision(const sf::RectangleShape& shapeA, const sf::RectangleShape& shapeB);
 	static bool CheckCollision(const sf::Sprite& shapeA, const sf::Sprite& shapeB);
+	static bool CheckCollision(const sf::RectangleShape& shapeA, const sf::Vector2f& centerB, float radiusB);
 	static bool CheckCircleCollision(const sf::Vector2f& centerA, float radiusA, const sf::Vector2f& centerB, float radiusB);
 	static bool PointInTransformBounds(const sf::Transformable& transformable,
 		const sf::FloatRect& localBounds, const sf::Vector2f& point);

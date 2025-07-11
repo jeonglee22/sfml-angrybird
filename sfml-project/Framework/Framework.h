@@ -10,6 +10,8 @@ protected:
 
 	sf::RenderWindow window;
 
+	float gravity = 1500.f;
+
 	sf::Clock clock;
 	float timeScale = 1.f;
 
@@ -41,6 +43,8 @@ public:
 	float GetDeltaTime() const { return deltaTime; }
 	float GetRealTime() const { return realTime; }
 	float GetRealDeltaTime() const { return realDeltaTime; }
+
+	float GetGravity() const { return gravity; }
 
 	virtual void Init(int w, int h, const std::string& t);
 	virtual void Do();
