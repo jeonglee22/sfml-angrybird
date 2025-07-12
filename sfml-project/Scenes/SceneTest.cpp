@@ -12,16 +12,16 @@ void SceneTest::Init()
 
 	auto size = FRAMEWORK.GetWindowSizeF();
 
-	groundBody.position = b2Vec2{ 640.f / SCALE, 700.f / SCALE };
+	/*groundBody.position = b2Vec2{ 640.f / SCALE, 700.f / SCALE };
 	groundBodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &groundBody);
 	
 	b2Polygon groundBox = b2MakeBox(size.x * 0.25f / SCALE, 100.f / SCALE);
 	groundShapeDef = b2DefaultShapeDef();
 	groundShapeDef.material.friction = 1.f;
 	groundShapeDef.material.restitution = 0.5f;
-	b2CreatePolygonShape(groundBodyId, &groundShapeDef, &groundBox);
+	b2CreatePolygonShape(groundBodyId, &groundShapeDef, &groundBox);*/
 
-	bodyDef = b2DefaultBodyDef();
+	/*bodyDef = b2DefaultBodyDef();
 	bodyDef.type = b2_dynamicBody;
 	bodyDef.position = b2Vec2{ size.x * 0.5f / SCALE, 100.0f / SCALE };
 	bodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &bodyDef);
@@ -44,18 +44,18 @@ void SceneTest::Init()
 	shapeDef2.material.friction = 0.2f;
 	shapeDef2.material.rollingResistance = 0.1f;
 	shapeDef2.material.restitution = 0.5f;
-	b2CreateCircleShape(bodyId2, &shapeDef2, &circleBox);
+	b2CreateCircleShape(bodyId2, &shapeDef2, &circleBox);*/
 
 	//start.setSize({ 20.f,20.f });
 	//start.setOrigin({ 10.f,10.f });
 	//start.setPosition({ 100.f, 500.f });
 
-	ground.setSize({ size.x * 0.5f, 200.f });
+	/*ground.setSize({ size.x * 0.5f, 200.f });
 	ground.setOrigin({ size.x * 0.5f / 2.f , 100.f });
 	ground.setPosition({ groundBody.position.x * SCALE , groundBody.position.y * SCALE });
-	ground.setFillColor(sf::Color::Green);
+	ground.setFillColor(sf::Color::Green);*/
 
-	box.setSize({ 30.f,30.f });
+	/*box.setSize({ 30.f,30.f });
 	box.setOrigin({ 15.f,15.f });
 	box.setPosition({ size.x * 0.5f, 100.0f });
 	box.setFillColor(sf::Color::Red);
@@ -63,7 +63,7 @@ void SceneTest::Init()
 	ball.setRadius(20.f);
 	ball.setOrigin({ 20.f,20.f });
 	ball.setPosition({ (size.x * 0.5f + 10.f) , 50.0f });
-	velocity = 500.f;
+	velocity = 500.f;*/
 	
 	isShoot = false;
 }
@@ -90,7 +90,7 @@ void SceneTest::Exit()
 void SceneTest::Update(float dt)
 {
 	Scene::Update(dt);
-	timeValue += dt;
+	/*timeValue += dt;
 	if(timeValue >= timeStep)
 	{
 		b2World_Step(FRAMEWORK.GetWorldID(), timeStep, subStepCount);
@@ -104,7 +104,7 @@ void SceneTest::Update(float dt)
 		ball.setPosition(position2.x * SCALE, position2.y * SCALE);
 		ball.setRotation(b2Rot_GetAngle(rotation2) * 180 / B2_PI);
 		timeValue = 0.f;
-	}
+	}*/
 
 	/*if(InputMgr::GetMouseButtonDown(sf::Mouse::Left))
 	{
@@ -141,9 +141,9 @@ void SceneTest::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);
 	//window.draw(start);
-	window.draw(ground);
+	/*window.draw(ground);
 	window.draw(box);
-	window.draw(ball);
+	window.draw(ball);*/
 	if(isShoot)
 	{
 		window.draw(ball);

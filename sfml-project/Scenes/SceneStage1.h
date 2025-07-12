@@ -1,8 +1,23 @@
 #pragma once
 #include "Scene.h"
+
+class SpriteGo;
+class Bird;
+
 class SceneStage1 : public Scene
 {
 protected:
+	b2BodyDef groundBody = b2DefaultBodyDef();
+	b2ShapeDef groundShapeDef;
+	b2BodyId groundBodyId;
+
+	SpriteGo* background;
+	Bird* bird;
+	sf::CircleShape ball;
+
+	int subStepCount = 4;
+	float timeStep = 1.0f / 60.0f;
+	float timeValue = 0.f;
 
 public:
 	SceneStage1();
@@ -12,5 +27,6 @@ public:
 	void Enter() override;
 
 	void Update(float dt) override;
+	void Draw(sf::RenderWindow& window) override;
 };
 
