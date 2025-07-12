@@ -49,5 +49,5 @@ void Bird::Update(float dt)
 
 void Bird::Draw(sf::RenderWindow& window)
 {
-	GameObject::Draw(window);
+	SpriteGo::Draw(window);
 }
