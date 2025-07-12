@@ -144,8 +144,8 @@ void SceneTest::Draw(sf::RenderWindow& window)
 	/*window.draw(ground);
 	window.draw(box);
 	window.draw(ball);*/
-	if(isShoot)
+	/*if(isShoot)
 	{
 		window.draw(ball);
-	}
+	}*/
 }

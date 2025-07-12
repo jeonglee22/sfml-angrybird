@@ -1,73 +1,67 @@
 #include "stdafx.h"
 #include "Block.h"
 
-Block::Block(const std::string& name)
-	: GameObject(name)
+Block::Block(const std::string& texPlayerId, const std::string& name)
+	: SpriteGo(texPlayerId,name)
 {
-}
-
-void Block::SetPosition(const sf::Vector2f& pos)
-{
-	GameObject::SetPosition(pos);
-	body.setPosition(pos);
-}
-
-void Block::SetRotation(float rot)
-{
-	GameObject::SetRotation(rot);
-	body.setRotation(rot);
-}
-
-void Block::SetScale(const sf::Vector2f& s)
-{
-	GameObject::SetScale(s);
-	body.setScale(s);
-}
-
-void Block::SetOrigin(const sf::Vector2f& o)
-{
-	GameObject::SetOrigin(o);
-	body.setOrigin(o);
-}
-
-void Block::SetOrigin(Origins preset)
-{
-	GameObject::SetOrigin(preset);
-	if (preset != Origins::Custom)
-	{
-		Utils::SetOrigin(body, preset);
-	}
 }
 
 void Block::Init()
 {
-	auto size = FRAMEWORK.GetWindowSizeF();
+	SpriteGo::Init();
 
 	sortingLayer = SortingLayers::Foreground;
 	sortingOrder = 0;
 
-	body.setFillColor(sf::Color::Green);
-	
-	hitBox.SetType(HitBox::Type::Rectangle);
+	bodyDef = b2DefaultBodyDef();
+	bodyDef.type = b2_dynamicBody;
+
+	//initPos = sf::Vector2f{ , };
+
+	SetOrigin(Origins::MC);
 }
 
 void Block::Release()
 {
+	SpriteGo::Release();
+
+	b2DestroyBody(bodyId);
+	bodyId = b2_nullBodyId;
 }
 
 void Block::Reset()
 {
-	SetScale({ 1.f,1.f });
-	SetRotation(30.f);
+	SpriteGo::Reset();
+
+	SetPosition(initPos);
+	SetRotation(0.f);
+	if (!setBody)
+	{
+		bodyDef.position = b2Vec2{ GetPosition().x / SCALE, GetPosition().y / SCALE };
+		bodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &bodyDef);
+
+		b2Polygon bodyBox = 
+
+		b2ShapeDef shapeDef = b2DefaultShapeDef();
+		shapeDef.density = 1.0f;
+		shapeDef.material.friction = 0.2f;
+		shapeDef.material.rollingResistance = 0.25f;
+		shapeDef.material.restitution = 0.5f;
+		b2CreateCircleShape(bodyId, &shapeDef, &Box);
+		setBody = true;
+	}
+	else
+	{
+		b2Body_SetTransform(bodyId, b2Vec2{ 150.f / SCALE, 550.0f / SCALE }, b2Rot{ 1.f,0.f });
+	}
 }
 
 void Block::Update(float dt)
 {
-	hitBox.UpdateTransform(body, GetLocalBounds());
+	SpriteGo::Update(dt);
 }
 
 void Block::Draw(sf::RenderWindow& window)
 {
-	window.draw(body);
-	hitBox.Draw(window);
+	SpriteGo::Draw(window);
 }

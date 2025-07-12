@@ -12,7 +12,7 @@ void SceneCollision::Init()
 {
 	auto size = FRAMEWORK.GetWindowSizeF();
 
-	ground.setSize({ size.x, 200.f });
+	/*ground.setSize({ size.x, 200.f });
 	ground.setOrigin({ size.x / 2.f , 100.f });
 	ground.setPosition({ size.x / 2.f , 700.f });
 	ground.setFillColor(sf::Color::Green);
@@ -25,7 +25,7 @@ void SceneCollision::Init()
 	ball = (Ball*)AddGameObject(new Ball("Ball"));
 	ball->GetBody().setRadius(10.f);
 	ball->SetOrigin(Origins::MC);
-	ball->SetPosition({ 100.f, 100.f });
+	ball->SetPosition({ 100.f, 100.f });*/
 
 	/*object1 = (Ball*)AddGameObject(new Ball("Object1"));
 	object1->GetBody().setRadius(50.f);
@@ -62,10 +62,10 @@ void SceneCollision::Update(float dt)
 {
 	Scene::Update(dt);
 
-	if(!ball->GetShoot())
+	/*if(!ball->GetShoot())
 	{
 		ball->SetPosition({ 100.f, 100.f });
-	}
+	}*/
 }
 
 void SceneCollision::Draw(sf::RenderWindow& window)

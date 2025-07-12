@@ -18,6 +18,8 @@ protected:
 	float maxCharge = 70.f;
 	float forceAmount = 1200.f;
 
+	sf::Vector2f initPos = { 150.f, 550.0f };
+
 public:
 	Bird(const std::string& texPlayerId = "", const std::string & name = "");
 	virtual ~Bird() = default;

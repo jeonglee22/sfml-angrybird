@@ -10,6 +10,9 @@ protected:
 	b2BodyDef groundBody = b2DefaultBodyDef();
 	b2ShapeDef groundShapeDef;
 	b2BodyId groundBodyId;
+	b2BodyDef shootBody = b2DefaultBodyDef();
+	b2ShapeDef shootShapeDef;
+	b2BodyId shootBodyId;
 
 	SpriteGo* background;
 	Bird* bird;

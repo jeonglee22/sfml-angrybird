@@ -47,18 +47,27 @@ void SceneStage1::Enter()
 	ball.setOrigin({ bird->GetCollisionRadius(),bird->GetCollisionRadius() });
 	ball.setPosition({ bird->GetPosition().x , bird->GetPosition().y });
 	ball.setFillColor(sf::Color::Blue);
+
+	shootBody.position = b2Vec2{ 150.f / SCALE, (550.f + bird->GetCollisionRadius() + 40.f) / SCALE };
+	shootBodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &shootBody);
+
+	b2Polygon shootBox = b2MakeBox(20.f / SCALE, 40.f / SCALE);
+	shootShapeDef = b2DefaultShapeDef();
+	shootShapeDef.material.friction = 1.f;
+	shootShapeDef.material.restitution = 0.5f;
+	b2CreatePolygonShape(shootBodyId, &shootShapeDef, &shootBox);
 }
 
 void SceneStage1::Update(float dt)
 {
 	Scene::Update(dt);
-	if(bird->GetShoot())
+	timeValue += dt;
+	if (timeValue >= timeStep)
 	{
-		timeValue += dt;
-		if (timeValue >= timeStep)
+		b2World_Step(FRAMEWORK.GetWorldID(), timeStep, subStepCount);
+		//bird->Shoot();
+		if (bird->GetShoot())
 		{
-			b2World_Step(FRAMEWORK.GetWorldID(), timeStep, subStepCount);
-			//bird->Shoot();
 			b2Vec2 position = b2Body_GetPosition(bird->GetBodyId());
 			b2Rot rotation = b2Body_GetRotation(bird->GetBodyId());
 			bird->SetPosition({ position.x * SCALE, position.y * SCALE });

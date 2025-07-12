@@ -65,7 +65,7 @@ void Ball::Reset()
 	SetRotation(0.f);
 	if(SCENE_MGR.GetCurrentSceneId() == SceneIds::Test)
 	{
-		block = (Block*)SCENE_MGR.GetCurrentScene()->FindGameObject("Block");
+		//block = (Block*)SCENE_MGR.GetCurrentScene()->FindGameObject("Block");
 		ball2 = (Ball*)SCENE_MGR.GetCurrentScene()->FindGameObject("Object2");
 	}
 }
@@ -98,7 +98,7 @@ void Ball::Update(float dt)
 		float radius = body.getRadius();
 		hitBox.UpdateTransform(body, radius);
 
-		if (Utils::CheckCollision(block->GetHitBox().rect, position, radius) && !isCollision)
+		/*if (Utils::CheckCollision(block->GetHitBox().rect, position, radius) && !isCollision)
 		{
 			isCollision = true;
 			float angle = block->GetRotation();
@@ -110,7 +110,7 @@ void Ball::Update(float dt)
 		else if (!Utils::CheckCollision(block->GetHitBox().rect, position, radius) && isCollision)
 		{
 			isCollision = false;
-		}
+		}*/
 
 		/*if (Utils::CheckCircleCollision(ball2->GetPosition(), ball2->GetRadius(), position, radius) && !isCollision && this->name != "Object2")
 		{

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Bird.h"
 
-Bird::Bird(const std::string& texPlayerId,const std::string& name)
+Bird::Bird(const std::string& texPlayerId, const std::string& name)
 	: SpriteGo(texPlayerId, name)
 {
 }
@@ -31,11 +31,11 @@ void Bird::Reset()
 {
 	SpriteGo::Reset();
 
-	SetPosition({ 150.f, 550.0f});
+	SetPosition(initPos);
 	SetRotation(0.f);
 	if(!setBody)
 	{
-		bodyDef.position = b2Vec2{ GetPosition().x / SCALE, GetPosition().y / SCALE };
+		bodyDef.position = b2Vec2{ initPos.x / SCALE, initPos.y / SCALE };
 		bodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &bodyDef);
 
 		collisionRadius = sprite.getTexture()->getSize().x * 0.5f * 0.8f;
@@ -53,7 +53,9 @@ void Bird::Reset()
 	}
 	else
 	{
-		b2Body_SetTransform(bodyId, b2Vec2{ 150.f / SCALE, 550.0f / SCALE }, b2Rot{ 1.f,0.f });
+		b2Body_SetTransform(bodyId, b2Vec2{ initPos.x / SCALE, initPos.y / SCALE }, b2Rot{ 1.f,0.f });
+		b2Body_SetAngularVelocity(bodyId, 0.f);
+		b2Body_SetLinearVelocity(bodyId, b2Vec2_zero);
 	}
 }
 
