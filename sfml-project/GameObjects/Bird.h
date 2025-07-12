@@ -7,10 +7,16 @@ protected:
 	b2BodyId bodyId;
 	float collisionRadius;
 
+	bool setBody = false;
+
 	bool isShoot = false;
 	bool isCharging = false;
 	sf::Vector2f mouseStart;
 	sf::Vector2f mouseEnd;
+
+	float minCharge = 30.f;
+	float maxCharge = 70.f;
+	float forceAmount = 1200.f;
 
 public:
 	Bird(const std::string& texPlayerId = "", const std::string & name = "");

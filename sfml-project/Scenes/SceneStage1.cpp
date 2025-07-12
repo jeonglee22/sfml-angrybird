@@ -14,14 +14,14 @@ void SceneStage1::Init()
 	texIds.push_back("graphics/LevelOne.png");
 
 	background = (SpriteGo*) AddGameObject(new SpriteGo("graphics/LevelOne.png"));
-	background->SetScale({ 1280.f / 909.f, 1.f});
+	background->SetScale({ 1.f, 768.f / 1082.f });
 	background->sortingLayer = SortingLayers::Background;
 	background->sortingOrder = 0;
 
-	groundBody.position = b2Vec2{ 640.f / SCALE, 720.f / SCALE };
+	groundBody.position = b2Vec2{ FRAMEWORK.GetWindowBounds().width * 0.5f / SCALE, 768.f / SCALE };
 	groundBodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &groundBody);
 
-	b2Polygon groundBox = b2MakeBox(FRAMEWORK.GetWindowBounds().width * 0.5f / SCALE, 80.f / SCALE);
+	b2Polygon groundBox = b2MakeBox(FRAMEWORK.GetWindowBounds().width * 0.5f / SCALE, 85.f / SCALE);
 	groundShapeDef = b2DefaultShapeDef();
 	groundShapeDef.material.friction = 1.f;
 	groundShapeDef.material.restitution = 0.5f;

@@ -31,24 +31,30 @@ void Bird::Reset()
 {
 	SpriteGo::Reset();
 
-	bodyId = b2_nullBodyId;
-
-	SetPosition({ 100.f, 550.0f});
+	SetPosition({ 150.f, 550.0f});
 	SetRotation(0.f);
-	bodyDef.position = b2Vec2{ GetPosition().x / SCALE, GetPosition().y / SCALE };
-	bodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &bodyDef);
+	if(!setBody)
+	{
+		bodyDef.position = b2Vec2{ GetPosition().x / SCALE, GetPosition().y / SCALE };
+		bodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &bodyDef);
 
-	collisionRadius = sprite.getTexture()->getSize().x * 0.5f * 0.8f;
-	b2Circle circleBox;
-	circleBox.center = { 0.f, 0.f };
-	circleBox.radius = collisionRadius / SCALE;
+		collisionRadius = sprite.getTexture()->getSize().x * 0.5f * 0.8f;
+		b2Circle circleBox;
+		circleBox.center = { 0.f, 0.f };
+		circleBox.radius = collisionRadius / SCALE;
 
-	b2ShapeDef shapeDef = b2DefaultShapeDef();
-	shapeDef.density = 1.0f;
-	shapeDef.material.friction = 0.2f;
-	shapeDef.material.rollingResistance = 0.2f;
-	shapeDef.material.restitution = 0.5f;
-	b2CreateCircleShape(bodyId, &shapeDef, &circleBox);
+		b2ShapeDef shapeDef = b2DefaultShapeDef();
+		shapeDef.density = 1.0f;
+		shapeDef.material.friction = 0.2f;
+		shapeDef.material.rollingResistance = 0.25f;
+		shapeDef.material.restitution = 0.5f;
+		b2CreateCircleShape(bodyId, &shapeDef, &circleBox);
+		setBody = true;
+	}
+	else
+	{
+		b2Body_SetTransform(bodyId, b2Vec2{ 150.f / SCALE, 550.0f / SCALE }, b2Rot{ 1.f,0.f });
+	}
 }
 
 void Bird::Update(float dt)
@@ -66,21 +72,16 @@ void Bird::Update(float dt)
 	if (InputMgr::GetMouseButtonUp(sf::Mouse::Left) && isCharging)
 	{
 		mouseEnd = (sf::Vector2f) InputMgr::GetMousePosition();
-		direction = Utils::GetNormal((sf::Vector2f)(mouseStart - mouseEnd));
+		direction = Utils::GetNormal(mouseStart - mouseEnd);
+		float distance = Utils::Clamp(Utils::Distance(mouseStart, mouseEnd), minCharge, maxCharge);
 		isShoot = true;
-		b2Body_ApplyForceToCenter(bodyId, b2Vec2{ direction.x * 1000, direction.y * 1000 }, true);
-	}/*
-	if(isShoot)
-	{
-		direction += 0.5f * sf::Vector2f(0, 2500.f) * dt * dt;
-		ball.setPosition(ball.getPosition() + velocity * dt * direction);
-	}*/
+		std::cout << distance << std::endl;
+		sf::Vector2f Force(direction.x * forceAmount * (distance / maxCharge), direction.y * forceAmount * (distance / maxCharge));
+		b2Body_ApplyForceToCenter(bodyId, b2Vec2{ Force.x, Force.y }, true);
+	}
 }
 
 void Bird::Draw(sf::RenderWindow& window)
 {
-	//if(isShoot)
-	//{
-		SpriteGo::Draw(window);
-	//}
+	SpriteGo::Draw(window);
 }
