@@ -1,12 +1,12 @@
 #include "stdafx.h"
-#include "Block.h"
+#include "Pig.h"
 
-Block::Block(const std::string& texPlayerId, const std::string& name)
-	: SpriteGo(texPlayerId,name)
+Pig::Pig(const std::string& texPlayerId, const std::string& name)
+	: SpriteGo(texPlayerId, name)
 {
 }
 
-void Block::Init()
+void Pig::Init()
 {
 	SpriteGo::Init();
 
@@ -21,15 +21,15 @@ void Block::Init()
 	SetOrigin(Origins::MC);
 }
 
-void Block::Release()
+void Pig::Release()
 {
 	SpriteGo::Release();
 
-	/*b2DestroyBody(bodyId);
-	bodyId = b2_nullBodyId;*/
+	b2DestroyBody(bodyId);
+	bodyId = b2_nullBodyId;
 }
 
-void Block::Reset()
+void Pig::Reset()
 {
 	SpriteGo::Reset();
 
@@ -55,17 +55,17 @@ void Block::Reset()
 	}
 }
 
-void Block::Update(float dt)
+void Pig::Update(float dt)
 {
 	SpriteGo::Update(dt);
 }
 
-void Block::Draw(sf::RenderWindow& window)
+void Pig::Draw(sf::RenderWindow& window)
 {
 	SpriteGo::Draw(window);
 }
 
-void Block::SetTransform()
+void Pig::SetTransform()
 {
 	b2Vec2 position = b2Body_GetPosition(bodyId);
 	b2Rot rotation = b2Body_GetRotation(bodyId);

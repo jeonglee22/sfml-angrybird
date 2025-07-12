@@ -23,15 +23,6 @@ void Scenebox2dTest::Init()
 	background->sortingLayer = SortingLayers::Background;
 	background->sortingOrder = 0;
 
-	groundBody.position = b2Vec2{ bounds.width * 0.5f / SCALE, bounds.height / SCALE };
-	groundBodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &groundBody);
-
-	b2Polygon groundBox = b2MakeBox(bounds.width * 0.5f / SCALE, 85.f / SCALE);
-	groundShapeDef = b2DefaultShapeDef();
-	groundShapeDef.material.friction = 1.f;
-	groundShapeDef.material.restitution = 0.5f;
-	b2CreatePolygonShape(groundBodyId, &groundShapeDef, &groundBox);
-
 	bird = (Bird*)AddGameObject(new Bird("graphics/Angrybirds/RedBird1.png", "Bird"));
 
 	for (int i = 0; i < blockCount; i++)
@@ -47,6 +38,7 @@ void Scenebox2dTest::Init()
 void Scenebox2dTest::Enter()
 {
 	auto size = FRAMEWORK.GetWindowSizeF();
+	sf::FloatRect bounds = FRAMEWORK.GetWindowBounds();
 	sf::Vector2f center{ size.x * 0.5f, size.y * 0.5f };
 	uiView.setSize(size);
 	uiView.setCenter(center);
@@ -54,6 +46,15 @@ void Scenebox2dTest::Enter()
 	worldView.setCenter(center);
 
 	Scene::Enter();
+
+	groundBody.position = b2Vec2{ bounds.width * 0.5f / SCALE, bounds.height / SCALE };
+	groundBodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &groundBody);
+
+	b2Polygon groundBox = b2MakeBox(bounds.width * 0.5f / SCALE, 85.f / SCALE);
+	groundShapeDef = b2DefaultShapeDef();
+	groundShapeDef.material.friction = 1.f;
+	groundShapeDef.material.restitution = 0.5f;
+	b2CreatePolygonShape(groundBodyId, &groundShapeDef, &groundBox);
 
 	shootBody.position = b2Vec2{ 150.f / SCALE, (550.f + bird->GetCollisionRadius() + 40.f) / SCALE };
 	shootBodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &shootBody);

@@ -23,8 +23,8 @@ void Bird::Release()
 {
 	SpriteGo::Release();
 
-	b2DestroyBody(bodyId);
-	bodyId = b2_nullBodyId;
+	/*b2DestroyBody(bodyId);
+	bodyId = b2_nullBodyId;*/
 }
 
 void Bird::Reset()
@@ -46,7 +46,7 @@ void Bird::Reset()
 		b2ShapeDef shapeDef = b2DefaultShapeDef();
 		shapeDef.density = 1.0f;
 		shapeDef.material.friction = 0.6f;
-		shapeDef.material.rollingResistance = 0.25f;
+		shapeDef.material.rollingResistance = 0.5f;
 		shapeDef.material.restitution = 0.5f;
 		b2CreateCircleShape(bodyId, &shapeDef, &circleBox);
 		setBody = true;

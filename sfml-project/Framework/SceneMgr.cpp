@@ -3,12 +3,14 @@
 #include "SceneDev1.h"
 #include "SceneDev2.h"
 #include "Scenebox2dTest.h"
+#include "SceneStage1.h"
 #include "SceneTest.h"
 
 void SceneMgr::Init()
 {
 	//scenes.insert({ SceneIds::Test, new SceneTest() });
 	scenes.insert({ SceneIds::Test, new Scenebox2dTest() });
+	scenes.insert({ SceneIds::Stage1, new SceneStage1() });
 	scenes.insert({ SceneIds::Dev1, new SceneDev1() });
 	scenes.insert({ SceneIds::Dev2, new SceneDev2() });
 
