@@ -1,15 +1,15 @@
 #include "stdafx.h"
-#include "SceneStage1.h"
+#include "Scenebox2dTest.h"
 #include "SpriteGo.h"
 #include "Bird.h"
 #include "Block.h"
 
-SceneStage1::SceneStage1()
-	: Scene(SceneIds::Stage1)
+Scenebox2dTest::Scenebox2dTest()
+	: Scene(SceneIds::Test)
 {
 }
 
-void SceneStage1::Init()
+void Scenebox2dTest::Init()
 {
 	sf::FloatRect bounds = FRAMEWORK.GetWindowBounds();
 
@@ -44,7 +44,7 @@ void SceneStage1::Init()
 	Scene::Init();
 }
 
-void SceneStage1::Enter()
+void Scenebox2dTest::Enter()
 {
 	auto size = FRAMEWORK.GetWindowSizeF();
 	sf::Vector2f center{ size.x * 0.5f, size.y * 0.5f };
@@ -65,7 +65,7 @@ void SceneStage1::Enter()
 	b2CreatePolygonShape(shootBodyId, &shootShapeDef, &shootBox);
 }
 
-void SceneStage1::Update(float dt)
+void Scenebox2dTest::Update(float dt)
 {
 	Scene::Update(dt);
 	timeValue += dt;
@@ -92,7 +92,7 @@ void SceneStage1::Update(float dt)
 #endif // DEBUG
 }
 
-void SceneStage1::Draw(sf::RenderWindow& window)
+void Scenebox2dTest::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);
 }

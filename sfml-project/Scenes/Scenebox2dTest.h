@@ -5,7 +5,7 @@ class SpriteGo;
 class Bird;
 class Block;
 
-class SceneStage1 : public Scene
+class Scenebox2dTest : public Scene
 {
 protected:
 	b2BodyDef groundBody = b2DefaultBodyDef();
@@ -26,8 +26,8 @@ protected:
 	float timeValue = 0.f;
 
 public:
-	SceneStage1();
-	~SceneStage1() = default;
+	Scenebox2dTest();
+	~Scenebox2dTest() = default;
 
 	void Init() override;
 	void Enter() override;
