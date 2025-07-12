@@ -63,7 +63,7 @@ void Ball::Reset()
 	//SetDirection({ 0.f,0.f });
 	SetScale({ 1.f,1.f });
 	SetRotation(0.f);
-	if(SCENE_MGR.GetCurrentSceneId() == SceneIds::Collision)
+	if(SCENE_MGR.GetCurrentSceneId() == SceneIds::Test)
 	{
 		block = (Block*)SCENE_MGR.GetCurrentScene()->FindGameObject("Block");
 		ball2 = (Ball*)SCENE_MGR.GetCurrentScene()->FindGameObject("Object2");

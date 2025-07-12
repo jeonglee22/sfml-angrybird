@@ -4,7 +4,7 @@
 #include "SceneCollision.h"
 
 SceneCollision::SceneCollision()
-	: Scene(SceneIds::Collision)
+	: Scene(SceneIds::Test)
 {
 }
 
