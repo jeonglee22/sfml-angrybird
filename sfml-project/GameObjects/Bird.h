@@ -38,5 +38,7 @@ public:
 
 	sf::FloatRect GetLocalBounds() { return sprite.getLocalBounds(); }
 	sf::FloatRect GetGlobalBounds() { return sprite.getGlobalBounds(); }
+
+	void SetTransform();
 };
 

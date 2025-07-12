@@ -45,7 +45,7 @@ void Bird::Reset()
 
 		b2ShapeDef shapeDef = b2DefaultShapeDef();
 		shapeDef.density = 1.0f;
-		shapeDef.material.friction = 0.2f;
+		shapeDef.material.friction = 0.6f;
 		shapeDef.material.rollingResistance = 0.25f;
 		shapeDef.material.restitution = 0.5f;
 		b2CreateCircleShape(bodyId, &shapeDef, &circleBox);
@@ -80,10 +80,19 @@ void Bird::Update(float dt)
 		std::cout << distance << std::endl;
 		sf::Vector2f Force(direction.x * forceAmount * (distance / maxCharge), direction.y * forceAmount * (distance / maxCharge));
 		b2Body_ApplyForceToCenter(bodyId, b2Vec2{ Force.x, Force.y }, true);
+		isCharging = false;
 	}
 }
 
 void Bird::Draw(sf::RenderWindow& window)
 {
 	SpriteGo::Draw(window);
+}
+
+void Bird::SetTransform()
+{
+	b2Vec2 position = b2Body_GetPosition(bodyId);
+	b2Rot rotation = b2Body_GetRotation(bodyId);
+	SetPosition({ position.x * SCALE, position.y * SCALE });
+	SetRotation(b2Rot_GetAngle(rotation) * 180 / B2_PI);
 }

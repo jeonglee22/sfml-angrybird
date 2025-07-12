@@ -3,6 +3,7 @@
 
 class SpriteGo;
 class Bird;
+class Block;
 
 class SceneStage1 : public Scene
 {
@@ -16,7 +17,9 @@ protected:
 
 	SpriteGo* background;
 	Bird* bird;
-	sf::CircleShape ball;
+
+	std::vector<Block*> blocks;
+	int blockCount = 3;
 
 	int subStepCount = 4;
 	float timeStep = 1.0f / 60.0f;

@@ -9,6 +9,7 @@ protected:
 	bool setBody = false;
 
 	sf::Vector2f initPos;
+	sf::Vector2f texSize;
 
 public:
 	Block(const std::string& texPlayerId, const std::string& name = "");
@@ -19,5 +20,8 @@ public:
 	void Reset() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+
+	void SetInitPos(const sf::Vector2f& pos) { initPos = pos; }
+	void SetTransform();
 };
 
