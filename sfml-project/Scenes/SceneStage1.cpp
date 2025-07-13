@@ -4,6 +4,7 @@
 #include "Bird.h"
 #include "Block.h"
 #include "Pig.h"
+#include "rapidcsv.h"
 
 SceneStage1::SceneStage1()
 	: Scene(SceneIds::Stage1)
@@ -20,8 +21,6 @@ void SceneStage1::Init()
 	texIds.push_back("graphics/Angrybirds/ShootStand.png");
 	texIds.push_back("graphics/Angrybirds/StandRight.png");
 	texIds.push_back("graphics/Angrybirds/StandLeft.png");
-	texIds.push_back("graphics/StaticObjects/WoodSquareBlock1.png");
-	texIds.push_back("graphics/StaticObjects/WoodSquareBlock2.png");
 
 	background = (SpriteGo*)AddGameObject(new SpriteGo("graphics/LevelOne.png"));
 	background->SetScale({ 1.f, 768.f / 1082.f });
@@ -52,15 +51,17 @@ void SceneStage1::Init()
 
 	bird = (Bird*)AddGameObject(new Bird("graphics/Angrybirds/RedBird1.png", "Bird"));
 
-	for (int i = 0; i < blockCount; i++)
-	{
-		blocks.push_back((Block*)AddGameObject(new Block("graphics/StaticObjects/WoodSquareBlock1.png")));
-		//blocks[i]->SetInitPos({ 1200.f - i * 50.f,bounds.height - 85.f - 50.f });
-		blocks[i]->SetInitPos({ 800.f,bounds.height - 85.f - 50.f * (i + 1) });
-	}
+	LoadBlockInfo("StageStructures/Stage1.csv");
+
+	//for (int i = 0; i < blockCount; i++)
+	//{
+	//	blocks.push_back((Block*)AddGameObject(new Block("graphics/StaticObjects/WoodSquareBlock1.png")));
+	//	//blocks[i]->SetInitPos({ 1200.f - i * 50.f,bounds.height - 85.f - 50.f });
+	//	blocks[i]->SetInitPos({ 800.f,bounds.height - 85.f - 50.f * (i + 1) });
+	//}
 
 	pig = (Pig*)AddGameObject(new Pig("graphics/Angrybirds/PigOriginal.png", "Pig"));
-	pig->SetInitPos({1100.f, bounds.height - 85.f - 30.f - 10.f });
+	pig->SetInitPos({900.f, 480.f - 30.f });
 
 	Scene::Init();
 }
@@ -131,4 +132,20 @@ void SceneStage1::Update(float dt)
 void SceneStage1::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);
+}
+
+void SceneStage1::LoadBlockInfo(const std::string& filePath)
+{
+	rapidcsv::Document doc(filePath);
+	blockCount = doc.GetCell<int>(0,0);
+
+	blocks.clear();
+	for (int i = 0; i < blockCount; i++)
+	{
+		auto row = doc.GetRow<std::string>(i+2);
+		if(std::find(texIds.begin(), texIds.end(), row[0]) == texIds.end())
+			texIds.push_back(row[0]);
+		blocks.push_back((Block*)AddGameObject(new Block(row[0])));
+		blocks[i]->SetInitPos({ std::stof(row[1]), std::stof(row[2]) });
+	}
 }

@@ -16,7 +16,7 @@ protected:
 
 	float minCharge = 30.f;
 	float maxCharge = 70.f;
-	float forceAmount = 1200.f;
+	float forceAmount = 700.f;
 
 	sf::Vector2f initPos = { 150.f, 560.0f };
 

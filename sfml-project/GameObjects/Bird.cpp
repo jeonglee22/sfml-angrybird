@@ -44,7 +44,7 @@ void Bird::Reset()
 		circleBox.radius = collisionRadius / SCALE;
 
 		b2ShapeDef shapeDef = b2DefaultShapeDef();
-		shapeDef.density = 1.0f;
+		shapeDef.density = .5f;
 		shapeDef.material.friction = 0.6f;
 		shapeDef.material.rollingResistance = 0.5f;
 		shapeDef.material.restitution = 0.5f;

@@ -1,0 +1,9 @@
+BLOCK_COUNT,,,,,,
+3,,,,,,
+TEXTURE_ID,POSITION_X,POSITION_Y,LEFT,TOP,WIDTH,HEIGHT
+graphics/StaticObjects/WoodSquareBlock1.png,900,635,,,,
+graphics/StaticObjects/WoodSquareBlock2.png,900,545,,,,
+graphics/StaticObjects/WoodStick1.png,900,590,,,,
+graphics/StaticObjects/WoodSquareBlock3.png,850,545,,,,
+graphics/StaticObjects/WoodSquareBlock4.png,950,545,,,,
+graphics/StaticObjects/WoodStick1.png,900,490,,,,

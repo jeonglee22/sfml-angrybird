@@ -24,7 +24,7 @@ protected:
 	Pig* pig;
 
 	std::vector<Block*> blocks;
-	int blockCount = 3;
+	int blockCount = 5;
 
 	int subStepCount = 4;
 	float timeStep = 1.0f / 60.0f;
@@ -39,5 +39,7 @@ public:
 
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+
+	void LoadBlockInfo(const std::string& filePath);
 };
 
