@@ -5,6 +5,7 @@ class Bird : public SpriteGo
 protected:
 	b2BodyDef bodyDef;
 	b2BodyId bodyId;
+	b2ShapeId bodyShape;
 	float collisionRadius;
 
 	bool setBody = false;
@@ -34,6 +35,7 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	b2BodyId GetBodyId() { return bodyId; }
+	b2ShapeId GetShapeId() { return bodyShape; }
 	b2BodyDef GetBodyDef() { return bodyDef; }
 	bool GetShoot() { return isShoot; }
 	void SetShoot(bool b) { isShoot = b; }

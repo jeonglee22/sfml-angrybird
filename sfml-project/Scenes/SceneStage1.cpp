@@ -122,7 +122,6 @@ void SceneStage1::Update(float dt)
 					{
 						birds[tryCount]->SetBirdEnable();
 					}
-
 				}
 			}
 		}
@@ -132,6 +131,10 @@ void SceneStage1::Update(float dt)
 		}
 		pig->SetTransform();
 		timeValue = 0.f;
+
+		b2ContactHitEvent* hitEvents = b2World_GetContactEvents(FRAMEWORK.GetWorldID()).hitEvents;
+		int hitCount = b2World_GetContactEvents(FRAMEWORK.GetWorldID()).hitCount;
+		
 	}
 
 #ifdef DEF_DEV

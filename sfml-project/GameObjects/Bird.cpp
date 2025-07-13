@@ -48,7 +48,8 @@ void Bird::Reset()
 		shapeDef.material.friction = 0.6f;
 		shapeDef.material.rollingResistance = 0.5f;
 		shapeDef.material.restitution = 0.5f;
-		b2CreateCircleShape(bodyId, &shapeDef, &circleBox);
+		bodyShape = b2CreateCircleShape(bodyId, &shapeDef, &circleBox);
+		b2Shape_EnableHitEvents(bodyShape, true);
 
 		SetBirdDisable();
 		setBody = true;

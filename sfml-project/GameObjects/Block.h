@@ -5,6 +5,7 @@ class Block : public SpriteGo
 protected:
 	b2BodyDef bodyDef;
 	b2BodyId bodyId;
+	b2ShapeId bodyShape;
 
 	bool setBody = false;
 
@@ -20,6 +21,8 @@ public:
 	void Reset() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+
+	b2ShapeId GetShapeId() { return bodyShape; }
 
 	void SetInitPos(const sf::Vector2f& pos) { initPos = pos; }
 	void SetTransform();

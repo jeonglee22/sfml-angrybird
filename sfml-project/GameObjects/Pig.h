@@ -5,6 +5,7 @@ class Pig : public SpriteGo
 protected:
 	b2BodyDef bodyDef;
 	b2BodyId bodyId;
+	b2ShapeId bodyShape;
 	float collisionRadius;
 
 	bool setBody = false;
@@ -14,6 +15,7 @@ protected:
 
 	int hp = 0;
 	int maxHp = 100;
+	bool isDead = false;
 
 public:
 	Pig(const std::string& texPlayerId, const std::string& name = "");
@@ -25,7 +27,11 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
+	b2ShapeId GetShapeId() { return bodyShape; }
+
 	void SetInitPos(const sf::Vector2f& pos) { initPos = pos; }
 	void SetTransform();
+
+	void TakeDamage(int damage);
 };
 

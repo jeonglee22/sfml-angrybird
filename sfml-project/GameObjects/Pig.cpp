@@ -33,6 +33,8 @@ void Pig::Reset()
 {
 	SpriteGo::Reset();
 
+	hp = maxHp;
+
 	SetPosition(initPos);
 	SetRotation(0.f);
 	if (!setBody)
@@ -50,7 +52,9 @@ void Pig::Reset()
 		shapeDef.material.friction = 0.3f;
 		shapeDef.material.rollingResistance = 0.2f;
 		shapeDef.material.restitution = 0.5f;
-		b2CreateCircleShape(bodyId, &shapeDef, &circleBox);
+		bodyShape = b2CreateCircleShape(bodyId, &shapeDef, &circleBox);
+		b2Shape_EnableHitEvents(bodyShape, true);
+
 		setBody = true;
 	}
 	else
@@ -75,4 +79,13 @@ void Pig::SetTransform()
 	b2Rot rotation = b2Body_GetRotation(bodyId);
 	SetPosition({ position.x * SCALE, position.y * SCALE });
 	SetRotation(b2Rot_GetAngle(rotation) * 180 / B2_PI);
+}
+
+void Pig::TakeDamage(int damage)
+{
+	hp = Utils::Clamp(hp - damage, 0, maxHp);
+	if (hp == 0)
+	{
+		isDead = true;
+	}
 }

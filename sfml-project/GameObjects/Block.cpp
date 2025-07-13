@@ -46,7 +46,9 @@ void Block::Reset()
 		shapeDef.density = 0.2f;
 		shapeDef.material.friction = 0.5f;
 		shapeDef.material.restitution = 0.5f;
-		b2CreatePolygonShape(bodyId, &shapeDef, &bodyBox);
+		bodyShape = b2CreatePolygonShape(bodyId, &shapeDef, &bodyBox);
+		b2Shape_EnableHitEvents(bodyShape, true);
+
 		setBody = true;
 	}
 	else
