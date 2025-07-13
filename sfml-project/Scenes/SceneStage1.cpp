@@ -15,6 +15,7 @@ void SceneStage1::Init()
 	sf::FloatRect bounds = FRAMEWORK.GetWindowBounds();
 
 	texIds.push_back("graphics/Angrybirds/RedBird1.png");
+	texIds.push_back("graphics/Angrybirds/PigOriginal.png");
 	texIds.push_back("graphics/LevelOne.png");
 	texIds.push_back("graphics/Angrybirds/ShootStand.png");
 	texIds.push_back("graphics/Angrybirds/StandRight.png");
@@ -50,6 +51,16 @@ void SceneStage1::Init()
 	}
 
 	bird = (Bird*)AddGameObject(new Bird("graphics/Angrybirds/RedBird1.png", "Bird"));
+
+	for (int i = 0; i < blockCount; i++)
+	{
+		blocks.push_back((Block*)AddGameObject(new Block("graphics/StaticObjects/WoodSquareBlock1.png")));
+		//blocks[i]->SetInitPos({ 1200.f - i * 50.f,bounds.height - 85.f - 50.f });
+		blocks[i]->SetInitPos({ 800.f,bounds.height - 85.f - 50.f * (i + 1) });
+	}
+
+	pig = (Pig*)AddGameObject(new Pig("graphics/Angrybirds/PigOriginal.png", "Pig"));
+	pig->SetInitPos({1100.f, bounds.height - 85.f - 30.f - 10.f });
 
 	Scene::Init();
 }
@@ -99,12 +110,13 @@ void SceneStage1::Update(float dt)
 		if (bird->GetShoot())
 		{
 			bird->SetTransform();
-			timeValue = 0.f;
 		}
-		/*for (int i = 0; i < blockCount; i++)
+		for (int i = 0; i < blockCount; i++)
 		{
 			blocks[i]->SetTransform();
-		}*/
+		}
+		pig->SetTransform();
+		timeValue = 0.f;
 	}
 
 #ifdef DEF_DEV

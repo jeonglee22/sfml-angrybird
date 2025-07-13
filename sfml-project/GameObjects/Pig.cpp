@@ -39,19 +39,23 @@ void Pig::Reset()
 	{
 		bodyDef.position = b2Vec2{ initPos.x / SCALE, initPos.y / SCALE };
 		bodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &bodyDef);
-		texSize = (sf::Vector2f)sprite.getTexture()->getSize();
-		b2Polygon bodyBox = b2MakeBox(texSize.x * 0.5f / SCALE, texSize.y * 0.5f / SCALE);
+
+		collisionRadius = sprite.getTexture()->getSize().x * 0.5f * 0.8f;
+		b2Circle circleBox;
+		circleBox.center = { 0.f, 0.f };
+		circleBox.radius = collisionRadius / SCALE;
 
 		b2ShapeDef shapeDef = b2DefaultShapeDef();
-		shapeDef.density = 0.2f;
-		shapeDef.material.friction = 0.5f;
+		shapeDef.density = 1.0f;
+		shapeDef.material.friction = 0.3f;
+		shapeDef.material.rollingResistance = 0.5f;
 		shapeDef.material.restitution = 0.5f;
-		b2CreatePolygonShape(bodyId, &shapeDef, &bodyBox);
+		b2CreateCircleShape(bodyId, &shapeDef, &circleBox);
 		setBody = true;
 	}
 	else
 	{
-		b2Body_SetTransform(bodyId, b2Vec2{ 150.f / SCALE, 550.0f / SCALE }, b2Rot{ 1.f,0.f });
+		b2Body_SetTransform(bodyId, b2Vec2{ initPos.x / SCALE, initPos.y / SCALE }, b2Rot{ 1.f,0.f });
 	}
 }
 

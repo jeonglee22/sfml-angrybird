@@ -21,6 +21,7 @@ protected:
 	SpriteGo* shootStandRight;
 	SpriteGo* shootStandLeft;
 	Bird* bird;
+	Pig* pig;
 
 	std::vector<Block*> blocks;
 	int blockCount = 3;
