@@ -16,15 +16,19 @@ protected:
 	b2ShapeDef standShapeDef;
 	b2BodyId standBodyId;
 
-	SpriteGo* background;
+	SpriteGo* background = nullptr;
 	std::vector<SpriteGo*> shootStand;
-	SpriteGo* shootStandRight;
-	SpriteGo* shootStandLeft;
-	Bird* bird;
-	Pig* pig;
+	SpriteGo* shootStandRight = nullptr;
+	SpriteGo* shootStandLeft = nullptr;
+	Bird* bird = nullptr;
+	Pig* pig = nullptr;
 
+	std::vector<Bird*> birds;
 	std::vector<Block*> blocks;
 	int blockCount = 5;
+
+	int tryCount = 0;
+	int tryMax = 5;
 
 	int subStepCount = 4;
 	float timeStep = 1.0f / 60.0f;

@@ -49,16 +49,12 @@ void SceneStage1::Init()
 			shootStand[i]->sortingOrder = 1;
 	}
 
-	bird = (Bird*)AddGameObject(new Bird("graphics/Angrybirds/RedBird1.png", "Bird"));
+	for(int i =0; i< tryMax; i++)
+	{
+		birds.push_back((Bird*)AddGameObject(new Bird("graphics/Angrybirds/RedBird1.png", "Bird")));
+	}
 
 	LoadBlockInfo("StageStructures/Stage1.csv");
-
-	//for (int i = 0; i < blockCount; i++)
-	//{
-	//	blocks.push_back((Block*)AddGameObject(new Block("graphics/StaticObjects/WoodSquareBlock1.png")));
-	//	//blocks[i]->SetInitPos({ 1200.f - i * 50.f,bounds.height - 85.f - 50.f });
-	//	blocks[i]->SetInitPos({ 800.f,bounds.height - 85.f - 50.f * (i + 1) });
-	//}
 
 	pig = (Pig*)AddGameObject(new Pig("graphics/Angrybirds/PigOriginal.png", "Pig"));
 	pig->SetInitPos({900.f, 480.f - 30.f });
@@ -89,7 +85,7 @@ void SceneStage1::Enter()
 
 	sf::Vector2u standTexSize = TEXTURE_MGR.Get("graphics/Angrybirds/ShootStand.png").getSize();
 
-	standBodyDef.position = b2Vec2{ 150.f / SCALE, (560.f + bird->GetCollisionRadius() + standTexSize.y * 0.7f * 0.5f) / SCALE };
+	standBodyDef.position = b2Vec2{ 150.f / SCALE, (560.f + birds[0]->GetCollisionRadius() + standTexSize.y * 0.7f * 0.5f) / SCALE};
 	standBodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &standBodyDef);
 
 	b2Polygon standBox = b2MakeBox(standTexSize.x * 0.2f / SCALE, standTexSize.y * 0.5f * 0.7f / SCALE);
@@ -97,6 +93,8 @@ void SceneStage1::Enter()
 	standShapeDef.material.friction = 1.f;
 	standShapeDef.material.restitution = 0.5f;
 	b2CreatePolygonShape(standBodyId, &standShapeDef, &standBox);
+
+	birds[tryCount]->SetBirdEnable();
 }
 
 void SceneStage1::Update(float dt)
@@ -108,9 +106,25 @@ void SceneStage1::Update(float dt)
 	{
 		b2World_Step(FRAMEWORK.GetWorldID(), timeStep, subStepCount);
 		//bird->Shoot();
-		if (bird->GetShoot())
+		for (int i = 0; i < tryCount; i++)
 		{
-			bird->SetTransform();
+			birds[i]->SetTransform();
+		}
+		if(tryCount < 5)
+		{
+			if (birds[tryCount]->GetShoot())
+			{
+				birds[tryCount]->SetTransform();
+				if (birds[tryCount]->CheckBirdStop())
+				{
+					tryCount++;
+					if (tryCount < 5)
+					{
+						birds[tryCount]->SetBirdEnable();
+					}
+
+				}
+			}
 		}
 		for (int i = 0; i < blockCount; i++)
 		{
@@ -123,8 +137,12 @@ void SceneStage1::Update(float dt)
 #ifdef DEF_DEV
 	if (InputMgr::GetKeyDown(sf::Keyboard::Space))
 	{
-		bird->Reset();
-		bird->SetShoot(false);
+		for(int i = 0 ; i < tryMax; i++)
+		{
+			birds[i]->Reset();
+			birds[i]->SetShoot(false);
+
+		}
 	}
 #endif
 }

@@ -49,11 +49,13 @@ void Bird::Reset()
 		shapeDef.material.rollingResistance = 0.5f;
 		shapeDef.material.restitution = 0.5f;
 		b2CreateCircleShape(bodyId, &shapeDef, &circleBox);
+
+		SetBirdDisable();
 		setBody = true;
 	}
 	else
 	{
-		b2Body_SetTransform(bodyId, b2Vec2{ initPos.x / SCALE, initPos.y / SCALE }, b2Rot{ 1.f,0.f });
+		b2Body_SetTransform(bodyId, b2Vec2{ shootPos.x / SCALE, shootPos.y / SCALE }, b2Rot{ 1.f,0.f });
 		b2Body_SetAngularVelocity(bodyId, 0.f);
 		b2Body_SetLinearVelocity(bodyId, b2Vec2_zero);
 	}
@@ -63,7 +65,7 @@ void Bird::Update(float dt)
 {
 	SpriteGo::Update(dt);
 
-	if(InputMgr::GetMouseButtonDown(sf::Mouse::Left) && !isCharging && !isShoot)
+	if(InputMgr::GetMouseButtonDown(sf::Mouse::Left) && !isCharging && !isShoot && canShoot)
 	{
 		if(Utils::PointInTransformBounds(sprite, GetLocalBounds(), (sf::Vector2f)InputMgr::GetMousePosition()))
 		{
@@ -71,7 +73,7 @@ void Bird::Update(float dt)
 			mouseStart = (sf::Vector2f)InputMgr::GetMousePosition();
 		}
 	}
-	if (InputMgr::GetMouseButtonUp(sf::Mouse::Left) && isCharging)
+	if (InputMgr::GetMouseButtonUp(sf::Mouse::Left) && isCharging && canShoot)
 	{
 		mouseEnd = (sf::Vector2f) InputMgr::GetMousePosition();
 		direction = Utils::GetNormal(mouseStart - mouseEnd);

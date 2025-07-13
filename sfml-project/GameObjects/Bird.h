@@ -18,7 +18,10 @@ protected:
 	float maxCharge = 70.f;
 	float forceAmount = 700.f;
 
-	sf::Vector2f initPos = { 150.f, 560.0f };
+	sf::Vector2f initPos = { 80.f, 660.0f };
+	sf::Vector2f shootPos = { 150.f, 550.f };
+
+	bool canShoot = true;
 
 public:
 	Bird(const std::string& texPlayerId = "", const std::string & name = "");
@@ -40,5 +43,16 @@ public:
 	sf::FloatRect GetGlobalBounds() { return sprite.getGlobalBounds(); }
 
 	void SetTransform();
+	void SetBirdEnable() { 
+		b2Body_Enable(bodyId);
+		Reset();
+		SetTransform();
+	}
+	void SetBirdDisable() { b2Body_Disable(bodyId); }
+
+	bool CheckBirdStop() { 
+		return b2Body_GetLinearVelocity(bodyId).x <= std::numeric_limits<float>::epsilon() &&
+			b2Body_GetLinearVelocity(bodyId).y <= std::numeric_limits<float>::epsilon();
+	}
 };
 
