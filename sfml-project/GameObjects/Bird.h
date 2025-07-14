@@ -1,14 +1,18 @@
 #pragma once
-#include "SpriteGo.h"
-class Bird : public SpriteGo
+#include "PhysicsBody.h"
+class Bird : public PhysicsBody
 {
-protected:
-	b2BodyDef bodyDef;
-	b2BodyId bodyId;
-	b2ShapeId bodyShape;
-	float collisionRadius;
+public:
+	enum class BirdType
+	{
+		None = -1,
+		Original,
+		Yellow,
 
-	bool setBody = false;
+		TypeCount,
+	};
+protected:
+	float collisionRadius;
 
 	bool isShoot = false;
 	bool isCharging = false;
@@ -19,14 +23,13 @@ protected:
 	float maxCharge = 70.f;
 	float forceAmount = 700.f;
 
-	sf::Vector2f initPos = { 80.f, 660.0f };
 	sf::Vector2f shootPos = { 150.f, 560.f };
 
 	bool canShoot = true;
 	bool isRestart = false;
 
 public:
-	Bird(const std::string& texPlayerId = "", const std::string & name = "");
+	Bird(const std::string& texPlayerId = "", const std::string& name = "");
 	virtual ~Bird() = default;
 
 	void Init() override;
@@ -36,7 +39,7 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	b2BodyId GetBodyId() { return bodyId; }
-	b2ShapeId GetShapeId() { return bodyShape; }
+	b2ShapeId GetShapeId() { return shapeId; }
 	b2BodyDef GetBodyDef() { return bodyDef; }
 	bool GetShoot() { return isShoot; }
 	void SetShoot(bool b) { isShoot = b; }
@@ -45,8 +48,7 @@ public:
 	sf::FloatRect GetLocalBounds() { return sprite.getLocalBounds(); }
 	sf::FloatRect GetGlobalBounds() { return sprite.getGlobalBounds(); }
 
-	void SetTransform();
-	void SetBirdEnable() { 
+	void SetBirdEnable() {
 		b2Body_Enable(bodyId);
 		Reset();
 		SetTransform();
@@ -54,7 +56,7 @@ public:
 	void SetDisable() { b2Body_Disable(bodyId); }
 	void SetRestart(bool re) { isRestart = re; }
 
-	bool CheckBirdStop() { 
+	bool CheckBirdStop() {
 		return b2Body_GetLinearVelocity(bodyId).x <= std::numeric_limits<float>::epsilon() &&
 			b2Body_GetLinearVelocity(bodyId).y <= std::numeric_limits<float>::epsilon();
 	}

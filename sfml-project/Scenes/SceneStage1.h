@@ -18,7 +18,6 @@ protected:
 	std::vector<SpriteGo*> shootStand;
 	SpriteGo* shootStandRight = nullptr;
 	SpriteGo* shootStandLeft = nullptr;
-	Bird* bird = nullptr;
 	Pig* pig = nullptr;
 	ShootCountUI* countUI = nullptr;
 

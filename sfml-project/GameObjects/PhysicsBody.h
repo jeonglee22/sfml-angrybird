@@ -8,6 +8,7 @@ public:
 		Invisible,
 		Block,
 		Pig,
+		Bird,
 	};
 
 protected:
