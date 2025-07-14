@@ -56,6 +56,7 @@ void Bird::Reset()
 		else
 		{
 			b2Body_SetTransform(bodyId, b2Vec2{ shootPos.x, shootPos.y}, b2Rot{ 1.f,0.f });
+			SetPosition(shootPos * SCALE);
 		}
 		b2Body_SetAngularVelocity(bodyId, 0.f);
 		b2Body_SetLinearVelocity(bodyId, b2Vec2_zero);
@@ -85,7 +86,7 @@ void Bird::Update(float dt)
 
 		b2Body_SetTransform(bodyId, 
 			b2Vec2{ position.x / SCALE, position.y / SCALE }, 
-			b2Rot{ std::cos(SpriteGo::rotation), std::sin(SpriteGo::rotation) });
+			b2Rot_identity);
 	}
 	if (InputMgr::GetMouseButtonUp(sf::Mouse::Left) && isCharging && canShoot)
 	{
@@ -100,4 +101,14 @@ void Bird::Update(float dt)
 void Bird::Draw(sf::RenderWindow& window)
 {
 	PhysicsBody::Draw(window);
+}
+
+bool Bird::CheckBirdOut()
+{
+	float posX = position.x;
+	float posY = position.y;
+	return posX <= shootPos.x * SCALE - 200.f || 
+		posX >= shootPos.x * SCALE + 200.f ||
+		posY <= shootPos.y * SCALE - 200.f ||
+		posY >= shootPos.y * SCALE + 50.f;
 }

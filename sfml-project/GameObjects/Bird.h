@@ -59,9 +59,6 @@ public:
 	void SetShoot(bool b) { isShoot = b; }
 	void SetRestart(bool re) { isRestart = re; }
 
-	bool CheckBirdStop() {
-		return b2Body_GetLinearVelocity(bodyId).x <= std::numeric_limits<float>::epsilon() &&
-			b2Body_GetLinearVelocity(bodyId).y <= std::numeric_limits<float>::epsilon();
-	}
+	bool CheckBirdOut();
 };
 

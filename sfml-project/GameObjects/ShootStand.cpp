@@ -48,12 +48,12 @@ void ShootStand::Reset()
 
 	sf::Vector2u standTexSize = TEXTURE_MGR.Get("graphics/Angrybirds/ShootStand.png").getSize();
 	SetBoxSize(standTexSize.x * 0.2f, standTexSize.y * 0.5f * 0.7f);
-	SetBoxPos(beforeShootPos.x, beforeShootPos.y);
-	SetBoxFactor(0.8f, 0.5f);
+	SetBoxPos(shootPos.x, shootPos.y);
+	SetBoxFactor(0.8f, 0.2f);
 	SetPosition(initPos * SCALE);
 	SetRotation(0.f);
 
-	bodyDef.position = b2Vec2{ beforeShootPos.x, beforeShootPos.y };
+	bodyDef.position = b2Vec2{ initPos.x, initPos.y };
 	bodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &bodyDef);
 
 	b2Polygon groundBox = b2MakeBox(texSize.x, texSize.y);
@@ -107,16 +107,6 @@ void ShootStand::Update(float dt)
 void ShootStand::Draw(sf::RenderWindow& window)
 {
 	PhysicsBody::Draw(window);
-}
-
-void ShootStand::ChangeToAfterPos()
-{
-	b2Body_SetTransform(bodyId, b2Vec2{ afterShootPos.x, afterShootPos.y }, rotation);
-}
-
-void ShootStand::ChangeToBeforePos()
-{
-	b2Body_SetTransform(bodyId, b2Vec2{ beforeShootPos.x, beforeShootPos.y }, rotation);
 }
 
 void ShootStand::SetBandActive(bool b)
