@@ -10,7 +10,7 @@ void Bird::Init()
 {
 	PhysicsBody::Init();
 
-	initPos = { 80.f, 660.0f };
+	initPos = { 80.f / SCALE, 660.0f / SCALE };
 }
 
 void Bird::Release()
@@ -22,11 +22,11 @@ void Bird::Reset()
 {
 	SpriteGo::Reset();
 
-	SetPosition(initPos);
+	SetPosition(initPos * SCALE);
 	SetRotation(0.f);
 	if (!setBody)
 	{
-		bodyDef.position = b2Vec2{ initPos.x / SCALE, initPos.y / SCALE };
+		bodyDef.position = b2Vec2{ initPos.x, initPos.y };
 		bodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &bodyDef);
 
 		collisionRadius = sprite.getTexture()->getSize().x * 0.5f * 0.8f;
@@ -49,13 +49,13 @@ void Bird::Reset()
 	{
 		if (isRestart)
 		{
-			b2Body_SetTransform(bodyId, b2Vec2{ initPos.x / SCALE, initPos.y / SCALE }, b2Rot{ 1.f,0.f });
+			b2Body_SetTransform(bodyId, b2Vec2{ initPos.x , initPos.y  }, b2Rot{ 1.f,0.f });
 			isRestart = false;
 			SetDisable();
 		}
 		else
 		{
-			b2Body_SetTransform(bodyId, b2Vec2{ shootPos.x / SCALE, shootPos.y / SCALE }, b2Rot{ 1.f,0.f });
+			b2Body_SetTransform(bodyId, b2Vec2{ shootPos.x, shootPos.y}, b2Rot{ 1.f,0.f });
 		}
 		b2Body_SetAngularVelocity(bodyId, 0.f);
 		b2Body_SetLinearVelocity(bodyId, b2Vec2_zero);

@@ -12,7 +12,7 @@ public:
 	};
 
 protected:
-	b2BodyDef bodyDef = b2DefaultBodyDef();;
+	b2BodyDef bodyDef = b2DefaultBodyDef();
 	b2ShapeDef shapeDef;
 	b2BodyId bodyId;
 	b2ShapeId shapeId;

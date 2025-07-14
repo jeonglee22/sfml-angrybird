@@ -90,9 +90,6 @@
     <ClCompile Include="Scenes\SceneStage1.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects\Pig.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="GameUIs\ShootCountUI.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -103,6 +100,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="GameObjects\Bird.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Pig.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -191,9 +191,6 @@
     <ClInclude Include="Scenes\SceneStage1.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjects\Pig.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="GameUIs\ShootCountUI.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -204,6 +201,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\Bird.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Pig.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,28 +2,18 @@
 #include "Pig.h"
 
 Pig::Pig(const std::string& texPlayerId, const std::string& name)
-	: SpriteGo(texPlayerId, name)
+	: PhysicsBody(Type::Pig, texPlayerId, name)
 {
 }
 
 void Pig::Init()
 {
-	SpriteGo::Init();
-
-	sortingLayer = SortingLayers::Foreground;
-	sortingOrder = 0;
-
-	bodyDef = b2DefaultBodyDef();
-	bodyDef.type = b2_dynamicBody;
-
-	//initPos = sf::Vector2f{ , };
-
-	SetOrigin(Origins::MC);
+	PhysicsBody::Init();
 }
 
 void Pig::Release()
 {
-	SpriteGo::Release();
+	PhysicsBody::Release();
 
 	b2DestroyBody(bodyId);
 	bodyId = b2_nullBodyId;
@@ -35,11 +25,11 @@ void Pig::Reset()
 
 	hp = maxHp;
 
-	SetPosition(initPos);
+	SetPosition(initPos * SCALE);
 	SetRotation(0.f);
 	if (!setBody)
 	{
-		bodyDef.position = b2Vec2{ initPos.x / SCALE, initPos.y / SCALE };
+		bodyDef.position = b2Vec2{ initPos.x , initPos.y  };
 		bodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &bodyDef);
 
 		collisionRadius = sprite.getTexture()->getSize().x * 0.5f * 0.8f;
@@ -52,14 +42,14 @@ void Pig::Reset()
 		shapeDef.material.friction = 0.3f;
 		shapeDef.material.rollingResistance = 0.2f;
 		shapeDef.material.restitution = 0.5f;
-		bodyShape = b2CreateCircleShape(bodyId, &shapeDef, &circleBox);
-		b2Shape_EnableHitEvents(bodyShape, true);
+		shapeId = b2CreateCircleShape(bodyId, &shapeDef, &circleBox);
+		b2Shape_EnableHitEvents(shapeId, true);
 
 		setBody = true;
 	}
 	else
 	{
-		b2Body_SetTransform(bodyId, b2Vec2{ initPos.x / SCALE, initPos.y / SCALE }, b2Rot{ 1.f,0.f });
+		b2Body_SetTransform(bodyId, b2Vec2{ initPos.x , initPos.y }, b2Rot{ 1.f,0.f });
 	}
 }
 
@@ -71,14 +61,6 @@ void Pig::Update(float dt)
 void Pig::Draw(sf::RenderWindow& window)
 {
 	SpriteGo::Draw(window);
-}
-
-void Pig::SetTransform()
-{
-	b2Vec2 position = b2Body_GetPosition(bodyId);
-	b2Rot rotation = b2Body_GetRotation(bodyId);
-	SetPosition({ position.x * SCALE, position.y * SCALE });
-	SetRotation(b2Rot_GetAngle(rotation) * 180 / B2_PI);
 }
 
 void Pig::TakeDamage(int damage)
