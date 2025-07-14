@@ -119,7 +119,7 @@ void SceneStage1::Update(float dt)
 				if (birds[tryCount]->CheckBirdStop())
 				{
 					tryCount++;
-					countUI->SetCount(birds.size() - tryCount);
+					countUI->SetCount(tryMax - tryCount);
 					if (tryCount < 5)
 					{
 						birds[tryCount]->SetBirdEnable();
@@ -149,10 +149,13 @@ void SceneStage1::Update(float dt)
 	{
 		for(int i = 0 ; i < tryMax; i++)
 		{
+			birds[i]->SetRestart(true);
 			birds[i]->Reset();
 			birds[i]->SetShoot(false);
-
 		}
+		tryCount = 0;
+		countUI->SetCount(tryMax - tryCount);
+		birds[tryCount]->SetBirdEnable();
 	}
 #endif
 }

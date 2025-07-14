@@ -56,7 +56,16 @@ void Bird::Reset()
 	}
 	else
 	{
-		b2Body_SetTransform(bodyId, b2Vec2{ shootPos.x / SCALE, shootPos.y / SCALE }, b2Rot{ 1.f,0.f });
+		if(isRestart)
+		{
+			b2Body_SetTransform(bodyId, b2Vec2{ initPos.x / SCALE, initPos.y / SCALE }, b2Rot{ 1.f,0.f });
+			isRestart = false;
+			SetDisable();
+		}
+		else
+		{
+			b2Body_SetTransform(bodyId, b2Vec2{ shootPos.x / SCALE, shootPos.y / SCALE }, b2Rot{ 1.f,0.f });
+		}
 		b2Body_SetAngularVelocity(bodyId, 0.f);
 		b2Body_SetLinearVelocity(bodyId, b2Vec2_zero);
 	}
@@ -79,10 +88,10 @@ void Bird::Update(float dt)
 		mouseEnd = (sf::Vector2f) InputMgr::GetMousePosition();
 		direction = Utils::GetNormal(mouseStart - mouseEnd);
 		float distance = Utils::Clamp(Utils::Distance(mouseStart, mouseEnd), minCharge, maxCharge);
-		isShoot = true;
-		std::cout << distance << std::endl;
+		
 		sf::Vector2f Force(direction.x * forceAmount * (distance / maxCharge), direction.y * forceAmount * (distance / maxCharge));
 		b2Body_ApplyForceToCenter(bodyId, b2Vec2{ Force.x, Force.y }, true);
+		isShoot = true;
 		isCharging = false;
 	}
 }

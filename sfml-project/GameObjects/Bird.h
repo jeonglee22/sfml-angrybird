@@ -23,6 +23,7 @@ protected:
 	sf::Vector2f shootPos = { 150.f, 560.f };
 
 	bool canShoot = true;
+	bool isRestart = false;
 
 public:
 	Bird(const std::string& texPlayerId = "", const std::string & name = "");
@@ -51,6 +52,7 @@ public:
 		SetTransform();
 	}
 	void SetDisable() { b2Body_Disable(bodyId); }
+	void SetRestart(bool re) { isRestart = re; }
 
 	bool CheckBirdStop() { 
 		return b2Body_GetLinearVelocity(bodyId).x <= std::numeric_limits<float>::epsilon() &&
