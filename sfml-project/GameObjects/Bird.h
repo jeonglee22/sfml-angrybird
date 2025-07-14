@@ -50,7 +50,7 @@ public:
 		Reset();
 		SetTransform();
 	}
-	void SetBirdDisable() { b2Body_Disable(bodyId); }
+	void SetDisable() { b2Body_Disable(bodyId); }
 
 	bool CheckBirdStop() { 
 		return b2Body_GetLinearVelocity(bodyId).x <= std::numeric_limits<float>::epsilon() &&

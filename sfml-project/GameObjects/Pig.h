@@ -28,10 +28,14 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	b2ShapeId GetShapeId() { return bodyShape; }
+	int GetHp() { return hp; }
 
 	void SetInitPos(const sf::Vector2f& pos) { initPos = pos; }
 	void SetTransform();
+	void SetDisable() { b2Body_Disable(bodyId); }
 
 	void TakeDamage(int damage);
+
+	bool IsDead() { return isDead; }
 };
 

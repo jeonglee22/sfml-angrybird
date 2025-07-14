@@ -134,7 +134,23 @@ void SceneStage1::Update(float dt)
 
 		b2ContactHitEvent* hitEvents = b2World_GetContactEvents(FRAMEWORK.GetWorldID()).hitEvents;
 		int hitCount = b2World_GetContactEvents(FRAMEWORK.GetWorldID()).hitCount;
-		
+		for (int i = 0; i < hitCount; i++)
+		{
+			b2ContactHitEvent event = hitEvents[i];
+			b2ShapeId shapeId1 = event.shapeIdA;
+			b2ShapeId shapeId2 = event.shapeIdB;
+			if (shapeId1.index1 == pig->GetShapeId().index1 || shapeId2.index1 == pig->GetShapeId().index1)
+			{
+				pig->TakeDamage(20);
+				std::cout << pig->GetHp() << std::endl;
+			}
+		}
+		//std::cout << pig->IsDead() << std::endl;
+		if (pig->IsDead())
+		{
+			pig->SetDisable();
+			pig->SetActive(false);
+		}
 	}
 
 #ifdef DEF_DEV

@@ -47,6 +47,7 @@ void Block::Reset()
 		shapeDef.material.friction = 0.5f;
 		shapeDef.material.restitution = 0.5f;
 		bodyShape = b2CreatePolygonShape(bodyId, &shapeDef, &bodyBox);
+		std::cout << "Block : " << bodyShape.index1 << ", " << bodyShape.generation << ", " << bodyShape.world0 << std::endl;
 		b2Shape_EnableHitEvents(bodyShape, true);
 
 		setBody = true;
