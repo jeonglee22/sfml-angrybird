@@ -14,19 +14,19 @@ void ShootStand::Init()
 	rightBody->SetPosition({ 143.f, 550.f });
 	rightBody->SetScale({ 1.f,0.7f });
 	rightBody->sortingLayer = SortingLayers::Foreground;
-	rightBody->sortingOrder = -1;
+	rightBody->sortingOrder = -2;
 
 	leftBody = new SpriteGo("graphics/Angrybirds/StandLeft.png");
 	leftBody->SetOrigin(Origins::TR);
 	leftBody->SetPosition({ 159.f, 545.f });
 	leftBody->SetScale({ 1.f,0.7f });
 	leftBody->sortingLayer = SortingLayers::Foreground;
-	leftBody->sortingOrder = 1;
+	leftBody->sortingOrder = 2;
 
 	for (int i = 0; i < (int)Part::PartCount; i++)
 	{
 		Band.push_back(new SpriteGo(i == 2 ? "graphics/band2.png" : "graphics/band.png"));
-		Band[i]->SetOrigin(Origins::MR);
+		Band[i]->SetOrigin(i == 2 ? Origins::MC : Origins::MR);
 		Band[i]->sortingLayer = SortingLayers::Foreground;
 		Band[i]->sortingOrder = (i == 1 ? -1 : 1);
 		Band[i]->SetActive(false);
@@ -82,15 +82,16 @@ void ShootStand::Update(float dt)
 		mouseEnd = (sf::Vector2f)InputMgr::GetMousePosition();
 		sf::Vector2f leftBandPos = GetLeftBandPos();
 		sf::Vector2f rightBandPos = GetRightBandPos();
-		sf::Vector2f bodyBandPos = GetBodyBandPos();
 		float bandScale = Utils::Clamp(Utils::Distance(mouseStart, mouseEnd), bird->GetMinCharge(), bird->GetMaxCharge());
 		sf::Vector2f shootPos = Utils::GetNormal(mouseEnd - mouseStart) * bandScale + mouseStart;
 		
 		SetLeftBandRotation(Utils::Angle(leftBandPos - shootPos));
 		SetRightBandRotation(Utils::Angle(rightBandPos - shootPos));
-		SetBodyBandRotation(Utils::Angle(shootPos - bodyBandPos));
-		SetLeftBandScale(Utils::Distance(leftBandPos, shootPos) / 10.f);
-		SetRightBandScale(Utils::Distance(rightBandPos, shootPos) / 10.f);
+		SetBodyBandRotation(Utils::Angle(mouseStart - shootPos));
+		std::cout << Utils::Angle(mouseStart - shootPos) << std::endl;
+
+		SetLeftBandScale(Utils::Distance(leftBandPos, shootPos));
+		SetRightBandScale(Utils::Distance(rightBandPos, shootPos));
 		SetBandPos(shootPos);
 	}
 	if (InputMgr::GetMouseButtonUp(sf::Mouse::Left) && isShoot)
