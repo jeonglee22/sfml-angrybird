@@ -110,7 +110,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\SFML-2.6.2\include;.\Framework;.\Scenes;$(ProjectDir);.\GameObjects;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\SFML-2.6.2\include;.\Framework;.\Scenes;$(ProjectDir);.\GameObjects;.\GameUIs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
@@ -129,7 +129,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\SFML-2.6.2\include;.\Framework;.\Scenes;$(ProjectDir);.\GameObjects;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\SFML-2.6.2\include;.\Framework;.\Scenes;$(ProjectDir);.\GameObjects;.\GameUIs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -163,6 +163,7 @@
     <ClCompile Include="Framework\SceneMgr.cpp" />
     <ClCompile Include="Framework\SoundMgr.cpp" />
     <ClCompile Include="Scenes\SceneTest.cpp" />
+    <ClCompile Include="GameUIs\ShootCountUI.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -197,6 +198,7 @@
     <ClInclude Include="Framework\SceneMgr.h" />
     <ClInclude Include="Framework\SoundMgr.h" />
     <ClInclude Include="Scenes\SceneTest.h" />
+    <ClInclude Include="GameUIs\ShootCountUI.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Framework\TextGo.h" />
     <ClInclude Include="Framework\Utils.h" />

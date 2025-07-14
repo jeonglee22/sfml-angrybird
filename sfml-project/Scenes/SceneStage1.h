@@ -5,6 +5,7 @@ class SpriteGo;
 class Bird;
 class Block;
 class Pig;
+class ShootCountUI;
 
 class SceneStage1 : public Scene
 {
@@ -22,6 +23,7 @@ protected:
 	SpriteGo* shootStandLeft = nullptr;
 	Bird* bird = nullptr;
 	Pig* pig = nullptr;
+	ShootCountUI* countUI = nullptr;
 
 	std::vector<Bird*> birds;
 	std::vector<Block*> blocks;
@@ -45,5 +47,6 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	void LoadBlockInfo(const std::string& filePath);
+	void CheckPigCollision();
 };
 

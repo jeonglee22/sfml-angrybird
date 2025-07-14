@@ -9,6 +9,9 @@ ShootCountUI::ShootCountUI(const std::string& fontId, const std::string& name)
 void ShootCountUI::Init()
 {
 	TextGo::Init();
+
+	sortingLayer = SortingLayers::UI;
+	sortingOrder = 0;
 }
 
 void ShootCountUI::Release()
@@ -22,9 +25,9 @@ void ShootCountUI::Reset()
 
 	TextGo::Reset();
 	text.setCharacterSize(30);
-	text.setColor(sf::Color::Black);
+	text.setFillColor(sf::Color::Black);
 	SetCount(0);
-	SetPosition({ bounds.width - 200.f, 100.f });
+	SetPosition({ bounds.width - 200.f, 50.f });
 }
 
 void ShootCountUI::Update(float dt)
