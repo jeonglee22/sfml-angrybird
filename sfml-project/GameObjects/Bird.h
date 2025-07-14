@@ -23,7 +23,7 @@ protected:
 	float maxCharge = 70.f;
 	float forceAmount = 700.f;
 
-	sf::Vector2f shootPos = { 150.f / SCALE, 560.f / SCALE };
+	sf::Vector2f shootPos = { 150.f / SCALE, 570.f / SCALE };
 
 	bool canShoot = true;
 	bool isRestart = false;

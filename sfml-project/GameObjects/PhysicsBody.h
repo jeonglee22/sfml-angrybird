@@ -7,6 +7,7 @@ public:
 	{
 		Invisible,
 		Block,
+		ShootStand,
 		Pig,
 		Bird,
 	};

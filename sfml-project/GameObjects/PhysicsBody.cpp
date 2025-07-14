@@ -39,7 +39,7 @@ void PhysicsBody::Reset()
 
 	if (!setBody)
 	{
-		SetPosition(initPos);
+		SetPosition(initPos * SCALE);
 		SetRotation(0.f);
 
 		bodyDef.position = b2Vec2{ initPos.x, initPos.y };

@@ -7,17 +7,14 @@ class Block;
 class Pig;
 class ShootCountUI;
 class PhysicsBody;
+class ShootStand;
 
 class SceneStage1 : public Scene
 {
 protected:
 	PhysicsBody* ground;
-	PhysicsBody* stand;
-
 	SpriteGo* background = nullptr;
-	std::vector<SpriteGo*> shootStand;
-	SpriteGo* shootStandRight = nullptr;
-	SpriteGo* shootStandLeft = nullptr;
+	ShootStand* shootStand;
 	Pig* pig = nullptr;
 	ShootCountUI* countUI = nullptr;
 

@@ -38,7 +38,6 @@ void SpriteGo::SetOrigin(Origins preset)
 	{
 		origin = Utils::SetOrigin(sprite, originPreset);
 	}
-
 }
 
 void SpriteGo::Init()

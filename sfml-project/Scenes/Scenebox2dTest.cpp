@@ -2,7 +2,7 @@
 #include "Scenebox2dTest.h"
 #include "SpriteGo.h"
 #include "Bird.h"
-#include "Block.h"
+//#include "Block.h"
 
 Scenebox2dTest::Scenebox2dTest()
 	: Scene(SceneIds::Test)
@@ -25,12 +25,12 @@ void Scenebox2dTest::Init()
 
 	bird = (Bird*)AddGameObject(new Bird("graphics/Angrybirds/RedBird1.png", "Bird"));
 
-	for (int i = 0; i < blockCount; i++)
-	{
-		blocks.push_back((Block*)AddGameObject(new Block("graphics/StaticObjects/WoodSquareBlock1.png")));
-		//blocks[i]->SetInitPos({ 1200.f - i * 50.f,bounds.height - 85.f - 50.f });
-		blocks[i]->SetInitPos({ 800.f,bounds.height - 85.f - 50.f * (i+1)});
-	}
+	//for (int i = 0; i < blockCount; i++)
+	//{
+	//	blocks.push_back((Block*)AddGameObject(new Block("graphics/StaticObjects/WoodSquareBlock1.png")));
+	//	//blocks[i]->SetInitPos({ 1200.f - i * 50.f,bounds.height - 85.f - 50.f });
+	//	blocks[i]->SetInitPos({ 800.f,bounds.height - 85.f - 50.f * (i+1)});
+	//}
 
 	Scene::Init();
 }
@@ -79,10 +79,10 @@ void Scenebox2dTest::Update(float dt)
 			bird->SetTransform();
 			timeValue = 0.f;
 		}
-		for (int i = 0; i < blockCount; i++)
+		/*for (int i = 0; i < blockCount; i++)
 		{
 			blocks[i]->SetTransform();
-		}
+		}*/
 	}
 #ifdef DEF_DEV
 	if (InputMgr::GetKeyDown(sf::Keyboard::Space))

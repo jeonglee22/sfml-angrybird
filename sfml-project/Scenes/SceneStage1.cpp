@@ -6,6 +6,7 @@
 #include "rapidcsv.h"
 #include "ShootCountUI.h"
 #include "PhysicsBody.h"
+#include "ShootStand.h"
 
 SceneStage1::SceneStage1()
 	: Scene(SceneIds::Stage1)
@@ -31,29 +32,7 @@ void SceneStage1::Init()
 	background->sortingOrder = 0;
 
 	ground = (PhysicsBody*)AddGameObject(new PhysicsBody(PhysicsBody::Type::Invisible));
-	stand = (PhysicsBody*)AddGameObject(new PhysicsBody(PhysicsBody::Type::Invisible));
-
-	for (int i = 0; i < 2; i++)
-	{
-		if (i == 0)
-		{
-			shootStand.push_back((SpriteGo*)AddGameObject(new SpriteGo("graphics/Angrybirds/StandRight.png")));
-			shootStand[i]->SetOrigin(Origins::TL);
-			shootStand[i]->SetPosition({ 143.f, 550.f });
-		}
-		else
-		{
-			shootStand.push_back((SpriteGo*)AddGameObject(new SpriteGo("graphics/Angrybirds/StandLeft.png")));
-			shootStand[i]->SetOrigin(Origins::TR);
-			shootStand[i]->SetPosition({ 159.f, 545.f });
-		}
-		shootStand[i]->SetScale({ 1.f,0.7f });
-		shootStand[i]->sortingLayer = SortingLayers::Foreground;
-		if(i == 0)
-			shootStand[i]->sortingOrder = -1;
-		else
-			shootStand[i]->sortingOrder = 1;
-	}
+	shootStand = (ShootStand*)AddGameObject(new ShootStand());
 
 	for(int i =0; i< tryMax; i++)
 	{
@@ -68,6 +47,9 @@ void SceneStage1::Init()
 	countUI = (ShootCountUI*)AddGameObject(new ShootCountUI());
 
 	Scene::Init();
+
+	AddGameObject(shootStand->GetLeftPart());
+	AddGameObject(shootStand->GetRightPart());
 }
 
 void SceneStage1::Enter()
@@ -85,13 +67,6 @@ void SceneStage1::Enter()
 	ground->SetBoxFactor(0.8f, 0.5f);
 
 	Scene::Enter();
-
-	sf::Vector2u standTexSize = TEXTURE_MGR.Get("graphics/Angrybirds/ShootStand.png").getSize();
-
-	stand->SetBoxSize(standTexSize.x * 0.2f, standTexSize.y * 0.5f * 0.7f);
-	stand->SetBoxPos(150.f, (560.f + birds[0]->GetCollisionRadius() + standTexSize.y * 0.7f * 0.5f));
-	stand->SetBoxFactor(0.8f, 0.5f);
-	stand->Reset();
 
 	birds[tryCount]->SetBirdEnable();
 	countUI->SetCount(birds.size());
