@@ -88,7 +88,6 @@ void ShootStand::Update(float dt)
 		SetLeftBandRotation(Utils::Angle(leftBandPos - shootPos));
 		SetRightBandRotation(Utils::Angle(rightBandPos - shootPos));
 		SetBodyBandRotation(Utils::Angle(mouseStart - shootPos));
-		std::cout << Utils::Angle(mouseStart - shootPos) << std::endl;
 
 		SetLeftBandScale(Utils::Distance(leftBandPos, shootPos));
 		SetRightBandScale(Utils::Distance(rightBandPos, shootPos));

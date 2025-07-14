@@ -18,6 +18,7 @@ protected:
 	bool isCharging = false;
 	sf::Vector2f mouseStart;
 	sf::Vector2f mouseEnd;
+	float chargeDistance;
 
 	float minCharge = 30.f;
 	float maxCharge = 70.f;

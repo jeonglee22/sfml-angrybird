@@ -71,16 +71,26 @@ void Bird::Update(float dt)
 		if (Utils::PointInTransformBounds(sprite, GetLocalBounds(), (sf::Vector2f)InputMgr::GetMousePosition()))
 		{
 			isCharging = true;
-			mouseStart = (sf::Vector2f)InputMgr::GetMousePosition();
+			mouseStart = GetPosition();
 		}
+	}
+	if (InputMgr::GetMouseButton(sf::Mouse::Left) && isCharging && !isShoot && canShoot)
+	{
+		mouseEnd = (sf::Vector2f)InputMgr::GetMousePosition();
+		direction = Utils::GetNormal(mouseEnd - mouseStart);
+		chargeDistance = Utils::Clamp(Utils::Distance(mouseStart, mouseEnd), minCharge, maxCharge);
+
+		SetPosition(mouseStart + (chargeDistance - sprite.getTexture()->getSize().x * 0.3f ) * direction);
+		SetRotation(Utils::Angle(Utils::GetNormal(mouseStart - mouseEnd)));
+
+		b2Body_SetTransform(bodyId, 
+			b2Vec2{ position.x / SCALE, position.y / SCALE }, 
+			b2Rot{ std::cos(SpriteGo::rotation), std::sin(SpriteGo::rotation) });
 	}
 	if (InputMgr::GetMouseButtonUp(sf::Mouse::Left) && isCharging && canShoot)
 	{
-		mouseEnd = (sf::Vector2f)InputMgr::GetMousePosition();
-		direction = Utils::GetNormal(mouseStart - mouseEnd);
-		float distance = Utils::Clamp(Utils::Distance(mouseStart, mouseEnd), minCharge, maxCharge);
-
-		sf::Vector2f Force(direction.x * forceAmount * (distance / maxCharge), direction.y * forceAmount * (distance / maxCharge));
+		direction *= -1.f;
+		sf::Vector2f Force(direction.x * forceAmount * (chargeDistance / maxCharge), direction.y * forceAmount * (chargeDistance / maxCharge));
 		b2Body_ApplyForceToCenter(bodyId, b2Vec2{ Force.x, Force.y }, true);
 		isShoot = true;
 		isCharging = false;
