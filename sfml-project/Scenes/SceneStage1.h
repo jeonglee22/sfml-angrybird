@@ -6,16 +6,13 @@ class Bird;
 class Block;
 class Pig;
 class ShootCountUI;
+class InvisiblePhysicsBody;
 
 class SceneStage1 : public Scene
 {
 protected:
-	b2BodyDef groundBodyDef = b2DefaultBodyDef();
-	b2ShapeDef groundShapeDef;
-	b2BodyId groundBodyId;
-	b2BodyDef standBodyDef = b2DefaultBodyDef();
-	b2ShapeDef standShapeDef;
-	b2BodyId standBodyId;
+	InvisiblePhysicsBody* ground;
+	InvisiblePhysicsBody* stand;
 
 	SpriteGo* background = nullptr;
 	std::vector<SpriteGo*> shootStand;

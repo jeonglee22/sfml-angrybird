@@ -6,6 +6,7 @@
 #include "Pig.h"
 #include "rapidcsv.h"
 #include "ShootCountUI.h"
+#include "InvisiblePhysicsBody.h"
 
 SceneStage1::SceneStage1()
 	: Scene(SceneIds::Stage1)
@@ -29,6 +30,9 @@ void SceneStage1::Init()
 	background->SetScale({ 1.f, 768.f / 1082.f });
 	background->sortingLayer = SortingLayers::Background;
 	background->sortingOrder = 0;
+
+	ground = (InvisiblePhysicsBody*)AddGameObject(new InvisiblePhysicsBody());
+	stand = (InvisiblePhysicsBody*)AddGameObject(new InvisiblePhysicsBody());
 
 	for (int i = 0; i < 2; i++)
 	{
@@ -77,27 +81,18 @@ void SceneStage1::Enter()
 	worldView.setSize(size);
 	worldView.setCenter(center);
 
+	ground->SetBoxSize(bounds.width * 0.5f, 85.f);
+	ground->SetBoxPos(bounds.width * 0.5f, bounds.height);
+	ground->SetBoxFactor(1.f, 0.5f);
+
 	Scene::Enter();
-
-	groundBodyDef.position = b2Vec2{ bounds.width * 0.5f / SCALE, bounds.height / SCALE };
-	groundBodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &groundBodyDef);
-
-	b2Polygon groundBox = b2MakeBox(bounds.width * 0.5f / SCALE, 85.f / SCALE);
-	groundShapeDef = b2DefaultShapeDef();
-	groundShapeDef.material.friction = 1.f;
-	groundShapeDef.material.restitution = 0.5f;
-	b2CreatePolygonShape(groundBodyId, &groundShapeDef, &groundBox);
 
 	sf::Vector2u standTexSize = TEXTURE_MGR.Get("graphics/Angrybirds/ShootStand.png").getSize();
 
-	standBodyDef.position = b2Vec2{ 150.f / SCALE, (560.f + birds[0]->GetCollisionRadius() + standTexSize.y * 0.7f * 0.5f) / SCALE};
-	standBodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &standBodyDef);
-
-	b2Polygon standBox = b2MakeBox(standTexSize.x * 0.2f / SCALE, standTexSize.y * 0.5f * 0.7f / SCALE);
-	standShapeDef = b2DefaultShapeDef();
-	standShapeDef.material.friction = 1.f;
-	standShapeDef.material.restitution = 0.5f;
-	b2CreatePolygonShape(standBodyId, &standShapeDef, &standBox);
+	stand->SetBoxSize(standTexSize.x * 0.2f, standTexSize.y * 0.5f * 0.7f);
+	stand->SetBoxPos(150.f, (560.f + birds[0]->GetCollisionRadius() + standTexSize.y * 0.7f * 0.5f));
+	stand->SetBoxFactor(1.f, 0.5f);
+	stand->Reset();
 
 	birds[tryCount]->SetBirdEnable();
 	countUI->SetCount(birds.size());

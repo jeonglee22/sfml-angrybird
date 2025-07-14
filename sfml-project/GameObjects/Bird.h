@@ -20,7 +20,7 @@ protected:
 	float forceAmount = 700.f;
 
 	sf::Vector2f initPos = { 80.f, 660.0f };
-	sf::Vector2f shootPos = { 150.f, 550.f };
+	sf::Vector2f shootPos = { 150.f, 560.f };
 
 	bool canShoot = true;
 
