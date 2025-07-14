@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ShootStand.h"
+#include "Bird.h"
 
 ShootStand::ShootStand(const std::string& name)
 	:PhysicsBody(Type::ShootStand)
@@ -21,6 +22,18 @@ void ShootStand::Init()
 	leftBody->SetScale({ 1.f,0.7f });
 	leftBody->sortingLayer = SortingLayers::Foreground;
 	leftBody->sortingOrder = 1;
+
+	for (int i = 0; i < (int)Part::PartCount; i++)
+	{
+		Band.push_back(new SpriteGo(i == 2 ? "graphics/band2.png" : "graphics/band.png"));
+		Band[i]->SetOrigin(Origins::MR);
+		Band[i]->sortingLayer = SortingLayers::Foreground;
+		Band[i]->sortingOrder = (i == 1 ? -1 : 1);
+		Band[i]->SetActive(false);
+	}
+	Band[(int)Part::Left]->SetPosition({125.f, 570.f});
+	Band[(int)Part::Right]->SetPosition({165.f, 570.f});
+	Band[(int)Part::Body]->SetPosition({150.f, 570.f});
 }
 
 void ShootStand::Release()
@@ -54,6 +67,41 @@ void ShootStand::Reset()
 void ShootStand::Update(float dt)
 {
 	PhysicsBody::Update(dt);
+
+	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+	{
+		if (Utils::PointInTransformBounds(bird->GetSprite(), bird->GetLocalBounds(), (sf::Vector2f)InputMgr::GetMousePosition()))
+		{
+			mouseStart = bird->GetPosition();
+			SetBandActive(true);
+			isShoot = true;
+		}
+	}
+	if (InputMgr::GetMouseButton(sf::Mouse::Left) && isShoot)
+	{
+		mouseEnd = (sf::Vector2f)InputMgr::GetMousePosition();
+		sf::Vector2f leftBandPos = GetLeftBandPos();
+		sf::Vector2f rightBandPos = GetRightBandPos();
+		sf::Vector2f bodyBandPos = GetBodyBandPos();
+		float bandScale = Utils::Clamp(Utils::Distance(mouseStart, mouseEnd), bird->GetMinCharge(), bird->GetMaxCharge());
+		sf::Vector2f shootPos = Utils::GetNormal(mouseEnd - mouseStart) * bandScale + mouseStart;
+		
+		SetLeftBandRotation(Utils::Angle(leftBandPos - shootPos));
+		SetRightBandRotation(Utils::Angle(rightBandPos - shootPos));
+		SetBodyBandRotation(Utils::Angle(shootPos - bodyBandPos));
+		SetLeftBandScale(Utils::Distance(leftBandPos, shootPos) / 10.f);
+		SetRightBandScale(Utils::Distance(rightBandPos, shootPos) / 10.f);
+		SetBandPos(shootPos);
+	}
+	if (InputMgr::GetMouseButtonUp(sf::Mouse::Left) && isShoot)
+	{
+		SetLeftBandRotation(0.f);
+		SetRightBandRotation(0.f);
+		SetLeftBandScale(1.f);
+		SetRightBandScale(1.f);
+		SetBandActive(false);
+		isShoot = false;
+	}
 }
 
 void ShootStand::Draw(sf::RenderWindow& window)
@@ -70,3 +118,41 @@ void ShootStand::ChangeToBeforePos()
 {
 	b2Body_SetTransform(bodyId, b2Vec2{ beforeShootPos.x, beforeShootPos.y }, rotation);
 }
+
+void ShootStand::SetBandActive(bool b)
+{
+	for (auto band : Band)
+	{
+		band->SetActive(b);
+	}
+}
+
+void ShootStand::SetLeftBandRotation(float r)
+{
+	Band[(int)Part::Left]->SetRotation(r);
+}
+
+void ShootStand::SetRightBandRotation(float r)
+{
+	Band[(int)Part::Right]->SetRotation(r);
+}
+
+void ShootStand::SetBodyBandRotation(float r)
+{
+	Band[(int)Part::Body]->SetRotation(r);
+}
+
+void ShootStand::SetLeftBandScale(float s)
+{
+	Band[(int)Part::Left]->SetScale({s,1.f});
+}
+void ShootStand::SetRightBandScale(float s)
+{
+	Band[(int)Part::Right]->SetScale({s,1.f});
+}
+
+void ShootStand::SetBandPos(const sf::Vector2f& pos)
+{
+	Band[(int)Part::Body]->SetPosition(pos);
+}
+

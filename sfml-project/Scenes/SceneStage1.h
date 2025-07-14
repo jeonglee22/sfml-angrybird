@@ -29,6 +29,11 @@ protected:
 	float timeStep = 1.0f / 60.0f;
 	float timeValue = 0.f;
 
+	sf::Vector2f mouseStart;
+	sf::Vector2f mouseEnd;
+
+	bool isShoot = false;
+
 public:
 	SceneStage1();
 	~SceneStage1() = default;

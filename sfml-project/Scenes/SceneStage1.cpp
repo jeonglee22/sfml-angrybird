@@ -20,6 +20,8 @@ void SceneStage1::Init()
 	texIds.push_back("graphics/Angrybirds/RedBird1.png");
 	texIds.push_back("graphics/Angrybirds/PigOriginal.png");
 	texIds.push_back("graphics/LevelOne.png");
+	texIds.push_back("graphics/band.png");
+	texIds.push_back("graphics/band2.png");
 	texIds.push_back("graphics/Angrybirds/ShootStand.png");
 	texIds.push_back("graphics/Angrybirds/StandRight.png");
 	texIds.push_back("graphics/Angrybirds/StandLeft.png");
@@ -50,6 +52,11 @@ void SceneStage1::Init()
 
 	AddGameObject(shootStand->GetLeftPart());
 	AddGameObject(shootStand->GetRightPart());
+	std::vector<SpriteGo*> band = shootStand->GetBandPart();
+	for (auto part : band)
+	{
+		AddGameObject(part);
+	}
 }
 
 void SceneStage1::Enter()
@@ -75,6 +82,8 @@ void SceneStage1::Enter()
 void SceneStage1::Update(float dt)
 {
 	Scene::Update(dt);
+
+	shootStand->SetBird(birds[tryCount]);
 
 	timeValue += dt;
 	if (timeValue >= timeStep)

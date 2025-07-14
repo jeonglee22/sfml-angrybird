@@ -42,7 +42,8 @@ public:
 	b2ShapeId GetShapeId() { return shapeId; }
 	b2BodyDef GetBodyDef() { return bodyDef; }
 	bool GetShoot() { return isShoot; }
-	void SetShoot(bool b) { isShoot = b; }
+	float GetMaxCharge() { return maxCharge; }
+	float GetMinCharge() { return minCharge; }
 	float GetCollisionRadius() { return collisionRadius; }
 
 	sf::FloatRect GetLocalBounds() { return sprite.getLocalBounds(); }
@@ -54,6 +55,7 @@ public:
 		SetTransform();
 	}
 	void SetDisable() { b2Body_Disable(bodyId); }
+	void SetShoot(bool b) { isShoot = b; }
 	void SetRestart(bool re) { isRestart = re; }
 
 	bool CheckBirdStop() {
