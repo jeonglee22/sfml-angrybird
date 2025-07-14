@@ -6,13 +6,13 @@ class Bird;
 class Block;
 class Pig;
 class ShootCountUI;
-class InvisiblePhysicsBody;
+class PhysicsBody;
 
 class SceneStage1 : public Scene
 {
 protected:
-	InvisiblePhysicsBody* ground;
-	InvisiblePhysicsBody* stand;
+	PhysicsBody* ground;
+	PhysicsBody* stand;
 
 	SpriteGo* background = nullptr;
 	std::vector<SpriteGo*> shootStand;
@@ -23,7 +23,7 @@ protected:
 	ShootCountUI* countUI = nullptr;
 
 	std::vector<Bird*> birds;
-	std::vector<Block*> blocks;
+	std::vector<PhysicsBody*> blocks;
 	int blockCount = 5;
 
 	int tryCount = 0;

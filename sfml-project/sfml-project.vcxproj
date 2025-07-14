@@ -152,10 +152,11 @@
     <ClCompile Include="Framework\InputMgr.cpp" />
     <ClCompile Include="Framework\SpriteGo.cpp" />
     <ClCompile Include="Framework\Scene.cpp" />
-    <ClCompile Include="InvisiblePhysicsBody.cpp" />
+    <ClCompile Include="GameObjects\InvisiblePhysicsBody.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Framework\Physics.cpp" />
     <ClCompile Include="GameObjects\Pig.cpp" />
+    <ClCompile Include="GameObjects\PhysicsBody.cpp" />
     <ClCompile Include="Scenes\SceneStage1.cpp" />
     <ClCompile Include="Scenes\Scenebox2dTest.cpp" />
     <ClCompile Include="Scenes\SceneCollision.cpp" />
@@ -191,7 +192,8 @@
     <ClInclude Include="Framework\Scene.h" />
     <ClInclude Include="Framework\Physics.h" />
     <ClInclude Include="GameObjects\Pig.h" />
-    <ClInclude Include="InvisiblePhysicsBody.h" />
+    <ClInclude Include="GameObjects\InvisiblePhysicsBody.h" />
+    <ClInclude Include="GameObjects\PhysicsBody.h" />
     <ClInclude Include="Scenes\SceneStage1.h" />
     <ClInclude Include="Scenes\Scenebox2dTest.h" />
     <ClInclude Include="Scenes\SceneCollision.h" />

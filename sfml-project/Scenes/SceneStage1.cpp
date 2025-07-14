@@ -2,11 +2,10 @@
 #include "SceneStage1.h"
 #include "SpriteGo.h"
 #include "Bird.h"
-#include "Block.h"
 #include "Pig.h"
 #include "rapidcsv.h"
 #include "ShootCountUI.h"
-#include "InvisiblePhysicsBody.h"
+#include "PhysicsBody.h"
 
 SceneStage1::SceneStage1()
 	: Scene(SceneIds::Stage1)
@@ -31,8 +30,8 @@ void SceneStage1::Init()
 	background->sortingLayer = SortingLayers::Background;
 	background->sortingOrder = 0;
 
-	ground = (InvisiblePhysicsBody*)AddGameObject(new InvisiblePhysicsBody());
-	stand = (InvisiblePhysicsBody*)AddGameObject(new InvisiblePhysicsBody());
+	ground = (PhysicsBody*)AddGameObject(new PhysicsBody(PhysicsBody::Type::Invisible));
+	stand = (PhysicsBody*)AddGameObject(new PhysicsBody(PhysicsBody::Type::Invisible));
 
 	for (int i = 0; i < 2; i++)
 	{
@@ -83,7 +82,7 @@ void SceneStage1::Enter()
 
 	ground->SetBoxSize(bounds.width * 0.5f, 85.f);
 	ground->SetBoxPos(bounds.width * 0.5f, bounds.height);
-	ground->SetBoxFactor(1.f, 0.5f);
+	ground->SetBoxFactor(0.8f, 0.5f);
 
 	Scene::Enter();
 
@@ -91,7 +90,7 @@ void SceneStage1::Enter()
 
 	stand->SetBoxSize(standTexSize.x * 0.2f, standTexSize.y * 0.5f * 0.7f);
 	stand->SetBoxPos(150.f, (560.f + birds[0]->GetCollisionRadius() + standTexSize.y * 0.7f * 0.5f));
-	stand->SetBoxFactor(1.f, 0.5f);
+	stand->SetBoxFactor(0.8f, 0.5f);
 	stand->Reset();
 
 	birds[tryCount]->SetBirdEnable();
@@ -176,8 +175,10 @@ void SceneStage1::LoadBlockInfo(const std::string& filePath)
 		auto row = doc.GetRow<std::string>(i+2);
 		if(std::find(texIds.begin(), texIds.end(), row[0]) == texIds.end())
 			texIds.push_back(row[0]);
-		blocks.push_back((Block*)AddGameObject(new Block(row[0])));
-		blocks[i]->SetInitPos({ std::stof(row[1]), std::stof(row[2]) });
+		blocks.push_back((PhysicsBody*)AddGameObject(new PhysicsBody(PhysicsBody::Type::Block,row[0])));
+		blocks[i]->SetBoxPos(std::stof(row[1]), std::stof(row[2]));
+		blocks[i]->SetBoxSize(std::stof(row[3]), std::stof(row[4]));
+		blocks[i]->SetBoxFactor(std::stof(row[5]), std::stof(row[6]), std::stof(row[7]), 0.f);
 	}
 }
 

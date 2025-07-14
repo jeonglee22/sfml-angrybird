@@ -99,7 +99,10 @@
     <ClCompile Include="GameUIs\ShootCountUI.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="InvisiblePhysicsBody.cpp">
+    <ClCompile Include="GameObjects\InvisiblePhysicsBody.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\PhysicsBody.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -197,7 +200,10 @@
     <ClInclude Include="GameUIs\ShootCountUI.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="InvisiblePhysicsBody.h">
+    <ClInclude Include="GameObjects\InvisiblePhysicsBody.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\PhysicsBody.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
