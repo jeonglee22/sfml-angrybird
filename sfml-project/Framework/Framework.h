@@ -9,14 +9,13 @@ protected:
 	~Framework() override = default;
 
 	sf::RenderWindow window;
+	float windowRatio;
 
 	float timeStep = 1.0f / 60.0f;
 
 	b2Vec2 gravity = { 0.f, 9.8f };
 	b2WorldDef worldDef = b2DefaultWorldDef();
 	b2WorldId worldId;
-
-	float gravity1 = 1500.f;
 
 	sf::Clock clock;
 	float timeScale = 1.f;
@@ -50,11 +49,10 @@ public:
 	float GetRealTime() const { return realTime; }
 	float GetRealDeltaTime() const { return realDeltaTime; }
 
-	float GetGravity() const { return gravity1; }
-
 	b2WorldDef GetWorld() const { return worldDef; }
 	b2WorldId GetWorldID() const { return worldId; }
 	float GetTimeStep() const { return timeStep; }
+	float GetWindowRatio() const { return windowRatio; }
 
 	virtual void Init(int w, int h, const std::string& t);
 	virtual void Do();

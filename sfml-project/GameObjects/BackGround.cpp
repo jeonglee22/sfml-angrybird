@@ -87,3 +87,15 @@ void BackGround::Draw(sf::RenderWindow& window)
 		background->Draw(window);
 	}
 }
+
+sf::FloatRect BackGround::GetTotalSize()
+{
+	sf::Vector2f texSize1 = (sf::Vector2f)TEXTURE_MGR.Get(texId1).getSize();
+	texSize1.y = 768.f;
+	sf::Vector2f texSize2 = (sf::Vector2f)TEXTURE_MGR.Get(texId2).getSize();
+	float top = -texSize2.y;
+	float left = -texSize1.x;
+	float width = texSize1.x*3;
+	float height = texSize1.y + texSize2.y;
+	return sf::FloatRect(left, top, width, height);
+}

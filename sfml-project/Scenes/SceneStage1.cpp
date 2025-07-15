@@ -29,7 +29,7 @@ void SceneStage1::Init()
 
 	fontIds.push_back("fonts/DS-DIGIT.ttf");
 
-	AddGameObject(new BackGround("graphics/LevelOne.png", "graphics/Sky.png"));
+	background = (BackGround*)AddGameObject(new BackGround("graphics/LevelOne.png", "graphics/Sky.png"));
 
 	ground = (PhysicsBody*)AddGameObject(new PhysicsBody(PhysicsBody::Type::Invisible));
 	leftWall = (PhysicsBody*)AddGameObject(new PhysicsBody(PhysicsBody::Type::Invisible));
@@ -89,6 +89,8 @@ void SceneStage1::Enter()
 	birds[tryCount]->SetStartPos();
 	shootStand->SetBird(birds[tryCount]);
 	countUI->SetCount(birds.size());
+
+	backgroundSize = background->GetTotalSize();
 }
 
 void SceneStage1::Update(float dt)
@@ -224,16 +226,21 @@ void SceneStage1::CheckPhysicsBodyCollision()
 
 void SceneStage1::ViewControl(const sf::Vector2f& mousePos)
 {
-	sf::FloatRect bounds = FRAMEWORK.GetWindowBounds();
-	float newXpos = Utils::Clamp((mouseStart - mousePos).x + currentViewPos.x, -bounds.width * 0.5f , bounds.width * 1.5f);
-	currentViewPos = sf::Vector2f(newXpos, currentViewPos.y);
+	float topLimit = backgroundSize.top + currentViewSize.y * 0.5f;
+	float bottomLimit = backgroundSize.top + backgroundSize.height - currentViewSize.y * 0.5f;
+	float leftLimit = backgroundSize.left + currentViewSize.x * 0.5f;
+	float rightLimit = backgroundSize.left + backgroundSize.width - currentViewSize.x * 0.5f;
+
+	float newXpos = Utils::Clamp((mouseStart - mousePos).x + currentViewPos.x, leftLimit, rightLimit);
+	float newYpos = Utils::Clamp((mouseStart - mousePos).y + currentViewPos.y, topLimit, bottomLimit);
+	currentViewPos = sf::Vector2f(newXpos, newYpos);
 	mouseStart = mousePos;
 	worldView.setCenter(currentViewPos);
 }
 
 void SceneStage1::ViewReset(float dt)
 {
-	if ((initViewPos != currentViewPos || initViewSize != currentViewSize) && birdReady)
+	if ((initViewPos != currentViewPos || initViewSize != currentViewSize) && birdReady && !birds[tryCount]->GetCharging())
 	{
 		viewReset += dt;
 		if (viewReset >= viewResetMax)
@@ -282,9 +289,11 @@ void SceneStage1::ZoomIn(float dt)
 {
 	if (InputMgr::GetKey(sf::Keyboard::Z))
 	{
-		currentViewSize -= sf::Vector2f(100 * dt, 100 * dt);
-		if (currentViewPos.y + currentViewSize.y >= 768.f)
-			currentViewPos.y -= 100 * dt;
+		currentViewSize -= sf::Vector2f(100 * dt * FRAMEWORK.GetWindowRatio(), 100 * dt);
+		if (currentViewSize.y <= minViewSize.y)
+		{
+			currentViewSize = minViewSize;
+		}
 		worldView.setCenter(currentViewPos);
 		worldView.setSize(currentViewSize);
 		isZoomIn = true;
@@ -299,15 +308,19 @@ void SceneStage1::ZoomOut(float dt)
 {
 	if (InputMgr::GetKey(sf::Keyboard::X))
 	{
-		currentViewSize += sf::Vector2f(100 * dt, 100 * dt);
-		if (currentViewPos.y + currentViewSize.y >= 768.f)
+		currentViewSize += sf::Vector2f(100 * dt * FRAMEWORK.GetWindowRatio(), 100 * dt);
+		if (currentViewPos.y + currentViewSize.y * 0.5f >= 768.f)
 			currentViewPos.y -= 100 * dt;
-		if (currentViewPos.y - currentViewSize.y <= -800.f)
-			currentViewPos.y -= 100 * dt;
-		if (currentViewPos.x + currentViewSize.x >= 2732.f)
+		if (currentViewPos.y - currentViewSize.y * 0.5f <= -800.f)
+			currentViewPos.y += 100 * dt;
+		if (currentViewPos.x + currentViewSize.x * 0.5f >= 2732.f)
 			currentViewPos.x -= 100 * dt;
-		if (currentViewPos.x + currentViewSize.x >= -1366.f)
-			currentViewPos.x -= 100 * dt;
+		if (currentViewPos.x - currentViewSize.x * 0.5f <= -1366.f)
+			currentViewPos.x += 100 * dt;
+		if (currentViewSize.y >= backgroundSize.height)
+		{
+			currentViewSize = maxViewSize;
+		}
 		worldView.setCenter(currentViewPos);
 		worldView.setSize(currentViewSize);
 		isZoomOut = true;

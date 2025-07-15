@@ -4,6 +4,7 @@
 void Framework::Init(int w, int h, const std::string& t)
 {
     window.create(sf::VideoMode(w, h), t);
+    windowRatio = (float) w / h;
 
     worldDef.gravity = gravity;
     worldId = b2CreateWorld(&worldDef);

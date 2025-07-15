@@ -8,20 +8,22 @@ class Pig;
 class ShootCountUI;
 class PhysicsBody;
 class ShootStand;
+class BackGround;
 
 class SceneStage1 : public Scene
 {
 protected:
-	PhysicsBody* ground;
-	PhysicsBody* leftWall;
-	PhysicsBody* rightWall;
-	SpriteGo* background = nullptr;
-	ShootStand* shootStand;
+	PhysicsBody* ground = nullptr;
+	PhysicsBody* leftWall = nullptr;
+	PhysicsBody* rightWall = nullptr;
+	ShootStand* shootStand = nullptr;
 	ShootCountUI* countUI = nullptr;
+	BackGround* background = nullptr;
 
 	std::vector<Bird*> birds;
 	std::vector<Block*> blocks;
 	std::vector<Pig*> pigs;
+
 	int blockCount = 5;
 	int pigCount = 5;
 
@@ -42,12 +44,16 @@ protected:
 	sf::Vector2f initViewSize = FRAMEWORK.GetWindowSizeF();
 	sf::Vector2f currentViewPos;
 	sf::Vector2f currentViewSize;
+	sf::Vector2f minViewSize = { (1366.f / 768.f) * 100.f , 100.f };
+	sf::Vector2f maxViewSize = { (1366.f / 768.f) * 1882.f , 1882.f };
 
 	bool isShoot = false;
 	bool birdReady = true;
 	bool isViewMoving = false;
 	bool isZoomOut = false;
 	bool isZoomIn = false;
+
+	sf::FloatRect backgroundSize;
 
 public:
 	SceneStage1();
