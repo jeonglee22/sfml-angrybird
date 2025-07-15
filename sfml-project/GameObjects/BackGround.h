@@ -6,14 +6,15 @@ class BackGround : public GameObject
 {
 protected:
 	sf::Sprite mainbody;
-	std::string texId;
+	std::string texId1;
+	std::string texId2;
 
 	std::vector<SpriteGo*> backgrounds;
 	sf::Vector2f backgroundsPos = FRAMEWORK.GetWindowSizeF() * 0.5f;
 	int backgroundCount = 3;
 
 public:
-	BackGround(const std::string& texId = "", const std::string& name = "");
+	BackGround(const std::string& texId1 = "",const std::string& texId2 = "", const std::string& name = "");
 	virtual ~BackGround() = default;
 
 	void SetPosition(const sf::Vector2f& pos) override;

@@ -13,6 +13,8 @@ class SceneStage1 : public Scene
 {
 protected:
 	PhysicsBody* ground;
+	PhysicsBody* leftWall;
+	PhysicsBody* rightWall;
 	SpriteGo* background = nullptr;
 	ShootStand* shootStand;
 	ShootCountUI* countUI = nullptr;
@@ -37,13 +39,15 @@ protected:
 	sf::Vector2f mouseEnd;
 
 	sf::Vector2f initViewPos = FRAMEWORK.GetWindowSizeF() * 0.5f;
-	sf::Vector2f initViewSize = FRAMEWORK.GetWindowSizeF() * 0.7f;
+	sf::Vector2f initViewSize = FRAMEWORK.GetWindowSizeF();
 	sf::Vector2f currentViewPos;
 	sf::Vector2f currentViewSize;
 
 	bool isShoot = false;
 	bool birdReady = true;
 	bool isViewMoving = false;
+	bool isZoomOut = false;
+	bool isZoomIn = false;
 
 public:
 	SceneStage1();
@@ -67,5 +71,8 @@ public:
 	void ViewReset(float dt);
 	void ViewFollowing();
 	void Restart();
+
+	void ZoomIn(float dt);
+	void ZoomOut(float dt);
 };
 

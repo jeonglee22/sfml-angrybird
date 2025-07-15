@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "BackGround.h"
 
-BackGround::BackGround(const std::string& texId, const std::string& name)
-	:texId(texId), GameObject(name)
+BackGround::BackGround(const std::string& texId1, const std::string& texId2, const std::string& name)
+	:texId1(texId1), texId2(texId2), GameObject(name)
 {
 }
 
@@ -45,8 +45,13 @@ void BackGround::Init()
 	sortingOrder = 0;
 	for (int i = 0; i < backgroundCount; i++)
 	{
-		backgrounds.push_back(new SpriteGo(texId));
+		backgrounds.push_back(new SpriteGo(texId1));
 		backgrounds[i]->SetOrigin(Origins::MC);
+	}
+	for (int i = 0; i < backgroundCount; i++)
+	{
+		backgrounds.push_back(new SpriteGo(texId2));
+		backgrounds[i + backgroundCount]->SetOrigin(Origins::MC);
 	}
 }
 
@@ -60,7 +65,14 @@ void BackGround::Reset()
 	{
 		backgrounds[i]->Reset();
 		backgrounds[i]->SetScale({ i % 2 ? 1.f : -1.f, 768.f / 1082.f});
-		backgrounds[i]->SetPosition(sf::Vector2f(TEXTURE_MGR.Get(texId).getSize().x * (i - 1.f), 0) + backgroundsPos);
+		backgrounds[i]->SetPosition(sf::Vector2f(TEXTURE_MGR.Get(texId1).getSize().x * (i - 1.f), 0) + backgroundsPos);
+	}
+	for (int i = 0; i < backgroundCount; i++)
+	{
+		backgrounds[i + backgroundCount]->Reset();
+		backgrounds[i + backgroundCount]->SetScale({ 1.f, 1.f});
+		sf::Vector2f texSize = (sf::Vector2f)TEXTURE_MGR.Get(texId2).getSize();
+		backgrounds[i + backgroundCount]->SetPosition(sf::Vector2f(texSize.x * (i - 1.f), 0) + sf::Vector2f(texSize.x * 0.5f, texSize.y * -0.5f));
 	}
 }
 

@@ -20,6 +20,7 @@ void SceneStage1::Init()
 
 	texIds.push_back("graphics/Angrybirds/RedBird1.png");
 	texIds.push_back("graphics/LevelOne.png");
+	texIds.push_back("graphics/Sky.png");
 	texIds.push_back("graphics/band.png");
 	texIds.push_back("graphics/band2.png");
 	texIds.push_back("graphics/Angrybirds/ShootStand.png");
@@ -28,9 +29,12 @@ void SceneStage1::Init()
 
 	fontIds.push_back("fonts/DS-DIGIT.ttf");
 
-	AddGameObject(new BackGround("graphics/LevelOne.png"));
+	AddGameObject(new BackGround("graphics/LevelOne.png", "graphics/Sky.png"));
 
 	ground = (PhysicsBody*)AddGameObject(new PhysicsBody(PhysicsBody::Type::Invisible));
+	leftWall = (PhysicsBody*)AddGameObject(new PhysicsBody(PhysicsBody::Type::Invisible));
+	rightWall = (PhysicsBody*)AddGameObject(new PhysicsBody(PhysicsBody::Type::Invisible));
+
 	shootStand = (ShootStand*)AddGameObject(new ShootStand());
 
 	for(int i =0; i< tryMax; i++)
@@ -62,16 +66,22 @@ void SceneStage1::Enter()
 	uiView.setCenter(initViewPos);
 
 	initViewPos.x = shootStand->GetPosition().x;
-	initViewPos.y += 100.f;
 
 	worldView.setSize(initViewSize);
 	worldView.setCenter(initViewPos);
 	currentViewPos = initViewPos;
 	currentViewSize = initViewSize;
 
-	ground->SetBoxSize(bounds.width * 1.5f, 85.f);
+	ground->SetBoxSize(bounds.width * 2.f, 85.f);
 	ground->SetBoxPos(bounds.width * 0.5f, bounds.height);
 	ground->SetBoxFactor(0.8f, 0.5f);
+
+	leftWall->SetBoxSize(150.f, 768.f * 0.5f);
+	leftWall->SetBoxPos(bounds.width * 2.f + 150.f, bounds.height * 0.5f);
+	leftWall->SetBoxFactor(0.8f, 0.5f);
+	rightWall->SetBoxSize(150.f, 768.f * 0.5f);
+	rightWall->SetBoxPos(bounds.width * -1.f - 150.f, bounds.height * 0.5);
+	rightWall->SetBoxFactor(0.8f, 0.5f);
 
 	Scene::Enter();
 
@@ -102,7 +112,8 @@ void SceneStage1::Update(float dt)
 		}
 	}
 
-	ViewReset(dt);
+	if(!isZoomOut && !isZoomIn)
+		ViewReset(dt);
 
 	timeValue += dt;
 	if (timeValue >= timeStep)
@@ -128,11 +139,8 @@ void SceneStage1::Update(float dt)
 		viewReset = 0.f;
 	}
 
-	if (InputMgr::GetKeyDown(sf::Keyboard::Z))
-	{
-
-	}
-
+	ZoomIn(dt);
+	ZoomOut(dt);
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Space) && initViewPos != currentViewPos)
 	{
@@ -268,6 +276,46 @@ void SceneStage1::Restart()
 	birdReady = true;
 
 	ObjectsReset();
+}
+
+void SceneStage1::ZoomIn(float dt)
+{
+	if (InputMgr::GetKey(sf::Keyboard::Z))
+	{
+		currentViewSize -= sf::Vector2f(100 * dt, 100 * dt);
+		if (currentViewPos.y + currentViewSize.y >= 768.f)
+			currentViewPos.y -= 100 * dt;
+		worldView.setCenter(currentViewPos);
+		worldView.setSize(currentViewSize);
+		isZoomIn = true;
+	}
+	else if (InputMgr::GetKeyUp(sf::Keyboard::Z))
+	{
+		isZoomIn = false;
+	}
+}
+
+void SceneStage1::ZoomOut(float dt)
+{
+	if (InputMgr::GetKey(sf::Keyboard::X))
+	{
+		currentViewSize += sf::Vector2f(100 * dt, 100 * dt);
+		if (currentViewPos.y + currentViewSize.y >= 768.f)
+			currentViewPos.y -= 100 * dt;
+		if (currentViewPos.y - currentViewSize.y <= -800.f)
+			currentViewPos.y -= 100 * dt;
+		if (currentViewPos.x + currentViewSize.x >= 2732.f)
+			currentViewPos.x -= 100 * dt;
+		if (currentViewPos.x + currentViewSize.x >= -1366.f)
+			currentViewPos.x -= 100 * dt;
+		worldView.setCenter(currentViewPos);
+		worldView.setSize(currentViewSize);
+		isZoomOut = true;
+	}
+	else if (InputMgr::GetKeyUp(sf::Keyboard::X))
+	{
+		isZoomOut = false;
+	}
 }
 
 void SceneStage1::CheckObjectsDead()
