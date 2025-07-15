@@ -1,17 +1,15 @@
 #pragma once
 #include "PhysicsBody.h"
-class Pig : public PhysicsBody
+class Block : public PhysicsBody
 {
 protected:
-	float collisionRadius;
-
 	int hp = 0;
 	int maxHp = 100;
 	bool isDead = false;
 
 public:
-	Pig(const std::string& texId, const std::string& name = "");
-	virtual ~Pig() = default;
+	Block(const std::string& texId = "", const std::string& name = "");
+	virtual ~Block() = default;
 
 	void Init() override;
 	void Release() override;

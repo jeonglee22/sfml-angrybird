@@ -15,12 +15,13 @@ protected:
 	PhysicsBody* ground;
 	SpriteGo* background = nullptr;
 	ShootStand* shootStand;
-	Pig* pig = nullptr;
 	ShootCountUI* countUI = nullptr;
 
 	std::vector<Bird*> birds;
-	std::vector<PhysicsBody*> blocks;
+	std::vector<Block*> blocks;
+	std::vector<Pig*> pigs;
 	int blockCount = 5;
+	int pigCount = 5;
 
 	int tryCount = 0;
 	int tryMax = 5;
@@ -54,7 +55,9 @@ public:
 	bool GetViewMoving() { return isViewMoving; }
 
 	void LoadBlockInfo(const std::string& filePath);
-	void CheckPigCollision();
+	void CheckPhysicsBodyCollision();
+	void CheckObjectsDead();
+	void ObjectsReset();
 
 	void ViewControl(const sf::Vector2f& mousePos);
 	void Restart();

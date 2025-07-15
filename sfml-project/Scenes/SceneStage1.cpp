@@ -2,6 +2,7 @@
 #include "SceneStage1.h"
 #include "BackGround.h"
 #include "Bird.h"
+#include "Block.h"
 #include "Pig.h"
 #include "rapidcsv.h"
 #include "ShootCountUI.h"
@@ -18,7 +19,6 @@ void SceneStage1::Init()
 	sf::FloatRect bounds = FRAMEWORK.GetWindowBounds();
 
 	texIds.push_back("graphics/Angrybirds/RedBird1.png");
-	texIds.push_back("graphics/Angrybirds/PigOriginal.png");
 	texIds.push_back("graphics/LevelOne.png");
 	texIds.push_back("graphics/band.png");
 	texIds.push_back("graphics/band2.png");
@@ -68,8 +68,6 @@ void SceneStage1::Enter()
 	ground->SetBoxPos(bounds.width * 0.5f, bounds.height);
 	ground->SetBoxFactor(0.8f, 0.5f);
 
-	pig->SetInitPos({ 1500.f, 440.f });
-
 	Scene::Enter();
 
 	//birds[tryCount]->SetBirdEnable();
@@ -109,19 +107,18 @@ void SceneStage1::Update(float dt)
 			birds[i]->SetTransform();
 		}
 		
-		for (int i = 0; i < blockCount-1; i++)
+		for (int i = 0; i < blockCount; i++)
 		{
 			blocks[i]->SetTransform();
 		}
-		pig->SetTransform();
-		
-		CheckPigCollision();
-		//std::cout << pig->IsDead() << std::endl;
-		if (pig->IsDead())
+		for(int i = 0; i < pigCount; i++)
 		{
-			pig->SetDisable();
-			pig->SetActive(false);
+			pigs[i]->SetTransform();
 		}
+		
+		CheckObjectsDead();
+		CheckPhysicsBodyCollision();
+		//std::cout << pig->IsDead() << std::endl;
 
 		timeValue = 0.f;
 	}
@@ -157,24 +154,33 @@ void SceneStage1::LoadBlockInfo(const std::string& filePath)
 {
 	rapidcsv::Document doc(filePath);
 	blockCount = doc.GetCell<int>(0,0);
+	pigCount = doc.GetCell<int>(1, 0);
 
 	blocks.clear();
-	for (int i = 0; i < blockCount-1; i++)
+	pigs.clear();
+	for (int i = 0; i < blockCount; i++)
 	{
 		auto row = doc.GetRow<std::string>(i+2);
 		if(std::find(texIds.begin(), texIds.end(), row[0]) == texIds.end())
 			texIds.push_back(row[0]);
-		blocks.push_back((PhysicsBody*)AddGameObject(new PhysicsBody(PhysicsBody::Type::Block,row[0])));
+		blocks.push_back((Block*)AddGameObject(new Block(row[0])));
 		blocks[i]->SetBoxPos(std::stof(row[1]), std::stof(row[2]));
 		blocks[i]->SetBoxSize(std::stof(row[3]), std::stof(row[4]));
-		blocks[i]->SetBoxFactor(std::stof(row[5]), std::stof(row[6]), std::stof(row[7]), 0.f);
+		blocks[i]->SetBoxFactor(std::stof(row[5]), std::stof(row[6]), std::stof(row[7]), std::stof(row[8]));
+		blocks[i]->SetHP(std::stoi(row[9]));
 	}
-	auto row = doc.GetRow<std::string>(blockCount + 1);
-	pig = (Pig*)AddGameObject(new Pig(row[0], "Pig"));
-	pig->SetInitPos({ std::stof(row[1]), std::stof(row[2]) });
+	for(int i = 0; i < pigCount; i++)
+	{
+		auto row = doc.GetRow<std::string>(blockCount + i + 2);
+		if (std::find(texIds.begin(), texIds.end(), row[0]) == texIds.end())
+			texIds.push_back(row[0]);
+		pigs.push_back((Pig*)AddGameObject(new Pig(row[0], "Pig")));
+		pigs[i]->SetInitPos({ std::stof(row[1]), std::stof(row[2]) });
+		pigs[i]->SetHP(std::stoi(row[9]));
+	}
 }
 
-void SceneStage1::CheckPigCollision()
+void SceneStage1::CheckPhysicsBodyCollision()
 {
 	b2ContactHitEvent* hitEvents = b2World_GetContactEvents(FRAMEWORK.GetWorldID()).hitEvents;
 	int hitCount = b2World_GetContactEvents(FRAMEWORK.GetWorldID()).hitCount;
@@ -184,10 +190,28 @@ void SceneStage1::CheckPigCollision()
 		b2ShapeId shapeId1 = event.shapeIdA;
 		b2ShapeId shapeId2 = event.shapeIdB;
 		float speed = event.approachSpeed;
-		if (shapeId1.index1 == pig->GetShapeId().index1 || shapeId2.index1 == pig->GetShapeId().index1)
+		for (int j = 0; j < blockCount + pigCount; j++)
 		{
-			pig->TakeDamage((int)speed * 7);
-			std::cout << pig->GetHp() << std::endl;
+			if (j <= blockCount -1 && shapeId1.index1 == blocks[j]->GetShapeId().index1)
+			{
+				blocks[j]->TakeDamage((int)speed * 7);
+				std::cout << "Block" << j << " : " << blocks[j]->GetHp() << std::endl;
+			}
+			else if (j <= blockCount - 1 && shapeId2.index1 == blocks[j]->GetShapeId().index1)
+			{
+				blocks[j]->TakeDamage((int)speed * 7);
+				std::cout << "Block" << j << " : " << blocks[j]->GetHp() << std::endl;
+			}
+			else if (j > blockCount - 1 && shapeId1.index1 == pigs[j - blockCount]->GetShapeId().index1)
+			{
+				pigs[j - blockCount]->TakeDamage((int)speed * 7);
+				std::cout << "Pig : " << pigs[j - blockCount]->GetHp() << std::endl;
+			}
+			else if (j > blockCount - 1 && shapeId2.index1 == pigs[j - blockCount]->GetShapeId().index1)
+			{
+				pigs[j - blockCount]->TakeDamage((int)speed * 7);
+				std::cout << "Pig : " << pigs[j - blockCount]->GetHp() << std::endl;
+			}
 		}
 	}
 }
@@ -217,12 +241,43 @@ void SceneStage1::Restart()
 	shootStand->SetBird(birds[tryCount]);
 	birdReady = true;
 
+	ObjectsReset();
+}
+
+void SceneStage1::CheckObjectsDead()
+{
+	for(int i = 0; i< pigCount; i++)
+	{
+		if (pigs[i]->IsDead())
+		{
+			pigs[i]->SetDisable();
+			pigs[i]->SetActive(false);
+		}
+	}
+	for(int i = 0; i< blockCount; i++)
+	{
+		if (blocks[i]->IsDead())
+		{
+			blocks[i]->SetDisable();
+			blocks[i]->SetActive(false);
+		}
+	}
+}
+
+void SceneStage1::ObjectsReset()
+{
 	for (auto block : blocks)
 	{
 		block->Reset();
+		block->SetEnable();
+		block->SetActive(true);
+		block->SetNotDead();
 	}
-	pig->Reset();
-	pig->SetEnable();
-	pig->SetActive(true);
-	pig->SetNotDead();
+	for (auto pig : pigs)
+	{
+		pig->Reset();
+		pig->SetEnable();
+		pig->SetActive(true);
+		pig->SetNotDead();
+	}
 }

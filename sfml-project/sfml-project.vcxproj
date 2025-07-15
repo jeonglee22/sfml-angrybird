@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BackGround.cpp" />
+    <ClCompile Include="Block.cpp" />
     <ClCompile Include="GameObjects\Bird.cpp" />
     <ClCompile Include="Framework\AnimationClip.cpp" />
     <ClCompile Include="Framework\Animator.cpp" />
@@ -155,7 +156,7 @@
     <ClCompile Include="Framework\Physics.cpp" />
     <ClCompile Include="GameObjects\PhysicsBody.cpp" />
     <ClCompile Include="GameObjects\Pig.cpp" />
-    <ClCompile Include="SceneStart.cpp" />
+    <ClCompile Include="Scenes\SceneStart.cpp" />
     <ClCompile Include="Scenes\SceneStage1.cpp" />
     <ClCompile Include="Scenes\Scenebox2dTest.cpp" />
     <ClCompile Include="Scenes\SceneDev1.cpp" />
@@ -174,6 +175,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
+    <ClInclude Include="Block.h" />
     <ClInclude Include="GameObjects\Bird.h" />
     <ClInclude Include="Framework\AnimationClip.h" />
     <ClInclude Include="Framework\Animator.h" />
@@ -191,7 +193,7 @@
     <ClInclude Include="Framework\Physics.h" />
     <ClInclude Include="GameObjects\PhysicsBody.h" />
     <ClInclude Include="GameObjects\Pig.h" />
-    <ClInclude Include="SceneStart.h" />
+    <ClInclude Include="Scenes\SceneStart.h" />
     <ClInclude Include="Scenes\SceneStage1.h" />
     <ClInclude Include="Scenes\Scenebox2dTest.h" />
     <ClInclude Include="Scenes\SceneDev1.h" />

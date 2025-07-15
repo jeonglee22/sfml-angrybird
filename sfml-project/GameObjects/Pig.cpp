@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "Pig.h"
 
-Pig::Pig(const std::string& texPlayerId, const std::string& name)
-	: PhysicsBody(Type::Pig, texPlayerId, name)
+Pig::Pig(const std::string& texId, const std::string& name)
+	: PhysicsBody(Type::Pig, texId, name)
 {
 }
 
