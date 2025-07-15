@@ -15,8 +15,8 @@ void Pig::Release()
 {
 	PhysicsBody::Release();
 
-	b2DestroyBody(bodyId);
-	bodyId = b2_nullBodyId;
+	/*b2DestroyBody(bodyId);
+	bodyId = b2_nullBodyId;*/
 }
 
 void Pig::Reset()
