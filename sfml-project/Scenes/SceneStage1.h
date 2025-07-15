@@ -57,5 +57,6 @@ public:
 	void CheckPigCollision();
 
 	void ViewControl(const sf::Vector2f& mousePos);
+	void SceneRestart();
 };
 

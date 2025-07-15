@@ -40,8 +40,6 @@ void SceneStage1::Init()
 
 	LoadBlockInfo("StageStructures/Stage1.csv");
 
-	pig = (Pig*)AddGameObject(new Pig("graphics/Angrybirds/PigOriginal.png", "Pig"));
-
 	countUI = (ShootCountUI*)AddGameObject(new ShootCountUI());
 
 	Scene::Init();
@@ -70,7 +68,7 @@ void SceneStage1::Enter()
 	ground->SetBoxPos(bounds.width * 0.5f, bounds.height);
 	ground->SetBoxFactor(0.8f, 0.5f);
 
-	pig->SetInitPos({ 1500.f, 480.f - 20.f });
+	pig->SetInitPos({ 1500.f, 440.f });
 
 	Scene::Enter();
 
@@ -111,7 +109,7 @@ void SceneStage1::Update(float dt)
 			birds[i]->SetTransform();
 		}
 		
-		for (int i = 0; i < blockCount; i++)
+		for (int i = 0; i < blockCount-1; i++)
 		{
 			blocks[i]->SetTransform();
 		}
@@ -145,28 +143,7 @@ void SceneStage1::Update(float dt)
 #ifdef DEF_DEV
 	if (InputMgr::GetKeyDown(sf::Keyboard::Escape))
 	{
-		currentViewPos = initViewPos;
-		worldView.setCenter(initViewPos);
-		for(int i = 0 ; i < tryMax; i++)
-		{
-			birds[i]->SetRestart(true);
-			birds[i]->SetInitPos();
-			birds[i]->SetShoot(false);
-		}
-		tryCount = 0;
-		countUI->SetCount(tryMax - tryCount);
-		birds[tryCount]->SetStartPos();
-		shootStand->SetBird(birds[tryCount]);
-		birdReady = true;
-
-		for (auto block : blocks)
-		{
-			block->Reset();
-		}
-		pig->Reset();
-		pig->SetEnable();
-		pig->SetActive(true);
-		pig->SetNotDead();
+		Restart();
 	}
 #endif
 }
@@ -182,7 +159,7 @@ void SceneStage1::LoadBlockInfo(const std::string& filePath)
 	blockCount = doc.GetCell<int>(0,0);
 
 	blocks.clear();
-	for (int i = 0; i < blockCount; i++)
+	for (int i = 0; i < blockCount-1; i++)
 	{
 		auto row = doc.GetRow<std::string>(i+2);
 		if(std::find(texIds.begin(), texIds.end(), row[0]) == texIds.end())
@@ -192,6 +169,9 @@ void SceneStage1::LoadBlockInfo(const std::string& filePath)
 		blocks[i]->SetBoxSize(std::stof(row[3]), std::stof(row[4]));
 		blocks[i]->SetBoxFactor(std::stof(row[5]), std::stof(row[6]), std::stof(row[7]), 0.f);
 	}
+	auto row = doc.GetRow<std::string>(blockCount + 1);
+	pig = (Pig*)AddGameObject(new Pig(row[0], "Pig"));
+	pig->SetInitPos({ std::stof(row[1]), std::stof(row[2]) });
 }
 
 void SceneStage1::CheckPigCollision()
@@ -203,9 +183,10 @@ void SceneStage1::CheckPigCollision()
 		b2ContactHitEvent event = hitEvents[i];
 		b2ShapeId shapeId1 = event.shapeIdA;
 		b2ShapeId shapeId2 = event.shapeIdB;
+		float speed = event.approachSpeed;
 		if (shapeId1.index1 == pig->GetShapeId().index1 || shapeId2.index1 == pig->GetShapeId().index1)
 		{
-			pig->TakeDamage(20);
+			pig->TakeDamage((int)speed * 7);
 			std::cout << pig->GetHp() << std::endl;
 		}
 	}
@@ -218,4 +199,30 @@ void SceneStage1::ViewControl(const sf::Vector2f& mousePos)
 	currentViewPos = sf::Vector2f(newXpos, currentViewPos.y);
 	mouseStart = mousePos;
 	worldView.setCenter(currentViewPos);
+}
+
+void SceneStage1::Restart()
+{
+	currentViewPos = initViewPos;
+	worldView.setCenter(initViewPos);
+	for (int i = 0; i < tryMax; i++)
+	{
+		birds[i]->SetRestart(true);
+		birds[i]->SetInitPos();
+		birds[i]->SetShoot(false);
+	}
+	tryCount = 0;
+	countUI->SetCount(tryMax - tryCount);
+	birds[tryCount]->SetStartPos();
+	shootStand->SetBird(birds[tryCount]);
+	birdReady = true;
+
+	for (auto block : blocks)
+	{
+		block->Reset();
+	}
+	pig->Reset();
+	pig->SetEnable();
+	pig->SetActive(true);
+	pig->SetNotDead();
 }
