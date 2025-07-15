@@ -1,27 +1,35 @@
 #pragma once
-#include "SpriteGo.h"
-class Bird : public SpriteGo
+#include "PhysicsBody.h"
+class Bird : public PhysicsBody
 {
-protected:
-	b2BodyDef bodyDef;
-	b2BodyId bodyId;
-	float collisionRadius;
+public:
+	enum class BirdType
+	{
+		None = -1,
+		Original,
+		Yellow,
 
-	bool setBody = false;
+		TypeCount,
+	};
+protected:
+	float collisionRadius;
 
 	bool isShoot = false;
 	bool isCharging = false;
 	sf::Vector2f mouseStart;
 	sf::Vector2f mouseEnd;
+	float chargeDistance;
 
 	float minCharge = 30.f;
 	float maxCharge = 70.f;
-	float forceAmount = 1200.f;
+	float forceAmount = 800.f;
 
-	sf::Vector2f initPos = { 150.f, 550.0f };
+	sf::Vector2f shootPos = { 150.f / SCALE, 570.f / SCALE };
+
+	bool isRestart = false;
 
 public:
-	Bird(const std::string& texPlayerId = "", const std::string & name = "");
+	Bird(const std::string& texPlayerId = "", const std::string& name = "");
 	virtual ~Bird() = default;
 
 	void Init() override;
@@ -31,14 +39,26 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	b2BodyId GetBodyId() { return bodyId; }
+	b2ShapeId GetShapeId() { return shapeId; }
 	b2BodyDef GetBodyDef() { return bodyDef; }
 	bool GetShoot() { return isShoot; }
-	void SetShoot(bool b) { isShoot = b; }
+	bool GetCharging() { return isCharging; }
+	float GetMaxCharge() { return maxCharge; }
+	float GetMinCharge() { return minCharge; }
 	float GetCollisionRadius() { return collisionRadius; }
 
 	sf::FloatRect GetLocalBounds() { return sprite.getLocalBounds(); }
 	sf::FloatRect GetGlobalBounds() { return sprite.getGlobalBounds(); }
 
-	void SetTransform();
+	void SetBirdEnable() {b2Body_Enable(bodyId);}
+	void SetDisable() { b2Body_Disable(bodyId); }
+	void SetShoot(bool b) { isShoot = b; }
+	void SetRestart(bool re) { isRestart = re; }
+
+	bool CheckFinishShoot();
+
+	void SetStartPos();
+	void SetShootingState();
+	void SetInitPos();
 };
 

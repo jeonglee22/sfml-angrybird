@@ -2,7 +2,7 @@
 #include "Scenebox2dTest.h"
 #include "SpriteGo.h"
 #include "Bird.h"
-#include "Block.h"
+//#include "Block.h"
 
 Scenebox2dTest::Scenebox2dTest()
 	: Scene(SceneIds::Test)
@@ -23,6 +23,30 @@ void Scenebox2dTest::Init()
 	background->sortingLayer = SortingLayers::Background;
 	background->sortingOrder = 0;
 
+	bird = (Bird*)AddGameObject(new Bird("graphics/Angrybirds/RedBird1.png", "Bird"));
+
+	//for (int i = 0; i < blockCount; i++)
+	//{
+	//	blocks.push_back((Block*)AddGameObject(new Block("graphics/StaticObjects/WoodSquareBlock1.png")));
+	//	//blocks[i]->SetInitPos({ 1200.f - i * 50.f,bounds.height - 85.f - 50.f });
+	//	blocks[i]->SetInitPos({ 800.f,bounds.height - 85.f - 50.f * (i+1)});
+	//}
+
+	Scene::Init();
+}
+
+void Scenebox2dTest::Enter()
+{
+	auto size = FRAMEWORK.GetWindowSizeF();
+	sf::FloatRect bounds = FRAMEWORK.GetWindowBounds();
+	sf::Vector2f center{ size.x * 0.5f, size.y * 0.5f };
+	uiView.setSize(size);
+	uiView.setCenter(center);
+	worldView.setSize(size);
+	worldView.setCenter(center);
+
+	Scene::Enter();
+
 	groundBody.position = b2Vec2{ bounds.width * 0.5f / SCALE, bounds.height / SCALE };
 	groundBodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &groundBody);
 
@@ -31,29 +55,6 @@ void Scenebox2dTest::Init()
 	groundShapeDef.material.friction = 1.f;
 	groundShapeDef.material.restitution = 0.5f;
 	b2CreatePolygonShape(groundBodyId, &groundShapeDef, &groundBox);
-
-	bird = (Bird*)AddGameObject(new Bird("graphics/Angrybirds/RedBird1.png", "Bird"));
-
-	for (int i = 0; i < blockCount; i++)
-	{
-		blocks.push_back((Block*)AddGameObject(new Block("graphics/StaticObjects/WoodSquareBlock1.png")));
-		//blocks[i]->SetInitPos({ 1200.f - i * 50.f,bounds.height - 85.f - 50.f });
-		blocks[i]->SetInitPos({ 800.f,bounds.height - 85.f - 50.f * (i+1)});
-	}
-
-	Scene::Init();
-}
-
-void Scenebox2dTest::Enter()
-{
-	auto size = FRAMEWORK.GetWindowSizeF();
-	sf::Vector2f center{ size.x * 0.5f, size.y * 0.5f };
-	uiView.setSize(size);
-	uiView.setCenter(center);
-	worldView.setSize(size);
-	worldView.setCenter(center);
-
-	Scene::Enter();
 
 	shootBody.position = b2Vec2{ 150.f / SCALE, (550.f + bird->GetCollisionRadius() + 40.f) / SCALE };
 	shootBodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &shootBody);
@@ -78,10 +79,10 @@ void Scenebox2dTest::Update(float dt)
 			bird->SetTransform();
 			timeValue = 0.f;
 		}
-		for (int i = 0; i < blockCount; i++)
+		/*for (int i = 0; i < blockCount; i++)
 		{
 			blocks[i]->SetTransform();
-		}
+		}*/
 	}
 #ifdef DEF_DEV
 	if (InputMgr::GetKeyDown(sf::Keyboard::Space))
