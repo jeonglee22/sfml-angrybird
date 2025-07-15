@@ -36,6 +36,7 @@ void SceneStage1::Init()
 	for(int i =0; i< tryMax; i++)
 	{
 		birds.push_back((Bird*)AddGameObject(new Bird("graphics/Angrybirds/RedBird1.png", "Bird")));
+		birds[i]->SetInitPos({ 80.f - 40.f * i, 660.0f});
 	}
 
 	LoadBlockInfo("StageStructures/Stage1.csv");
@@ -97,6 +98,19 @@ void SceneStage1::Update(float dt)
 		}
 	}
 
+	/*if (initViewPos != currentViewPos || initViewSize != currentViewSize)
+	{
+		viewReset += dt;
+		if (viewReset >= viewResetMax)
+		{
+			viewReset = 0.f;
+			currentViewPos = initViewPos;
+			worldView.setCenter(initViewPos);
+			currentViewSize = initViewSize;
+			worldView.setSize(initViewSize);
+		}
+	}*/
+
 	timeValue += dt;
 	if (timeValue >= timeStep)
 	{
@@ -127,7 +141,7 @@ void SceneStage1::Update(float dt)
 	{
 		mouseStart = (sf::Vector2f)InputMgr::GetMousePosition();
 	}
-	else if (InputMgr::GetMouseButton(sf::Mouse::Right) && !birds[tryCount]->GetCharging())
+	else if (InputMgr::GetMouseButton(sf::Mouse::Right))
 	{
 		ViewControl((sf::Vector2f)InputMgr::GetMousePosition());
 	}
@@ -195,22 +209,18 @@ void SceneStage1::CheckPhysicsBodyCollision()
 			if (j <= blockCount -1 && shapeId1.index1 == blocks[j]->GetShapeId().index1)
 			{
 				blocks[j]->TakeDamage((int)speed * 7);
-				std::cout << "Block" << j << " : " << blocks[j]->GetHp() << std::endl;
 			}
 			else if (j <= blockCount - 1 && shapeId2.index1 == blocks[j]->GetShapeId().index1)
 			{
 				blocks[j]->TakeDamage((int)speed * 7);
-				std::cout << "Block" << j << " : " << blocks[j]->GetHp() << std::endl;
 			}
 			else if (j > blockCount - 1 && shapeId1.index1 == pigs[j - blockCount]->GetShapeId().index1)
 			{
 				pigs[j - blockCount]->TakeDamage((int)speed * 7);
-				std::cout << "Pig : " << pigs[j - blockCount]->GetHp() << std::endl;
 			}
 			else if (j > blockCount - 1 && shapeId2.index1 == pigs[j - blockCount]->GetShapeId().index1)
 			{
 				pigs[j - blockCount]->TakeDamage((int)speed * 7);
-				std::cout << "Pig : " << pigs[j - blockCount]->GetHp() << std::endl;
 			}
 		}
 	}

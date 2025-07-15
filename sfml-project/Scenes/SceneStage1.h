@@ -30,6 +30,9 @@ protected:
 	float timeStep = 1.0f / 60.0f;
 	float timeValue = 0.f;
 
+	float viewResetMax = 2.0f;
+	float viewReset = 0.f;
+
 	sf::Vector2f mouseStart;
 	sf::Vector2f mouseEnd;
 

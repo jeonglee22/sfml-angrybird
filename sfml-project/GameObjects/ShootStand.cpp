@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ShootStand.h"
 #include "Bird.h"
+#include "Scene.h"
 
 ShootStand::ShootStand(const std::string& name)
 	:PhysicsBody(Type::ShootStand)
@@ -30,6 +31,8 @@ void ShootStand::Init()
 		Band[i]->sortingLayer = SortingLayers::Foreground;
 		Band[i]->sortingOrder = (i == 1 ? -1 : 1);
 		Band[i]->SetActive(false);
+		if (i == 2)
+			Band[i]->SetScale({ 1.2f,1.2f });
 	}
 }
 
@@ -46,7 +49,7 @@ void ShootStand::Reset()
 	ResetBandPos();
 
 	sf::Vector2u standTexSize = TEXTURE_MGR.Get("graphics/Angrybirds/ShootStand.png").getSize();
-	SetBoxSize(standTexSize.x * 0.2f, standTexSize.y * 0.5f * 0.7f);
+	SetBoxSize(standTexSize.x * 0.1f, standTexSize.y * 0.5f * 0.7f);
 	SetBoxPos(bodyPos.x, bodyPos.y);
 	SetBoxFactor(0.8f, 0.2f);
 	SetPosition(initPos * SCALE);
@@ -67,40 +70,45 @@ void ShootStand::Update(float dt)
 {
 	PhysicsBody::Update(dt);
 
-	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left) && !bird->GetShoot())
+	if (SCENE_MGR.GetCurrentScene())
 	{
-		if (Utils::PointInTransformBounds(bird->GetSprite(), bird->GetLocalBounds(), (sf::Vector2f)InputMgr::GetMousePosition()))
-		{
-			mouseStart = bird->GetPosition();
-			SetBandActive(true);
-			isShoot = true;
-		}
-	}
-	if (InputMgr::GetMouseButton(sf::Mouse::Left) && isShoot)
-	{
-		mouseEnd = (sf::Vector2f)InputMgr::GetMousePosition();
-		sf::Vector2f leftBandPos = GetLeftBandPos();
-		sf::Vector2f rightBandPos = GetRightBandPos();
-		float bandScale = Utils::Clamp(Utils::Distance(mouseStart, mouseEnd), bird->GetMinCharge(), bird->GetMaxCharge());
-		sf::Vector2f shootPos = Utils::GetNormal(mouseEnd - mouseStart) * bandScale + mouseStart;
-		
-		SetLeftBandRotation(Utils::Angle(leftBandPos - shootPos));
-		SetRightBandRotation(Utils::Angle(rightBandPos - shootPos));
-		SetBodyBandRotation(Utils::Angle(mouseStart - shootPos));
+		Scene* scene = SCENE_MGR.GetCurrentScene();
 
-		SetLeftBandScale(Utils::Distance(leftBandPos, shootPos));
-		SetRightBandScale(Utils::Distance(rightBandPos, shootPos));
-		SetBandPos(shootPos);
-	}
-	if (InputMgr::GetMouseButtonUp(sf::Mouse::Left) && isShoot)
-	{
-		SetLeftBandRotation(0.f);
-		SetRightBandRotation(0.f);
-		SetLeftBandScale(1.f);
-		SetRightBandScale(1.f);
-		ResetBandPos();
-		SetBandActive(false);
-		isShoot = false;
+		if (InputMgr::GetMouseButtonDown(sf::Mouse::Left) && !bird->GetShoot())
+		{
+			if (Utils::PointInTransformBounds(bird->GetSprite(), bird->GetLocalBounds(), scene->ScreenToWorld(InputMgr::GetMousePosition())))
+			{
+				mouseStart = bird->GetPosition();
+				SetBandActive(true);
+				isShoot = true;
+			}
+		}
+		if (InputMgr::GetMouseButton(sf::Mouse::Left) && isShoot)
+		{
+			mouseEnd = scene->ScreenToWorld(InputMgr::GetMousePosition());
+			sf::Vector2f leftBandPos = GetLeftBandPos();
+			sf::Vector2f rightBandPos = GetRightBandPos();
+			float bandScale = Utils::Clamp(Utils::Distance(mouseStart, mouseEnd), bird->GetMinCharge(), bird->GetMaxCharge());
+			sf::Vector2f shootPos = Utils::GetNormal(mouseEnd - mouseStart) * (bandScale+3.f) + mouseStart;
+
+			SetLeftBandRotation(Utils::Angle(leftBandPos - shootPos));
+			SetRightBandRotation(Utils::Angle(rightBandPos - shootPos));
+			SetBodyBandRotation(Utils::Angle(mouseStart - shootPos) + 20.f);
+
+			SetLeftBandScale(Utils::Distance(leftBandPos, shootPos));
+			SetRightBandScale(Utils::Distance(rightBandPos, shootPos));
+			SetBandPos(shootPos);
+		}
+		if (InputMgr::GetMouseButtonUp(sf::Mouse::Left) && isShoot)
+		{
+			SetLeftBandRotation(0.f);
+			SetRightBandRotation(0.f);
+			SetLeftBandScale(1.f);
+			SetRightBandScale(1.f);
+			ResetBandPos();
+			SetBandActive(false);
+			isShoot = false;
+		}
 	}
 }
 

@@ -12,6 +12,7 @@ public:
 		TypeCount,
 	};
 protected:
+
 	float collisionRadius;
 
 	bool isShoot = false;
@@ -60,5 +61,6 @@ public:
 	void SetStartPos();
 	void SetShootingState();
 	void SetInitPos();
+	void SetInitPos(const sf::Vector2f& initPos);
 };
 

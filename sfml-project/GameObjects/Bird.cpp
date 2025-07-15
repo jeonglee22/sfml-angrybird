@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Bird.h"
+#include "Scene.h"
 
 Bird::Bird(const std::string& texPlayerId, const std::string& name)
 	:PhysicsBody(Type::Bird, texPlayerId, name)
@@ -10,7 +11,7 @@ void Bird::Init()
 {
 	PhysicsBody::Init();
 
-	initPos = { 80.f / SCALE, 660.0f / SCALE };
+	//initPos = { 80.f / SCALE, 660.0f / SCALE };
 }
 
 void Bird::Release()
@@ -47,37 +48,38 @@ void Bird::Reset()
 void Bird::Update(float dt)
 {
 	PhysicsBody::Update(dt);
-
-	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left) && !isCharging && !isShoot )
+	if (SCENE_MGR.GetCurrentScene())
 	{
-		if (Utils::PointInTransformBounds(sprite, GetLocalBounds(), (sf::Vector2f)InputMgr::GetMousePosition()))
+		Scene* scene = SCENE_MGR.GetCurrentScene();
+		if (InputMgr::GetMouseButtonDown(sf::Mouse::Left) && !isCharging && !isShoot)
 		{
-			isCharging = true;
-			mouseStart = GetPosition();
+			if (Utils::PointInTransformBounds(sprite, GetLocalBounds(), scene->ScreenToWorld(InputMgr::GetMousePosition())))
+			{
+				isCharging = true;
+				mouseStart = GetPosition();
+			}
 		}
-	}
-	if (InputMgr::GetMouseButton(sf::Mouse::Left) && isCharging && !isShoot)
-	{
-		mouseEnd = (sf::Vector2f)InputMgr::GetMousePosition();
-		direction = Utils::GetNormal(mouseEnd - mouseStart);
-		chargeDistance = Utils::Clamp(Utils::Distance(mouseStart, mouseEnd), minCharge, maxCharge);
-		sf::Vector2f newPos = mouseStart + (chargeDistance - sprite.getTexture()->getSize().x * 0.3f) * direction;
+		if (InputMgr::GetMouseButton(sf::Mouse::Left) && isCharging && !isShoot)
+		{
+			mouseEnd = scene->ScreenToWorld(InputMgr::GetMousePosition());
+			direction = Utils::GetNormal(mouseEnd - mouseStart);
+			chargeDistance = Utils::Clamp(Utils::Distance(mouseStart, mouseEnd), minCharge, maxCharge);
+			sf::Vector2f newPos = mouseStart + (chargeDistance - sprite.getTexture()->getSize().x * 0.3f) * direction;
+			SetPosition(newPos);
 
-		SetPosition(newPos);
-		SetRotation(Utils::Angle(Utils::GetNormal(mouseStart - mouseEnd)));
-
-		b2Body_SetTransform(bodyId, 
-			b2Vec2{ position.x / SCALE, position.y / SCALE }, 
-			b2Rot_identity);
-	}
-	if (InputMgr::GetMouseButtonUp(sf::Mouse::Left) && isCharging && !isShoot)
-	{
-		direction *= -1.f;
-		SetBirdEnable();
-		sf::Vector2f Force(direction.x * forceAmount * (chargeDistance / maxCharge), direction.y * forceAmount * (chargeDistance / maxCharge));
-		b2Body_ApplyForceToCenter(bodyId, b2Vec2{ Force.x, Force.y }, true);
-		isShoot = true;
-		isCharging = false;
+			b2Body_SetTransform(bodyId,
+				b2Vec2{ position.x / SCALE, position.y / SCALE },
+				b2Rot_identity);
+		}
+		if (InputMgr::GetMouseButtonUp(sf::Mouse::Left) && isCharging && !isShoot)
+		{
+			direction *= -1.f;
+			SetBirdEnable();
+			sf::Vector2f Force(direction.x * forceAmount * (chargeDistance / maxCharge), direction.y * forceAmount * (chargeDistance / maxCharge));
+			b2Body_ApplyForceToCenter(bodyId, b2Vec2{ Force.x, Force.y }, true);
+			isShoot = true;
+			isCharging = false;
+		}
 	}
 }
 
@@ -118,7 +120,7 @@ void Bird::SetShootingState()
 
 void Bird::SetInitPos()
 {
-	b2Body_SetTransform(bodyId, b2Vec2{ initPos.x , initPos.y }, b2Rot{ 1.f,0.f });
+	b2Body_SetTransform(bodyId, b2Vec2{ initPos.x, initPos.y }, b2Rot{ 1.f,0.f });
 	isRestart = false;
 	SetDisable();
 
@@ -127,4 +129,9 @@ void Bird::SetInitPos()
 
 	b2Body_SetAngularVelocity(bodyId, 0.f);
 	b2Body_SetLinearVelocity(bodyId, b2Vec2_zero);
+}
+
+void Bird::SetInitPos(const sf::Vector2f& initPos)
+{
+	this->initPos = initPos / SCALE;
 }
