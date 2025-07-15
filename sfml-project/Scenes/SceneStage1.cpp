@@ -62,6 +62,7 @@ void SceneStage1::Enter()
 	uiView.setCenter(initViewPos);
 
 	initViewPos.x = shootStand->GetPosition().x;
+	initViewPos.y += 100.f;
 
 	worldView.setSize(initViewSize);
 	worldView.setCenter(initViewPos);
@@ -126,6 +127,12 @@ void SceneStage1::Update(float dt)
 		ViewControl((sf::Vector2f)InputMgr::GetMousePosition());
 		viewReset = 0.f;
 	}
+
+	if (InputMgr::GetKeyDown(sf::Keyboard::Z))
+	{
+
+	}
+
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Space) && initViewPos != currentViewPos)
 	{
@@ -240,6 +247,7 @@ void SceneStage1::ViewReset(float dt)
 void SceneStage1::ViewFollowing()
 {
 	sf::Vector2f birdPos = birds[tryCount]->GetPosition();
+
 
 }
 

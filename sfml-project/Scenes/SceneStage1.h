@@ -37,7 +37,7 @@ protected:
 	sf::Vector2f mouseEnd;
 
 	sf::Vector2f initViewPos = FRAMEWORK.GetWindowSizeF() * 0.5f;
-	sf::Vector2f initViewSize = FRAMEWORK.GetWindowSizeF();
+	sf::Vector2f initViewSize = FRAMEWORK.GetWindowSizeF() * 0.7f;
 	sf::Vector2f currentViewPos;
 	sf::Vector2f currentViewSize;
 
