@@ -58,8 +58,6 @@ void Bird::Update(float dt)
 	}
 	if (InputMgr::GetMouseButton(sf::Mouse::Left) && isCharging && !isShoot)
 	{
-		std::cout << position.x << ", " << position.y << std::endl;
-
 		mouseEnd = (sf::Vector2f)InputMgr::GetMousePosition();
 		direction = Utils::GetNormal(mouseEnd - mouseStart);
 		chargeDistance = Utils::Clamp(Utils::Distance(mouseStart, mouseEnd), minCharge, maxCharge);
@@ -88,14 +86,18 @@ void Bird::Draw(sf::RenderWindow& window)
 	PhysicsBody::Draw(window);
 }
 
-bool Bird::CheckBirdOut()
+bool Bird::CheckFinishShoot()
 {
 	float posX = position.x;
 	float posY = position.y;
-	return posX <= shootPos.x * SCALE - 200.f || 
+	bool posOut = posX <= shootPos.x * SCALE - 200.f ||
 		posX >= shootPos.x * SCALE + 200.f ||
 		posY <= shootPos.y * SCALE - 200.f ||
 		posY >= shootPos.y * SCALE + 50.f;
+	b2Vec2 velocity = b2Body_GetLinearVelocity(bodyId);
+	bool stop = velocity.x <= std::numeric_limits<float>::epsilon() &&
+		velocity.y <= std::numeric_limits<float>::epsilon();
+	return posOut && stop;
 }
 
 void Bird::SetStartPos()

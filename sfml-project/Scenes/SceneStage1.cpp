@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "SceneStage1.h"
-#include "SpriteGo.h"
+#include "BackGround.h"
 #include "Bird.h"
 #include "Pig.h"
 #include "rapidcsv.h"
@@ -28,10 +28,7 @@ void SceneStage1::Init()
 
 	fontIds.push_back("fonts/DS-DIGIT.ttf");
 
-	background = (SpriteGo*)AddGameObject(new SpriteGo("graphics/LevelOne.png"));
-	background->SetScale({ 1.f, 768.f / 1082.f });
-	background->sortingLayer = SortingLayers::Background;
-	background->sortingOrder = 0;
+	AddGameObject(new BackGround("graphics/LevelOne.png"));
 
 	ground = (PhysicsBody*)AddGameObject(new PhysicsBody(PhysicsBody::Type::Invisible));
 	shootStand = (ShootStand*)AddGameObject(new ShootStand());
@@ -44,7 +41,7 @@ void SceneStage1::Init()
 	LoadBlockInfo("StageStructures/Stage1.csv");
 
 	pig = (Pig*)AddGameObject(new Pig("graphics/Angrybirds/PigOriginal.png", "Pig"));
-	pig->SetInitPos({900.f, 480.f - 30.f });
+	pig->SetInitPos({1500.f, 480.f - 30.f });
 
 	countUI = (ShootCountUI*)AddGameObject(new ShootCountUI());
 
@@ -61,15 +58,16 @@ void SceneStage1::Init()
 
 void SceneStage1::Enter()
 {
-	auto size = FRAMEWORK.GetWindowSizeF();
 	sf::FloatRect bounds = FRAMEWORK.GetWindowBounds();
-	sf::Vector2f center{ size.x * 0.5f, size.y * 0.5f };
-	uiView.setSize(size);
-	uiView.setCenter(center);
-	worldView.setSize(size);
-	worldView.setCenter(center);
 
-	ground->SetBoxSize(bounds.width * 0.5f, 85.f);
+	uiView.setSize(initViewSize);
+	uiView.setCenter(initViewPos);
+	worldView.setSize(initViewSize);
+	worldView.setCenter(initViewPos);
+	currentViewPos = initViewPos;
+	currentViewSize = initViewSize;
+
+	ground->SetBoxSize(bounds.width * 1.5f, 85.f);
 	ground->SetBoxPos(bounds.width * 0.5f, bounds.height);
 	ground->SetBoxFactor(0.8f, 0.5f);
 
@@ -85,7 +83,7 @@ void SceneStage1::Update(float dt)
 {
 	Scene::Update(dt);
 
-	if(tryCount < tryMax)
+	if (tryCount < tryMax)
 	{
 		if (birds[tryCount]->GetShoot() && birdReady)
 		{
@@ -94,7 +92,7 @@ void SceneStage1::Update(float dt)
 			birdReady = false;
 		}
 
-		if (tryCount > 0 && birds[tryCount-1]->CheckBirdOut() && !birdReady)
+		if (tryCount > 0 && birds[tryCount-1]->CheckFinishShoot() && !birdReady)
 		{
 			birds[tryCount]->SetStartPos();
 			shootStand->SetBird(birds[tryCount]);
@@ -129,8 +127,22 @@ void SceneStage1::Update(float dt)
 		timeValue = 0.f;
 	}
 
+	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+	{
+		mouseStart = (sf::Vector2f)InputMgr::GetMousePosition();
+	}
+	else if (InputMgr::GetMouseButton(sf::Mouse::Left) && !birds[tryCount]->GetCharging())
+	{
+		ViewControl((sf::Vector2f)InputMgr::GetMousePosition());
+	}
+
+	if (InputMgr::GetKeyDown(sf::Keyboard::Space) && initViewPos != currentViewPos)
+	{
+		currentViewPos = initViewPos;
+		worldView.setCenter(initViewPos);
+	}
 #ifdef DEF_DEV
-	if (InputMgr::GetKeyDown(sf::Keyboard::Space))
+	else if (InputMgr::GetKeyDown(sf::Keyboard::Space) && initViewPos == currentViewPos)
 	{
 		for(int i = 0 ; i < tryMax; i++)
 		{
@@ -185,4 +197,13 @@ void SceneStage1::CheckPigCollision()
 			std::cout << pig->GetHp() << std::endl;
 		}
 	}
+}
+
+void SceneStage1::ViewControl(const sf::Vector2f& mousePos)
+{
+	sf::FloatRect bounds = FRAMEWORK.GetWindowBounds();
+	float newXpos = Utils::Clamp((mouseStart - mousePos).x + currentViewPos.x, -bounds.width * 0.5f , bounds.width * 1.5f);
+	currentViewPos = sf::Vector2f(newXpos, currentViewPos.y);
+	mouseStart = mousePos;
+	worldView.setCenter(currentViewPos);
 }

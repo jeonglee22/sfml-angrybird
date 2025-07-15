@@ -22,7 +22,7 @@ protected:
 
 	float minCharge = 30.f;
 	float maxCharge = 70.f;
-	float forceAmount = 700.f;
+	float forceAmount = 800.f;
 
 	sf::Vector2f shootPos = { 150.f / SCALE, 570.f / SCALE };
 
@@ -42,6 +42,7 @@ public:
 	b2ShapeId GetShapeId() { return shapeId; }
 	b2BodyDef GetBodyDef() { return bodyDef; }
 	bool GetShoot() { return isShoot; }
+	bool GetCharging() { return isCharging; }
 	float GetMaxCharge() { return maxCharge; }
 	float GetMinCharge() { return minCharge; }
 	float GetCollisionRadius() { return collisionRadius; }
@@ -54,7 +55,7 @@ public:
 	void SetShoot(bool b) { isShoot = b; }
 	void SetRestart(bool re) { isRestart = re; }
 
-	bool CheckBirdOut();
+	bool CheckFinishShoot();
 
 	void SetStartPos();
 	void SetShootingState();

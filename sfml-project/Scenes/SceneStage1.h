@@ -32,8 +32,14 @@ protected:
 	sf::Vector2f mouseStart;
 	sf::Vector2f mouseEnd;
 
+	sf::Vector2f initViewPos = FRAMEWORK.GetWindowSizeF() * 0.5f;
+	sf::Vector2f initViewSize = FRAMEWORK.GetWindowSizeF();
+	sf::Vector2f currentViewPos;
+	sf::Vector2f currentViewSize;
+
 	bool isShoot = false;
 	bool birdReady = true;
+	bool isViewMoving = false;
 
 public:
 	SceneStage1();
@@ -45,7 +51,11 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
+	bool GetViewMoving() { return isViewMoving; }
+
 	void LoadBlockInfo(const std::string& filePath);
 	void CheckPigCollision();
+
+	void ViewControl(const sf::Vector2f& mousePos);
 };
 

@@ -1,9 +1,9 @@
 BLOCK_COUNT,,,,,,,,
 3,,,,,,,,
 TEXTURE_ID,POSITION_X,POSITION_Y,WIDTH,HEIGHT,FRICTION,RESTITUTION,DENSITY,ROLLING
-graphics/StaticObjects/WoodSquareBlock1.png,900,635,41,41,0.5,0.5,0.2,
-graphics/StaticObjects/WoodSquareBlock2.png,900,545,41,41,0.5,0.5,0.2,
-graphics/StaticObjects/WoodStick1.png,900,590,102.5,10,0.5,0.5,0.2,
+graphics/StaticObjects/WoodSquareBlock1.png,1500,635,41,41,0.5,0.5,0.2,
+graphics/StaticObjects/WoodSquareBlock2.png,1500,545,41,41,0.5,0.5,0.2,
+graphics/StaticObjects/WoodStick1.png,1500,590,102.5,10,0.5,0.5,0.2,
 graphics/StaticObjects/WoodSquareBlock3.png,850,545,41,41,0.5,0.5,0.2,
 graphics/StaticObjects/WoodSquareBlock4.png,950,545,41,41,0.5,0.5,0.2,
 graphics/StaticObjects/WoodStick1.png,900,490,102.5,10,0.5,0.5,0.2,
