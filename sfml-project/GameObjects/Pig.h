@@ -24,9 +24,11 @@ public:
 
 	void SetInitPos(const sf::Vector2f& pos) { SetBoxPos(pos.x, pos.y); }
 	void SetDisable() { b2Body_Disable(bodyId); }
+	void SetEnable() { b2Body_Enable(bodyId); }
 
 	void TakeDamage(int damage);
 
 	bool IsDead() { return isDead; }
+	void SetNotDead() { isDead = false; }
 };
 

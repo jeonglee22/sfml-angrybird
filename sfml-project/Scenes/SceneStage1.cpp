@@ -41,7 +41,6 @@ void SceneStage1::Init()
 	LoadBlockInfo("StageStructures/Stage1.csv");
 
 	pig = (Pig*)AddGameObject(new Pig("graphics/Angrybirds/PigOriginal.png", "Pig"));
-	pig->SetInitPos({1500.f, 480.f - 30.f });
 
 	countUI = (ShootCountUI*)AddGameObject(new ShootCountUI());
 
@@ -70,6 +69,8 @@ void SceneStage1::Enter()
 	ground->SetBoxSize(bounds.width * 1.5f, 85.f);
 	ground->SetBoxPos(bounds.width * 0.5f, bounds.height);
 	ground->SetBoxFactor(0.8f, 0.5f);
+
+	pig->SetInitPos({ 1500.f, 480.f - 20.f });
 
 	Scene::Enter();
 
@@ -142,8 +143,10 @@ void SceneStage1::Update(float dt)
 		worldView.setCenter(initViewPos);
 	}
 #ifdef DEF_DEV
-	else if (InputMgr::GetKeyDown(sf::Keyboard::Space) && initViewPos == currentViewPos)
+	if (InputMgr::GetKeyDown(sf::Keyboard::Escape))
 	{
+		currentViewPos = initViewPos;
+		worldView.setCenter(initViewPos);
 		for(int i = 0 ; i < tryMax; i++)
 		{
 			birds[i]->SetRestart(true);
@@ -155,6 +158,15 @@ void SceneStage1::Update(float dt)
 		birds[tryCount]->SetStartPos();
 		shootStand->SetBird(birds[tryCount]);
 		birdReady = true;
+
+		for (auto block : blocks)
+		{
+			block->Reset();
+		}
+		pig->Reset();
+		pig->SetEnable();
+		pig->SetActive(true);
+		pig->SetNotDead();
 	}
 #endif
 }
