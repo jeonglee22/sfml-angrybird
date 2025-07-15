@@ -24,43 +24,24 @@ void Bird::Reset()
 
 	SetPosition(initPos * SCALE);
 	SetRotation(0.f);
-	if (!setBody)
-	{
-		bodyDef.position = b2Vec2{ initPos.x, initPos.y };
-		bodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &bodyDef);
 
-		collisionRadius = sprite.getTexture()->getSize().x * 0.5f * 0.8f;
-		b2Circle circleBox;
-		circleBox.center = { 0.f, 0.f };
-		circleBox.radius = collisionRadius / SCALE;
+	bodyDef.position = b2Vec2{ initPos.x, initPos.y };
+	bodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &bodyDef);
 
-		b2ShapeDef shapeDef = b2DefaultShapeDef();
-		shapeDef.density = .5f;
-		shapeDef.material.friction = 0.6f;
-		shapeDef.material.rollingResistance = 0.5f;
-		shapeDef.material.restitution = 0.5f;
-		shapeId = b2CreateCircleShape(bodyId, &shapeDef, &circleBox);
-		b2Shape_EnableHitEvents(shapeId, true);
+	collisionRadius = sprite.getTexture()->getSize().x * 0.5f * 0.8f;
+	b2Circle circleBox;
+	circleBox.center = { 0.f, 0.f };
+	circleBox.radius = collisionRadius / SCALE;
 
-		SetDisable();
-		setBody = true;
-	}
-	else
-	{
-		if (isRestart)
-		{
-			b2Body_SetTransform(bodyId, b2Vec2{ initPos.x , initPos.y  }, b2Rot{ 1.f,0.f });
-			isRestart = false;
-			SetDisable();
-		}
-		else
-		{
-			b2Body_SetTransform(bodyId, b2Vec2{ shootPos.x, shootPos.y}, b2Rot{ 1.f,0.f });
-			SetPosition(shootPos * SCALE);
-		}
-		b2Body_SetAngularVelocity(bodyId, 0.f);
-		b2Body_SetLinearVelocity(bodyId, b2Vec2_zero);
-	}
+	b2ShapeDef shapeDef = b2DefaultShapeDef();
+	shapeDef.density = .5f;
+	shapeDef.material.friction = 0.6f;
+	shapeDef.material.rollingResistance = 0.5f;
+	shapeDef.material.restitution = 0.5f;
+	shapeId = b2CreateCircleShape(bodyId, &shapeDef, &circleBox);
+	b2Shape_EnableHitEvents(shapeId, true);
+
+	SetDisable();
 }
 
 void Bird::Update(float dt)
@@ -91,6 +72,7 @@ void Bird::Update(float dt)
 	if (InputMgr::GetMouseButtonUp(sf::Mouse::Left) && isCharging && canShoot)
 	{
 		direction *= -1.f;
+		SetBirdEnable();
 		sf::Vector2f Force(direction.x * forceAmount * (chargeDistance / maxCharge), direction.y * forceAmount * (chargeDistance / maxCharge));
 		b2Body_ApplyForceToCenter(bodyId, b2Vec2{ Force.x, Force.y }, true);
 		isShoot = true;
@@ -111,4 +93,30 @@ bool Bird::CheckBirdOut()
 		posX >= shootPos.x * SCALE + 200.f ||
 		posY <= shootPos.y * SCALE - 200.f ||
 		posY >= shootPos.y * SCALE + 50.f;
+}
+
+void Bird::SetStartPos()
+{
+	b2Body_SetTransform(bodyId, b2Vec2{ shootPos.x, shootPos.y }, b2Rot{ 1.f,0.f });
+	SetPosition(shootPos * SCALE);
+	SetRotation(0.f);
+
+	b2Body_SetAngularVelocity(bodyId, 0.f);
+	b2Body_SetLinearVelocity(bodyId, b2Vec2_zero);
+}
+
+void Bird::SetShootingState()
+{
+	b2Body_SetAngularVelocity(bodyId, 0.f);
+	b2Body_SetLinearVelocity(bodyId, b2Vec2_zero);
+}
+
+void Bird::SetInitPos()
+{
+	b2Body_SetTransform(bodyId, b2Vec2{ initPos.x , initPos.y }, b2Rot{ 1.f,0.f });
+	isRestart = false;
+	SetDisable();
+
+	b2Body_SetAngularVelocity(bodyId, 0.f);
+	b2Body_SetLinearVelocity(bodyId, b2Vec2_zero);
 }

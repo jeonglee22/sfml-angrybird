@@ -76,7 +76,7 @@ void SceneStage1::Enter()
 	Scene::Enter();
 
 	//birds[tryCount]->SetBirdEnable();
-	birds[tryCount]->Reset();
+	birds[tryCount]->SetStartPos();
 	countUI->SetCount(birds.size());
 }
 
@@ -87,6 +87,19 @@ void SceneStage1::Update(float dt)
 	if(tryCount < tryMax)
 	{
 		shootStand->SetBird(birds[tryCount]);
+
+		if (birds[tryCount]->GetShoot()) 
+		{
+			birds[tryCount]->SetBirdEnable();
+			birds[tryCount]->SetShoot(false);
+			tryCount++;
+			countUI->SetCount(tryMax - tryCount);
+		}
+
+		if (tryCount > 0 && birds[tryCount-1]->CheckBirdOut())
+		{
+			birds[tryCount]->SetStartPos();
+		}
 	}
 
 	timeValue += dt;
@@ -98,24 +111,7 @@ void SceneStage1::Update(float dt)
 		{
 			birds[i]->SetTransform();
 		}
-		if(tryCount < tryMax)
-		{
-			if (birds[tryCount]->GetShoot())
-			{
-				if(!birdEnable)
-				{
-					birds[tryCount]->SetBirdEnable();
-					birdEnable = true;
-				}
-				birds[tryCount]->SetTransform();
-				if (birds[tryCount]->CheckBirdOut())
-				{
-					tryCount++;
-					countUI->SetCount(tryMax - tryCount);
-					birdEnable = false;
-				}
-			}
-		}
+		
 		for (int i = 0; i < blockCount; i++)
 		{
 			blocks[i]->SetTransform();
@@ -139,12 +135,12 @@ void SceneStage1::Update(float dt)
 		for(int i = 0 ; i < tryMax; i++)
 		{
 			birds[i]->SetRestart(true);
-			birds[i]->Reset();
+			birds[i]->SetInitPos();
 			birds[i]->SetShoot(false);
 		}
 		tryCount = 0;
 		countUI->SetCount(tryMax - tryCount);
-		birds[tryCount]->SetBirdEnable();
+		birds[tryCount]->SetStartPos();
 	}
 #endif
 }

@@ -50,15 +50,15 @@ public:
 	sf::FloatRect GetLocalBounds() { return sprite.getLocalBounds(); }
 	sf::FloatRect GetGlobalBounds() { return sprite.getGlobalBounds(); }
 
-	void SetBirdEnable() {
-		b2Body_Enable(bodyId);
-		Reset();
-		SetTransform();
-	}
+	void SetBirdEnable() {b2Body_Enable(bodyId);}
 	void SetDisable() { b2Body_Disable(bodyId); }
 	void SetShoot(bool b) { isShoot = b; }
 	void SetRestart(bool re) { isRestart = re; }
 
 	bool CheckBirdOut();
+
+	void SetStartPos();
+	void SetShootingState();
+	void SetInitPos();
 };
 
