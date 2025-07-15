@@ -64,6 +64,11 @@ void Bird::Update(float dt)
 			mouseEnd = scene->ScreenToWorld(InputMgr::GetMousePosition());
 			direction = Utils::GetNormal(mouseEnd - mouseStart);
 			chargeDistance = Utils::Clamp(Utils::Distance(mouseStart, mouseEnd), minCharge, maxCharge);
+			float shootangle = Utils::Angle(direction);
+			if (shootangle >= 50.f && shootangle <= 130.f)
+			{
+				chargeDistance = minCharge;
+			}
 			sf::Vector2f newPos = mouseStart + (chargeDistance - sprite.getTexture()->getSize().x * 0.3f) * direction;
 			SetPosition(newPos);
 
