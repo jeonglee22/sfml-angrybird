@@ -61,8 +61,11 @@ public:
 	void CheckPhysicsBodyCollision();
 	void CheckObjectsDead();
 	void ObjectsReset();
+	void SetObjectTransform();
 
 	void ViewControl(const sf::Vector2f& mousePos);
+	void ViewReset(float dt);
+	void ViewFollowing();
 	void Restart();
 };
 

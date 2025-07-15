@@ -10,6 +10,8 @@ ShootStand::ShootStand(const std::string& name)
 
 void ShootStand::Init()
 {
+	SetPosition(bodyPos);
+
 	rightBody = new SpriteGo("graphics/Angrybirds/StandRight.png");
 	rightBody->SetOrigin(Origins::TL);
 	rightBody->SetPosition(bodyPos + rightBodyPos);
@@ -89,6 +91,11 @@ void ShootStand::Update(float dt)
 			sf::Vector2f leftBandPos = GetLeftBandPos();
 			sf::Vector2f rightBandPos = GetRightBandPos();
 			float bandScale = Utils::Clamp(Utils::Distance(mouseStart, mouseEnd), bird->GetMinCharge(), bird->GetMaxCharge());
+			float shootangle = Utils::Angle(Utils::GetNormal(mouseEnd - mouseStart));
+			if (shootangle >= 50.f && shootangle <= 130.f)
+			{
+				bandScale = bird->GetMinCharge();
+			}
 			sf::Vector2f shootPos = Utils::GetNormal(mouseEnd - mouseStart) * (bandScale+3.f) + mouseStart;
 
 			SetLeftBandRotation(Utils::Angle(leftBandPos - shootPos));

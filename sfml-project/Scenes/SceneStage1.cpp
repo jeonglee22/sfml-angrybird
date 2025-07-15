@@ -60,6 +60,9 @@ void SceneStage1::Enter()
 
 	uiView.setSize(initViewSize);
 	uiView.setCenter(initViewPos);
+
+	initViewPos.x = shootStand->GetPosition().x;
+
 	worldView.setSize(initViewSize);
 	worldView.setCenter(initViewPos);
 	currentViewPos = initViewPos;
@@ -98,41 +101,18 @@ void SceneStage1::Update(float dt)
 		}
 	}
 
-	/*if (initViewPos != currentViewPos || initViewSize != currentViewSize)
-	{
-		viewReset += dt;
-		if (viewReset >= viewResetMax)
-		{
-			viewReset = 0.f;
-			currentViewPos = initViewPos;
-			worldView.setCenter(initViewPos);
-			currentViewSize = initViewSize;
-			worldView.setSize(initViewSize);
-		}
-	}*/
+	ViewReset(dt);
 
 	timeValue += dt;
 	if (timeValue >= timeStep)
 	{
 		b2World_Step(FRAMEWORK.GetWorldID(), timeStep, subStepCount);
-		//bird->Shoot();
-		for (int i = 0; i < tryCount; i++)
-		{
-			birds[i]->SetTransform();
-		}
-		
-		for (int i = 0; i < blockCount; i++)
-		{
-			blocks[i]->SetTransform();
-		}
-		for(int i = 0; i < pigCount; i++)
-		{
-			pigs[i]->SetTransform();
-		}
 		
 		CheckObjectsDead();
+
 		CheckPhysicsBodyCollision();
-		//std::cout << pig->IsDead() << std::endl;
+
+		SetObjectTransform();
 
 		timeValue = 0.f;
 	}
@@ -144,6 +124,7 @@ void SceneStage1::Update(float dt)
 	else if (InputMgr::GetMouseButton(sf::Mouse::Right))
 	{
 		ViewControl((sf::Vector2f)InputMgr::GetMousePosition());
+		viewReset = 0.f;
 	}
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Space) && initViewPos != currentViewPos)
@@ -235,6 +216,33 @@ void SceneStage1::ViewControl(const sf::Vector2f& mousePos)
 	worldView.setCenter(currentViewPos);
 }
 
+void SceneStage1::ViewReset(float dt)
+{
+	if ((initViewPos != currentViewPos || initViewSize != currentViewSize) && birdReady)
+	{
+		viewReset += dt;
+		if (viewReset >= viewResetMax)
+		{
+			currentViewPos += Utils::GetNormal(initViewPos - currentViewPos) * 500.f * dt;
+			if (std::abs(currentViewPos.x - initViewPos.x) <= 5.f) currentViewPos.x = initViewPos.x;
+			if (std::abs(currentViewPos.y - initViewPos.y) <= 5.f) currentViewPos.y = initViewPos.y;
+			worldView.setCenter(currentViewPos);
+			currentViewSize = initViewSize;
+			worldView.setSize(initViewSize);
+		}
+	}
+	else
+	{
+		viewReset = 0.f;
+	}
+}
+
+void SceneStage1::ViewFollowing()
+{
+	sf::Vector2f birdPos = birds[tryCount]->GetPosition();
+
+}
+
 void SceneStage1::Restart()
 {
 	currentViewPos = initViewPos;
@@ -278,16 +286,33 @@ void SceneStage1::ObjectsReset()
 {
 	for (auto block : blocks)
 	{
-		block->Reset();
 		block->SetEnable();
+		block->Reset();
 		block->SetActive(true);
 		block->SetNotDead();
 	}
 	for (auto pig : pigs)
 	{
-		pig->Reset();
 		pig->SetEnable();
+		pig->Reset();
 		pig->SetActive(true);
 		pig->SetNotDead();
+	}
+}
+
+void SceneStage1::SetObjectTransform()
+{
+	for (int i = 0; i < tryCount; i++)
+	{
+		birds[i]->SetTransform();
+	}
+
+	for (int i = 0; i < blockCount; i++)
+	{
+		blocks[i]->SetTransform();
+	}
+	for (int i = 0; i < pigCount; i++)
+	{
+		pigs[i]->SetTransform();
 	}
 }
