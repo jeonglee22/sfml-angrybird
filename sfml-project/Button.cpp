@@ -51,3 +51,17 @@ void Button::Draw(sf::RenderWindow& window)
 {
 	SpriteGo::Draw(window);
 }
+
+void Button::DoFunc()
+{
+	switch (type)
+	{
+	case Button::Type::Void:
+		voidfunc();
+		break;
+	case Button::Type::buttonCount:
+		break;
+	default:
+		break;
+	}
+}

@@ -15,6 +15,7 @@ void SceneChooseStage::Init()
 	{
 		buttons.push_back((Button*)AddGameObject(new Button("graphics/startbutton.png")));
 		buttons[i]->SetPosition(FRAMEWORK.GetWindowSizeF() * 0.5f);
+		//buttons[i]->SetButtonFunc();
 	}
 
 	Scene::Init();

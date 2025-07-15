@@ -123,11 +123,11 @@ void SceneStage1::Update(float dt)
 		timeValue = 0.f;
 	}
 
-	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+	if (InputMgr::GetMouseButtonDown(sf::Mouse::Right))
 	{
 		mouseStart = (sf::Vector2f)InputMgr::GetMousePosition();
 	}
-	else if (InputMgr::GetMouseButton(sf::Mouse::Left) && !birds[tryCount]->GetCharging())
+	else if (InputMgr::GetMouseButton(sf::Mouse::Right) && !birds[tryCount]->GetCharging())
 	{
 		ViewControl((sf::Vector2f)InputMgr::GetMousePosition());
 	}

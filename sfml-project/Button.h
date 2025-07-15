@@ -2,10 +2,20 @@
 #include "SpriteGo.h"
 class Button : public SpriteGo
 {
+public:
+	enum class Type
+	{
+		None = -1,
+		Void,
+
+		buttonCount,
+	};
 protected:
-	std::function<void()> func;
+	std::function<void()> voidfunc;
 
 	bool isClicked = false;
+
+	Type type;
 
 	sf::Uint8 originAlpha;
 
@@ -21,5 +31,8 @@ public:
 
 	sf::FloatRect GetLocalBounds() { return sprite.getLocalBounds(); }
 	sf::FloatRect GetGlobalBounds() { return sprite.getGlobalBounds(); }
+
+	void SetButtonFunc(const std::function<void()>& func) { voidfunc = func; }
+	void DoFunc();
 };
 
