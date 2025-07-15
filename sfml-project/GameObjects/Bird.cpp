@@ -101,9 +101,11 @@ bool Bird::CheckFinishShoot()
 		posX >= shootPos.x * SCALE + 200.f ||
 		posY <= shootPos.y * SCALE - 200.f ||
 		posY >= shootPos.y * SCALE + 50.f;
+
 	b2Vec2 velocity = b2Body_GetLinearVelocity(bodyId);
-	bool stop = velocity.x <= std::numeric_limits<float>::epsilon() &&
-		velocity.y <= std::numeric_limits<float>::epsilon();
+	bool stop = std::abs(velocity.x * SCALE) <= std::numeric_limits<float>::epsilon() &&
+		std::abs(velocity.y * SCALE) <= std::numeric_limits<float>::epsilon();
+
 	return posOut && stop;
 }
 

@@ -114,7 +114,7 @@ void SceneStage1::Update(float dt)
 		}
 	}
 
-	if(!isZoomOut && !isZoomIn)
+	if(!isZoomOut && !isZoomIn && birdReady)
 		ViewReset(dt);
 
 	timeValue += dt;
@@ -143,6 +143,11 @@ void SceneStage1::Update(float dt)
 
 	ZoomIn(dt);
 	ZoomOut(dt);
+
+	if(!birdReady)
+	{
+		ViewFollowing(dt);
+	}
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Space) && initViewPos != currentViewPos)
 	{
@@ -226,14 +231,11 @@ void SceneStage1::CheckPhysicsBodyCollision()
 
 void SceneStage1::ViewControl(const sf::Vector2f& mousePos)
 {
-	float topLimit = backgroundSize.top + currentViewSize.y * 0.5f;
-	float bottomLimit = backgroundSize.top + backgroundSize.height - currentViewSize.y * 0.5f;
-	float leftLimit = backgroundSize.left + currentViewSize.x * 0.5f;
-	float rightLimit = backgroundSize.left + backgroundSize.width - currentViewSize.x * 0.5f;
+	currentViewPos.x += (mouseStart - mousePos).x;
+	currentViewPos.y += (mouseStart - mousePos).y;
+	
+	ViewClamp();
 
-	float newXpos = Utils::Clamp((mouseStart - mousePos).x + currentViewPos.x, leftLimit, rightLimit);
-	float newYpos = Utils::Clamp((mouseStart - mousePos).y + currentViewPos.y, topLimit, bottomLimit);
-	currentViewPos = sf::Vector2f(newXpos, newYpos);
 	mouseStart = mousePos;
 	worldView.setCenter(currentViewPos);
 }
@@ -249,8 +251,14 @@ void SceneStage1::ViewReset(float dt)
 			if (std::abs(currentViewPos.x - initViewPos.x) <= 5.f) currentViewPos.x = initViewPos.x;
 			if (std::abs(currentViewPos.y - initViewPos.y) <= 5.f) currentViewPos.y = initViewPos.y;
 			worldView.setCenter(currentViewPos);
+			/*float xSizeRatio = initViewSize.x / currentViewSize.x;
+			float ySizeRatio = initViewSize.y / currentViewSize.y;
+			currentViewSize.x *= xSizeRatio * 0.9f ;
+			currentViewSize.y *= ySizeRatio * 0.9f ;
+			if (std::abs(currentViewSize.x - initViewSize.x) <= 5.f) currentViewSize.x = initViewSize.x;
+			if (std::abs(currentViewSize.y - initViewSize.y) <= 5.f) currentViewSize.y = initViewSize.y;*/
 			currentViewSize = initViewSize;
-			worldView.setSize(initViewSize);
+			worldView.setSize(currentViewSize);
 		}
 	}
 	else
@@ -259,11 +267,43 @@ void SceneStage1::ViewReset(float dt)
 	}
 }
 
-void SceneStage1::ViewFollowing()
+void SceneStage1::ViewFollowing(float dt)
 {
-	sf::Vector2f birdPos = birds[tryCount]->GetPosition();
+	sf::Vector2f birdPos = birds[tryCount-1]->GetPosition();
+	
+	if (currentViewPos.y - currentViewSize.y * 0.25f >= birdPos.y)
+	{
+		float diff = currentViewPos.y - currentViewSize.y * 0.25f - birdPos.y;
+		currentViewPos.y -= diff *0.5f;
+		currentViewSize.y += diff;
+		currentViewSize.x += diff * FRAMEWORK.GetWindowRatio();
+	}
 
+	/*float xDiff = currentViewPos.x - birdPos.x;
+	if (std::abs(xDiff) <= std::numeric_limits<float>::epsilon())
+	{*/
+	currentViewPos.x = birdPos.x;
+	/*}
+	else
+	{
+		currentViewPos.x += (currentViewSize.x * 0.5f - xDiff) * dt * 0.8f;
+	}*/
+	ViewClamp();
 
+	worldView.setCenter(currentViewPos);
+	worldView.setSize(currentViewSize);
+
+}
+
+void SceneStage1::ViewClamp()
+{
+	float topLimit = backgroundSize.top + currentViewSize.y * 0.5f;
+	float bottomLimit = backgroundSize.top + backgroundSize.height - currentViewSize.y * 0.5f;
+	float leftLimit = backgroundSize.left + currentViewSize.x * 0.5f;
+	float rightLimit = backgroundSize.left + backgroundSize.width - currentViewSize.x * 0.5f;
+
+	currentViewPos.x = Utils::Clamp(currentViewPos.x, leftLimit, rightLimit);
+	currentViewPos.y = Utils::Clamp(currentViewPos.y, topLimit, bottomLimit);
 }
 
 void SceneStage1::Restart()

@@ -44,8 +44,8 @@ protected:
 	sf::Vector2f initViewSize = FRAMEWORK.GetWindowSizeF();
 	sf::Vector2f currentViewPos;
 	sf::Vector2f currentViewSize;
-	sf::Vector2f minViewSize = { (1366.f / 768.f) * 100.f , 100.f };
-	sf::Vector2f maxViewSize = { (1366.f / 768.f) * 1882.f , 1882.f };
+	sf::Vector2f minViewSize = { (1366.f / 768.f) * 400.f , 400.f };
+	sf::Vector2f maxViewSize = { (1366.f / 768.f) * 1568.f , 1568.f };
 
 	bool isShoot = false;
 	bool birdReady = true;
@@ -75,7 +75,8 @@ public:
 
 	void ViewControl(const sf::Vector2f& mousePos);
 	void ViewReset(float dt);
-	void ViewFollowing();
+	void ViewFollowing(float dt);
+	void ViewClamp();
 	void Restart();
 
 	void ZoomIn(float dt);
