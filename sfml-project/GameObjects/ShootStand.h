@@ -22,7 +22,13 @@ protected:
 	std::vector<SpriteGo*> Band;
 	Bird* bird = nullptr;
 
-	sf::Vector2f shootPos = { 150.f, 685.f };
+	sf::Vector2f bodyPos = { 150.f, 685.f };
+	sf::Vector2f leftBodyPos = {9.f,-140.f};
+	sf::Vector2f rightBodyPos = { -7.f,-135.f };
+	sf::Vector2f bandBodyPos = {0.f,-115.f};
+	sf::Vector2f leftBandPos = {-25.f,-115.f};
+	sf::Vector2f rightBandPos = {15.f,-115.f};
+
 	sf::Vector2f mouseStart;
 	sf::Vector2f mouseEnd;
 
@@ -54,5 +60,6 @@ public:
 	sf::Vector2f GetLeftBandPos() { return Band[(int)Part::Left]->GetPosition(); }
 	sf::Vector2f GetRightBandPos() { return Band[(int)Part::Right]->GetPosition(); }
 	sf::Vector2f GetBodyBandPos() { return Band[(int)Part::Body]->GetPosition(); }
+	void ResetBandPos();
 };
 

@@ -33,7 +33,7 @@ protected:
 	sf::Vector2f mouseEnd;
 
 	bool isShoot = false;
-	bool birdEnable = false;
+	bool birdReady = true;
 
 public:
 	SceneStage1();

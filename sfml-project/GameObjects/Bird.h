@@ -26,7 +26,6 @@ protected:
 
 	sf::Vector2f shootPos = { 150.f / SCALE, 570.f / SCALE };
 
-	bool canShoot = true;
 	bool isRestart = false;
 
 public:

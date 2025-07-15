@@ -11,14 +11,14 @@ void ShootStand::Init()
 {
 	rightBody = new SpriteGo("graphics/Angrybirds/StandRight.png");
 	rightBody->SetOrigin(Origins::TL);
-	rightBody->SetPosition({ 143.f, 550.f });
+	rightBody->SetPosition(bodyPos + rightBodyPos);
 	rightBody->SetScale({ 1.f,0.7f });
 	rightBody->sortingLayer = SortingLayers::Foreground;
 	rightBody->sortingOrder = -2;
 
 	leftBody = new SpriteGo("graphics/Angrybirds/StandLeft.png");
 	leftBody->SetOrigin(Origins::TR);
-	leftBody->SetPosition({ 159.f, 545.f });
+	leftBody->SetPosition(bodyPos + leftBodyPos);
 	leftBody->SetScale({ 1.f,0.7f });
 	leftBody->sortingLayer = SortingLayers::Foreground;
 	leftBody->sortingOrder = 2;
@@ -31,9 +31,6 @@ void ShootStand::Init()
 		Band[i]->sortingOrder = (i == 1 ? -1 : 1);
 		Band[i]->SetActive(false);
 	}
-	Band[(int)Part::Left]->SetPosition({125.f, 570.f});
-	Band[(int)Part::Right]->SetPosition({165.f, 570.f});
-	Band[(int)Part::Body]->SetPosition({150.f, 570.f});
 }
 
 void ShootStand::Release()
@@ -46,9 +43,11 @@ void ShootStand::Reset()
 	rightBody->Reset();
 	leftBody->Reset();
 
+	ResetBandPos();
+
 	sf::Vector2u standTexSize = TEXTURE_MGR.Get("graphics/Angrybirds/ShootStand.png").getSize();
 	SetBoxSize(standTexSize.x * 0.2f, standTexSize.y * 0.5f * 0.7f);
-	SetBoxPos(shootPos.x, shootPos.y);
+	SetBoxPos(bodyPos.x, bodyPos.y);
 	SetBoxFactor(0.8f, 0.2f);
 	SetPosition(initPos * SCALE);
 	SetRotation(0.f);
@@ -56,19 +55,19 @@ void ShootStand::Reset()
 	bodyDef.position = b2Vec2{ initPos.x, initPos.y };
 	bodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &bodyDef);
 
-	b2Polygon groundBox = b2MakeBox(texSize.x, texSize.y);
+	b2Polygon standBox = b2MakeBox(texSize.x, texSize.y);
 	shapeDef = b2DefaultShapeDef();
 	shapeDef.density = density;
 	shapeDef.material.friction = friction;
 	shapeDef.material.restitution = restitution;
-	shapeId = b2CreatePolygonShape(bodyId, &shapeDef, &groundBox);
+	shapeId = b2CreatePolygonShape(bodyId, &shapeDef, &standBox);
 }
 
 void ShootStand::Update(float dt)
 {
 	PhysicsBody::Update(dt);
 
-	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left) && !bird->GetShoot())
 	{
 		if (Utils::PointInTransformBounds(bird->GetSprite(), bird->GetLocalBounds(), (sf::Vector2f)InputMgr::GetMousePosition()))
 		{
@@ -99,6 +98,7 @@ void ShootStand::Update(float dt)
 		SetRightBandRotation(0.f);
 		SetLeftBandScale(1.f);
 		SetRightBandScale(1.f);
+		ResetBandPos();
 		SetBandActive(false);
 		isShoot = false;
 	}
@@ -144,5 +144,12 @@ void ShootStand::SetRightBandScale(float s)
 void ShootStand::SetBandPos(const sf::Vector2f& pos)
 {
 	Band[(int)Part::Body]->SetPosition(pos);
+}
+
+void ShootStand::ResetBandPos()
+{
+	Band[(int)Part::Left]->SetPosition(bodyPos + leftBandPos);
+	Band[(int)Part::Right]->SetPosition(bodyPos + rightBandPos);
+	Band[(int)Part::Body]->SetPosition(bodyPos + bandBodyPos);
 }
 
