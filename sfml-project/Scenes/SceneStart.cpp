@@ -51,5 +51,5 @@ void SceneStart::Update(float dt)
 		viewTime = 0.f;
 	}
 	if (InputMgr::GetMouseButtonUp(sf::Mouse::Left))
-		SCENE_MGR.ChangeScene(SceneIds::Stage1);
+		SCENE_MGR.ChangeScene(SceneIds::ChooseStage);
 }

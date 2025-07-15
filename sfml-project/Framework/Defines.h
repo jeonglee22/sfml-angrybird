@@ -23,6 +23,7 @@ enum class SceneIds
 {
 	None = -1,
 	Start,
+	ChooseStage,
 	Dev1,
 	Dev2,
 	Test,
