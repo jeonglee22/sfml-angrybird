@@ -67,24 +67,24 @@ void EditBoxUI::Init()
 
 	for (int i = 0; i < pigCount; i++)
 	{
-		pigs.push_back(new SpriteGo("graphics/Angrybirds/PigOriginal.png"));
+		pigs.push_back(new SpriteGo("graphics/Angrybirds/PigOriginal.png", "Pig"));
 		pigs[i]->SetOrigin(Origins::MC);
 		pigs[i]->SetActive(false);
 	}
 	for (int i = 0; i < blockCount; i++)
 	{
 		if(i <= 3)
-			blocks.push_back(new SpriteGo("graphics/EditorObjects/WoodSquareBlock"+ std::to_string(i + 1) + ".png"));
+			blocks.push_back(new SpriteGo("graphics/EditorObjects/WoodSquareBlock"+ std::to_string(i + 1) + ".png", "Block"));
 		else if(i <= 5)
-			blocks.push_back(new SpriteGo("graphics/EditorObjects/WoodStick" + std::to_string(i - 3) + ".png"));
+			blocks.push_back(new SpriteGo("graphics/EditorObjects/WoodStick" + std::to_string(i - 3) + ".png", "Block"));
 		else if(i <= 9)
-			blocks.push_back(new SpriteGo("graphics/EditorObjects/StoneSquareBlock" + std::to_string(i - 5) + ".png"));
+			blocks.push_back(new SpriteGo("graphics/EditorObjects/StoneSquareBlock" + std::to_string(i - 5) + ".png", "Block"));
 		else if(i <= 11)
-			blocks.push_back(new SpriteGo("graphics/EditorObjects/StoneStick" + std::to_string(i - 9) + ".png"));
+			blocks.push_back(new SpriteGo("graphics/EditorObjects/StoneStick" + std::to_string(i - 9) + ".png", "Block"));
 		else if(i <= 15)
-			blocks.push_back(new SpriteGo("graphics/EditorObjects/GlassSquareBlock" + std::to_string(i - 11) + ".png"));
+			blocks.push_back(new SpriteGo("graphics/EditorObjects/GlassSquareBlock" + std::to_string(i - 11) + ".png", "Block"));
 		else if (i <= 17)
-			blocks.push_back(new SpriteGo("graphics/EditorObjects/GlassStick" + std::to_string(i - 15) + ".png"));
+			blocks.push_back(new SpriteGo("graphics/EditorObjects/GlassStick" + std::to_string(i - 15) + ".png", "Block"));
 		blocks[i]->SetOrigin(Origins::MC);
 		blocks[i]->SetActive(false);
 		blocks[i]->SetScale({ 0.7f, 0.7f });

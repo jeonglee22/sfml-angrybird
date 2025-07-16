@@ -19,6 +19,7 @@ public:
 	void SetSize(const sf::Vector2f& s);
 	void SetColor(const sf::Color& c);
 
+	sf::RectangleShape GetRect() const { return rect; }
 
 	void Init() override;
 	void Release() override;

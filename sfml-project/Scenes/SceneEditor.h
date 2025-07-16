@@ -15,6 +15,7 @@ protected:
 	RectGo* objectBound = nullptr;
 	SpriteGo* spriteChoosed = nullptr;
 	Button* redo = nullptr;
+	Button* save = nullptr;
 
 	std::vector<SpriteGo*> spriteInserts;
 	int spriteCount = 0;
@@ -35,6 +36,8 @@ protected:
 
 	bool isChoosed = false;
 
+	static int mapNumber;
+
 public:
 	SceneEditor();
 	~SceneEditor() = default;
@@ -47,5 +50,6 @@ public:
 
 	void ViewControl(const sf::Vector2f& mousePos);
 	void ViewClamp();
+	void SaveField();
 };
 

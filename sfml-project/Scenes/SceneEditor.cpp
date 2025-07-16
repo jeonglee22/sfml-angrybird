@@ -1,10 +1,13 @@
 #include "stdafx.h"
+#include "rapidcsv.h"
 #include "SceneEditor.h"
 #include "BackGround.h"
 #include "EditBoxUI.h"
 #include "SpriteGo.h"
 #include "RectGo.h"
 #include "Button.h"
+
+int SceneEditor::mapNumber = 1;
 
 SceneEditor::SceneEditor()
 	: Scene(SceneIds::Editor)
@@ -16,6 +19,7 @@ void SceneEditor::Init()
 	texIds.push_back("graphics/LevelOne.png");
 	texIds.push_back("graphics/Sky.png");
 	texIds.push_back("graphics/redo.png");
+	texIds.push_back("graphics/save.png");
 	texIds.push_back("graphics/PigButton.png");
 	texIds.push_back("graphics/BlockButton.png");
 	texIds.push_back("graphics/Angrybirds/PigOriginal.png");
@@ -36,15 +40,16 @@ void SceneEditor::Init()
 
 	boxUI = (EditBoxUI*)AddGameObject(new EditBoxUI());
 	redo = (Button*)AddGameObject(new Button("graphics/redo.png"));
+	save = (Button*)AddGameObject(new Button("graphics/save.png"));
 	objectBound = (RectGo*)AddGameObject(new RectGo());
-	objectBound->SetSize({ backgroundSize.width * 0.5f,backgroundSize.height * 0.5f});
-	objectBound->SetColor(sf::Color(0, 0, 0, 120));
+	objectBound->SetColor(sf::Color(0, 0, 0, 100));
 
 	Scene::Init();
 
 	objectBound->sortingOrder = -1;
 	
 	redo->sortingOrder = 10;
+	save->sortingOrder = 10;
 }
 
 void SceneEditor::Enter()
@@ -58,9 +63,7 @@ void SceneEditor::Enter()
 	currentViewSize = initViewSize;
 
 	Scene::Enter();
-
-	objectBound->SetPosition({ backgroundSize.left + backgroundSize.width * 0.75f, backgroundSize.top + backgroundSize.height * 0.5f});
-
+	
 	auto redoFunc = [this]() {
 		if(spriteCount > 0)
 		{
@@ -70,10 +73,21 @@ void SceneEditor::Enter()
 		}
 	};
 	redo->SetButtonFunc(redoFunc);
+	redo->SetScale({ 0.75f,0.75f });
 	sf::Vector2f redoButtonSize = (sf::Vector2f)TEXTURE_MGR.Get(redo->GetTextureId()).getSize();
-	redo->SetPosition({ redoButtonSize.x * 0.8f, redoButtonSize.y * 0.8f});
+	redo->SetPosition({ redoButtonSize.x * 0.6f + 80.f, redoButtonSize.y * 0.6f});
+
+	auto saveFunc = [this]() { SaveField(); };
+	save->SetButtonFunc(saveFunc);
+	save->SetScale({ 0.6f,0.6f });
+	sf::Vector2f saveButtonSize = (sf::Vector2f)TEXTURE_MGR.Get(save->GetTextureId()).getSize();
+	save->SetPosition({ saveButtonSize.x * 0.6f, saveButtonSize.y * 0.5f});
 
 	backgroundSize = background->GetTotalSize();
+
+	objectBound->SetSize({ backgroundSize.width * 0.5f, backgroundSize.height });
+	objectBound->SetPosition({ backgroundSize.left + backgroundSize.width * 0.75f, backgroundSize.top + backgroundSize.height * 0.5f });
+	objectBound->SetOrigin(sf::Vector2f( backgroundSize.width * 0.5f, backgroundSize.height ) * 0.5f);
 }
 
 void SceneEditor::Update(float dt)
@@ -108,14 +122,26 @@ void SceneEditor::Update(float dt)
 	}
 	if (InputMgr::GetMouseButtonUp(sf::Mouse::Left) && isChoosed)
 	{
-		sf::Vector2f spritePos = spriteInserts[spriteCount]->GetPosition();
-		sf::Vector2f newPos = ScreenToWorld(UiToScreen(spritePos));
-		spriteInserts[spriteCount]->SetPosition(newPos);
-		spriteInserts[spriteCount]->sortingLayer = SortingLayers::Foreground;
-		spriteInserts[spriteCount]->sortingOrder = 0;
-		spriteChoosed = nullptr;
-		isChoosed = false;
-		spriteCount++;
+		sf::Vector2f mouseUiPos = ScreenToUi(InputMgr::GetMousePosition());
+		sf::Vector2f mouseWorldPos = ScreenToWorld(InputMgr::GetMousePosition());
+		if (Utils::PointInTransformBounds(objectBound->GetRect(), objectBound->GetRect().getLocalBounds(), mouseWorldPos) &&
+			!Utils::PointInTransformBounds(boxUI->GetBody(), boxUI->GetBody().getLocalBounds(), mouseUiPos))
+		{
+			sf::Vector2f spritePos = spriteInserts[spriteCount]->GetPosition();
+			sf::Vector2f newPos = ScreenToWorld(UiToScreen(spritePos));
+			spriteInserts[spriteCount]->SetPosition(newPos);
+			spriteInserts[spriteCount]->sortingLayer = SortingLayers::Foreground;
+			spriteInserts[spriteCount]->sortingOrder = 0;
+			spriteChoosed = nullptr;
+			isChoosed = false;
+			spriteCount++;
+		}
+		else
+		{
+			RemoveGameObject(spriteInserts[spriteCount]);
+			spriteInserts.pop_back();
+			isChoosed = false;
+		}
 	}
 }
 
@@ -144,4 +170,12 @@ void SceneEditor::ViewClamp()
 
 	currentViewPos.x = Utils::Clamp(currentViewPos.x, leftLimit, rightLimit);
 	currentViewPos.y = Utils::Clamp(currentViewPos.y, topLimit, bottomLimit);
+}
+
+void SceneEditor::SaveField()
+{
+	rapidcsv::Document doc("graphics/EditorMaps/Map" + std::to_string(SceneEditor::mapNumber) + ".csv");
+	doc.SetColumnName(0, "BLOCK_COUNT");
+	doc.SetColumnName(1, "PIG_COUNT");
+	//doc.SetCell(0, 0, SceneEditor::blockCount );
 }

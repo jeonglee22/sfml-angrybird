@@ -41,5 +41,6 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	SpriteGo* GetMousePosSprite();
+	sf::RectangleShape GetBody() const { return body; }
 };
 
