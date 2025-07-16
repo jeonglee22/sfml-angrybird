@@ -39,6 +39,10 @@ void Button::Update(float dt)
 		if (mouseDistance < sprite.getTexture()->getSize().x * 0.5)
 		{
 			sprite.setColor(sf::Color(sprite.getColor().r, sprite.getColor().g, sprite.getColor().b, originAlpha * 0.5f));
+			if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+			{
+				DoFunc();
+			}
 		}
 		else
 		{
@@ -57,7 +61,10 @@ void Button::DoFunc()
 	switch (type)
 	{
 	case Button::Type::Void:
-		voidfunc();
+		if(voidfunc)
+		{
+			voidfunc();
+		}
 		break;
 	case Button::Type::buttonCount:
 		break;

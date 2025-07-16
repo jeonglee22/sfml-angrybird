@@ -28,5 +28,15 @@ public:
 	void Reset() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+
+	virtual sf::FloatRect GetLocalBounds() const
+	{
+		return sprite.getLocalBounds();
+	}
+
+	virtual sf::FloatRect GetGlobalBounds() const
+	{
+		return sprite.getGlobalBounds();
+	}
 };
 

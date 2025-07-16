@@ -32,7 +32,11 @@ public:
 	sf::FloatRect GetLocalBounds() { return sprite.getLocalBounds(); }
 	sf::FloatRect GetGlobalBounds() { return sprite.getGlobalBounds(); }
 
-	void SetButtonFunc(const std::function<void()>& func) { voidfunc = func; }
+	void SetButtonFunc(const std::function<void()>& func) 
+	{ 
+		voidfunc = func; 
+		type = Type::Void; 
+	}
 	void DoFunc();
 };
 
