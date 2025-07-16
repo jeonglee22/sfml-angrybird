@@ -159,6 +159,7 @@ void SceneEditor::Update(float dt)
 			isChoosed = false;
 		}
 	}
+	std::cout << InputMgr::GetWheelScrollAmount() << std::endl;
 }
 
 void SceneEditor::Draw(sf::RenderWindow& window)
