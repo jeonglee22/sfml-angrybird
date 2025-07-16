@@ -19,6 +19,8 @@ protected:
 
 	std::vector<SpriteGo*> spriteInserts;
 	int spriteCount = 0;
+	int blockCount = 0;
+	int pigCount = 0;
 
 	sf::Vector2f initViewPos = { FRAMEWORK.GetWindowSizeF().x ,FRAMEWORK.GetWindowSizeF().y * 0.5f};
 	sf::Vector2f initViewSize = FRAMEWORK.GetWindowSizeF();

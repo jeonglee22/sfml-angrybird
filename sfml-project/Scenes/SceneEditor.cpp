@@ -68,6 +68,14 @@ void SceneEditor::Enter()
 		if(spriteCount > 0)
 		{
 			spriteCount--;
+			if (spriteInserts[spriteCount]->GetName() == "Pig")
+			{
+				pigCount--;
+			}
+			else
+			{
+				blockCount--;
+			}
 			RemoveGameObject(spriteInserts[spriteCount]);
 			spriteInserts.pop_back();
 		}
@@ -134,6 +142,14 @@ void SceneEditor::Update(float dt)
 			spriteInserts[spriteCount]->sortingOrder = 0;
 			spriteChoosed = nullptr;
 			isChoosed = false;
+			if (spriteInserts[spriteCount]->GetName() == "Pig")
+			{
+				pigCount++;
+			}
+			else
+			{
+				blockCount++;
+			}
 			spriteCount++;
 		}
 		else
@@ -174,8 +190,34 @@ void SceneEditor::ViewClamp()
 
 void SceneEditor::SaveField()
 {
-	rapidcsv::Document doc("graphics/EditorMaps/Map" + std::to_string(SceneEditor::mapNumber) + ".csv");
+	std::string fileName = "graphics/EditorMaps/Map" + std::to_string(SceneEditor::mapNumber) + ".csv";
+	rapidcsv::Document doc;
 	doc.SetColumnName(0, "BLOCK_COUNT");
 	doc.SetColumnName(1, "PIG_COUNT");
-	//doc.SetCell(0, 0, SceneEditor::blockCount );
+	doc.InsertRow(0, std::vector<int>{spriteCount});
+	for (int i = 0; i < spriteCount; i++)
+	{
+		sf::Vector2f pos = spriteInserts[i]->GetPosition();
+		sf::FloatRect rect = spriteInserts[i]->GetLocalBounds();
+		std::vector<float> info;
+		info.push_back(pos.x);
+		info.push_back(pos.y);
+		info.push_back(rect.width * 0.5f);
+		info.push_back(rect.height * 0.5f);
+		info.push_back(0.5f);
+		info.push_back(0.5f);
+		info.push_back(0.1f);
+		info.push_back(0.f);
+		info.push_back(50.f);
+		if(spriteInserts[i]->GetName() == "Pig")
+		{
+			info.push_back(1);
+		}
+		else
+		{
+			info.push_back(0);
+		}
+		doc.InsertRow(i + 2, info);
+		doc.Save(fileName);
+	}
 }
