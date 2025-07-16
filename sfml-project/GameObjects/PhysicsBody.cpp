@@ -22,10 +22,12 @@ void PhysicsBody::Init()
 
 void PhysicsBody::Release()
 {
-	SpriteGo::Release();
+	/*std::cout << bodyId.index1 << std::endl;
+	b2DestroyShape(shapeId, true);
+	b2DestroyBody(bodyId);
+	bodyId = b2_nullBodyId;*/
 
-	//b2DestroyBody(bodyId);
-	//bodyId = b2_nullBodyId;
+	SpriteGo::Release();
 }
 
 void PhysicsBody::Reset()
@@ -34,14 +36,14 @@ void PhysicsBody::Reset()
 	{
 		SpriteGo::Reset();
 	}
-
+	
 	sf::FloatRect bounds = FRAMEWORK.GetWindowBounds();
+
+	SetPosition(initPos * SCALE);
+	SetRotation(0.f);
 
 	if (!setBody)
 	{
-		SetPosition(initPos * SCALE);
-		SetRotation(0.f);
-
 		bodyDef.position = b2Vec2{ initPos.x, initPos.y };
 		bodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &bodyDef);
 
@@ -51,7 +53,6 @@ void PhysicsBody::Reset()
 		shapeDef.material.friction = friction;
 		shapeDef.material.restitution = restitution;
 		shapeId = b2CreatePolygonShape(bodyId, &shapeDef, &groundBox);
-
 		setBody = true;
 	}
 	else

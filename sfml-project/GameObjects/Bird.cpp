@@ -90,6 +90,16 @@ void Bird::Update(float dt)
 			isCharging = false;
 		}
 	}
+
+	if (CheckFinishShoot() && isShoot)
+	{
+		despawnTime += dt;
+		if (despawnTime >= despawnTimeMax)
+		{
+			SetDisable();
+			SetActive(false);
+		}
+	}
 }
 
 void Bird::Draw(sf::RenderWindow& window)

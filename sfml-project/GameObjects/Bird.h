@@ -25,6 +25,8 @@ protected:
 	float maxCharge = 70.f;
 	float forceAmount = 800.f;
 	float flyingDirection = 1.f;
+	float despawnTimeMax = 3.f;
+	float despawnTime = 0.f;
 
 	sf::Vector2f shootPos = { 150.f / SCALE, 570.f / SCALE };
 

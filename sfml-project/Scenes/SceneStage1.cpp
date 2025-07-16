@@ -118,10 +118,11 @@ void SceneStage1::Update(float dt)
 		ViewReset(dt);
 
 	timeValue += dt;
+	bool following = false;
 	if (timeValue >= timeStep)
 	{
 		b2World_Step(FRAMEWORK.GetWorldID(), timeStep, subStepCount);
-		
+
 		CheckObjectsDead();
 
 		CheckPhysicsBodyCollision();
@@ -129,6 +130,7 @@ void SceneStage1::Update(float dt)
 		SetObjectTransform();
 
 		timeValue = 0.f;
+		following = true;
 	}
 
 	if (InputMgr::GetMouseButtonDown(sf::Mouse::Right))
@@ -144,16 +146,11 @@ void SceneStage1::Update(float dt)
 	ZoomIn(dt);
 	ZoomOut(dt);
 
-	if(!birdReady)
+	if(!birdReady && following)
 	{
-		ViewFollowing(dt);
+		ViewFollowing(timeStep);
 	}
 
-	if (InputMgr::GetKeyDown(sf::Keyboard::Space) && initViewPos != currentViewPos)
-	{
-		currentViewPos = initViewPos;
-		worldView.setCenter(initViewPos);
-	}
 #ifdef DEF_DEV
 	if (InputMgr::GetKeyDown(sf::Keyboard::Escape))
 	{
@@ -292,10 +289,23 @@ void SceneStage1::ViewFollowing(float dt)
 	/*float xDiff = currentViewPos.x - birdPos.x;
 	if (std::abs(xDiff) <= std::numeric_limits<float>::epsilon())
 	{*/
-	if(currentViewPos.x < birdPos.x && birds[tryCount - 1]->GetFlyingDirection() == 1.f)
-		currentViewPos.x = birdPos.x;
-	else if(currentViewPos.x > birdPos.x && birds[tryCount - 1]->GetFlyingDirection() == -1.f)
-		currentViewPos.x = birdPos.x;
+	b2Vec2 birdVelo = b2Body_GetLinearVelocity(birds[tryCount-1]->GetBodyId());
+	if(std::abs(currentViewPos.x - birdPos.x) <= 1.f) currentViewPos.x = birdPos.x;
+	else
+	{
+		if (currentViewPos.x < birdPos.x && birds[tryCount - 1]->GetFlyingDirection() == 1.f)
+		{
+			currentViewPos.x = Utils::Lerp(currentViewPos.x, birdPos.x, dt * 3.f);
+			if (currentViewPos.x > birdPos.x) currentViewPos.x = birdPos.x;
+			//currentViewPos.x = birdPos.x;
+		}
+		else if (currentViewPos.x > birdPos.x && birds[tryCount - 1]->GetFlyingDirection() == -1.f)
+		{
+			currentViewPos.x = Utils::Lerp(currentViewPos.x, birdPos.x, dt * 3.f);
+			if (currentViewPos.x < birdPos.x) currentViewPos.x = birdPos.x;
+			//currentViewPos.x = birdPos.x;
+		}
+	}
 	/*}
 	else
 	{
@@ -322,11 +332,14 @@ void SceneStage1::Restart()
 {
 	currentViewPos = initViewPos;
 	worldView.setCenter(initViewPos);
+	currentViewSize = initViewSize;
+	worldView.setSize(initViewSize);
 	for (int i = 0; i < tryMax; i++)
 	{
 		birds[i]->SetRestart(true);
 		birds[i]->SetInitPos();
 		birds[i]->SetShoot(false);
+		birds[i]->SetActive(true);
 	}
 	tryCount = 0;
 	countUI->SetCount(tryMax - tryCount);
@@ -334,6 +347,7 @@ void SceneStage1::Restart()
 	shootStand->SetBird(birds[tryCount]);
 	birdReady = true;
 
+	timeValue = 0.f;
 	ObjectsReset();
 }
 
@@ -361,13 +375,13 @@ void SceneStage1::ZoomOut(float dt)
 	if (InputMgr::GetKey(sf::Keyboard::X))
 	{
 		currentViewSize += sf::Vector2f(100 * dt * FRAMEWORK.GetWindowRatio(), 100 * dt);
-		if (currentViewPos.y + currentViewSize.y * 0.5f >= 768.f)
+		if (currentViewPos.y + currentViewSize.y * 0.5f >= backgroundSize.top + backgroundSize.height)
 			currentViewPos.y -= 100 * dt;
-		if (currentViewPos.y - currentViewSize.y * 0.5f <= -800.f)
+		if (currentViewPos.y - currentViewSize.y * 0.5f <= backgroundSize.top)
 			currentViewPos.y += 100 * dt;
-		if (currentViewPos.x + currentViewSize.x * 0.5f >= 2732.f)
+		if (currentViewPos.x + currentViewSize.x * 0.5f >= backgroundSize.left + backgroundSize.width)
 			currentViewPos.x -= 100 * dt;
-		if (currentViewPos.x - currentViewSize.x * 0.5f <= -1366.f)
+		if (currentViewPos.x - currentViewSize.x * 0.5f <= backgroundSize.left)
 			currentViewPos.x += 100 * dt;
 		if (currentViewSize.y >= backgroundSize.height)
 		{
@@ -410,6 +424,7 @@ void SceneStage1::ObjectsReset()
 		block->SetEnable();
 		block->Reset();
 		block->SetActive(true);
+		block->SetTransform();
 		block->SetNotDead();
 	}
 	for (auto pig : pigs)
@@ -417,6 +432,7 @@ void SceneStage1::ObjectsReset()
 		pig->SetEnable();
 		pig->Reset();
 		pig->SetActive(true);
+		pig->SetTransform();
 		pig->SetNotDead();
 	}
 }
