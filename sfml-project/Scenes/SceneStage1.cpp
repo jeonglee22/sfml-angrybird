@@ -247,18 +247,22 @@ void SceneStage1::ViewReset(float dt)
 		viewReset += dt;
 		if (viewReset >= viewResetMax)
 		{
+			float xSizeRatio = initViewSize.x / currentViewSize.x;
+			float newXratio = xSizeRatio > 1.f ? xSizeRatio - (xSizeRatio - 1.f) * dt : xSizeRatio + (1.f - xSizeRatio) * dt;
+			float ySizeRatio = initViewSize.y / currentViewSize.y;
+			float newYratio = ySizeRatio > 1.f ? ySizeRatio - (ySizeRatio - 1.f) * dt : ySizeRatio + (1.f - ySizeRatio) * dt;
+			currentViewSize.x = initViewSize.x / newXratio;
+			currentViewSize.y = initViewSize.y / newYratio;
+			if (std::abs(currentViewSize.x - initViewSize.x) <= 1.f) currentViewSize.x = initViewSize.x;
+			if (std::abs(currentViewSize.y - initViewSize.y) <= 1.f) currentViewSize.y = initViewSize.y;
+			
 			currentViewPos += Utils::GetNormal(initViewPos - currentViewPos) * 500.f * dt;
 			if (std::abs(currentViewPos.x - initViewPos.x) <= 5.f) currentViewPos.x = initViewPos.x;
 			if (std::abs(currentViewPos.y - initViewPos.y) <= 5.f) currentViewPos.y = initViewPos.y;
-			worldView.setCenter(currentViewPos);
-			/*float xSizeRatio = initViewSize.x / currentViewSize.x;
-			float ySizeRatio = initViewSize.y / currentViewSize.y;
-			currentViewSize.x *= xSizeRatio * 0.9f ;
-			currentViewSize.y *= ySizeRatio * 0.9f ;
-			if (std::abs(currentViewSize.x - initViewSize.x) <= 5.f) currentViewSize.x = initViewSize.x;
-			if (std::abs(currentViewSize.y - initViewSize.y) <= 5.f) currentViewSize.y = initViewSize.y;*/
-			currentViewSize = initViewSize;
+
+			ViewClamp();
 			worldView.setSize(currentViewSize);
+			worldView.setCenter(currentViewPos);
 		}
 	}
 	else
@@ -278,11 +282,20 @@ void SceneStage1::ViewFollowing(float dt)
 		currentViewSize.y += diff;
 		currentViewSize.x += diff * FRAMEWORK.GetWindowRatio();
 	}
+	if (currentViewPos.y + currentViewSize.y * 0.45f <= birdPos.y)
+	{
+		float diff = birdPos.y - (currentViewPos.y + currentViewSize.y * 0.45f);
+		currentViewSize.y += diff;
+		currentViewSize.x += diff * FRAMEWORK.GetWindowRatio();
+	}
 
 	/*float xDiff = currentViewPos.x - birdPos.x;
 	if (std::abs(xDiff) <= std::numeric_limits<float>::epsilon())
 	{*/
-	currentViewPos.x = birdPos.x;
+	if(currentViewPos.x < birdPos.x && birds[tryCount - 1]->GetFlyingDirection() == 1.f)
+		currentViewPos.x = birdPos.x;
+	else if(currentViewPos.x > birdPos.x && birds[tryCount - 1]->GetFlyingDirection() == -1.f)
+		currentViewPos.x = birdPos.x;
 	/*}
 	else
 	{
@@ -292,7 +305,6 @@ void SceneStage1::ViewFollowing(float dt)
 
 	worldView.setCenter(currentViewPos);
 	worldView.setSize(currentViewSize);
-
 }
 
 void SceneStage1::ViewClamp()

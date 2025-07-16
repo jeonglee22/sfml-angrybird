@@ -24,6 +24,7 @@ protected:
 	float minCharge = 30.f;
 	float maxCharge = 70.f;
 	float forceAmount = 800.f;
+	float flyingDirection = 1.f;
 
 	sf::Vector2f shootPos = { 150.f / SCALE, 570.f / SCALE };
 
@@ -47,6 +48,7 @@ public:
 	float GetMaxCharge() { return maxCharge; }
 	float GetMinCharge() { return minCharge; }
 	float GetCollisionRadius() { return collisionRadius; }
+	float GetFlyingDirection() { return flyingDirection; }
 
 	sf::FloatRect GetLocalBounds() { return sprite.getLocalBounds(); }
 	sf::FloatRect GetGlobalBounds() { return sprite.getGlobalBounds(); }

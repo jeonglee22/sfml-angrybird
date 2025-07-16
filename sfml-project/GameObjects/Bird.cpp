@@ -79,6 +79,10 @@ void Bird::Update(float dt)
 		if (InputMgr::GetMouseButtonUp(sf::Mouse::Left) && isCharging && !isShoot)
 		{
 			direction *= -1.f;
+			if (direction.x < 0)
+				flyingDirection = -1.f;
+			else
+				flyingDirection = 1.f;
 			SetBirdEnable();
 			sf::Vector2f Force(direction.x * forceAmount * (chargeDistance / maxCharge), direction.y * forceAmount * (chargeDistance / maxCharge));
 			b2Body_ApplyForceToCenter(bodyId, b2Vec2{ Force.x, Force.y }, true);

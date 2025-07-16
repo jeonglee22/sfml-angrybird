@@ -44,7 +44,7 @@ protected:
 	sf::Vector2f initViewSize = FRAMEWORK.GetWindowSizeF();
 	sf::Vector2f currentViewPos;
 	sf::Vector2f currentViewSize;
-	sf::Vector2f minViewSize = { (1366.f / 768.f) * 400.f , 400.f };
+	sf::Vector2f minViewSize = { (1366.f / 768.f) * 600.f , 600.f };
 	sf::Vector2f maxViewSize = { (1366.f / 768.f) * 1568.f , 1568.f };
 
 	bool isShoot = false;
