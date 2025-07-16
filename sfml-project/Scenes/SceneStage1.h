@@ -24,8 +24,9 @@ protected:
 	std::vector<Block*> blocks;
 	std::vector<Pig*> pigs;
 
-	int blockCount = 5;
-	int pigCount = 5;
+	int blockCount = 0;
+	int pigCount = 0;
+	int objCount = 0;
 
 	int tryCount = 0;
 	int tryMax = 5;

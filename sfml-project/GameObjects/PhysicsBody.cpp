@@ -22,10 +22,12 @@ void PhysicsBody::Init()
 
 void PhysicsBody::Release()
 {
-	/*std::cout << bodyId.index1 << std::endl;
-	b2DestroyShape(shapeId, true);
-	b2DestroyBody(bodyId);
-	bodyId = b2_nullBodyId;*/
+	/*std::cout << bodyId.index1 << std::endl;*/
+	if(0 < bodyId.index1 && bodyId.index1 < 128)
+	{
+		b2DestroyBody(bodyId);
+		bodyId = b2_nullBodyId;
+	}
 
 	SpriteGo::Release();
 }

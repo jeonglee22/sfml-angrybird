@@ -117,7 +117,7 @@ void SceneEditor::Update(float dt)
 		if (spriteChoosed != nullptr)
 		{
 			isChoosed = true;
-			spriteInserts.push_back((SpriteGo*)AddGameObject( new SpriteGo(spriteChoosed->GetTextureId())));
+			spriteInserts.push_back((SpriteGo*)AddGameObject( new SpriteGo(spriteChoosed->GetTextureId(), spriteChoosed->GetName())));
 			spriteInserts[spriteCount]->Reset();
 			spriteInserts[spriteCount]->SetOrigin(Origins::MC);
 			spriteInserts[spriteCount]->sortingLayer = SortingLayers::UI;
@@ -193,29 +193,30 @@ void SceneEditor::SaveField()
 	std::string fileName = "graphics/EditorMaps/Map" + std::to_string(SceneEditor::mapNumber) + ".csv";
 	rapidcsv::Document doc;
 	doc.SetColumnName(0, "BLOCK_COUNT");
-	doc.SetColumnName(1, "PIG_COUNT");
 	doc.InsertRow(0, std::vector<int>{spriteCount});
 	for (int i = 0; i < spriteCount; i++)
 	{
 		sf::Vector2f pos = spriteInserts[i]->GetPosition();
 		sf::FloatRect rect = spriteInserts[i]->GetLocalBounds();
-		std::vector<float> info;
-		info.push_back(pos.x);
-		info.push_back(pos.y);
-		info.push_back(rect.width * 0.5f);
-		info.push_back(rect.height * 0.5f);
-		info.push_back(0.5f);
-		info.push_back(0.5f);
-		info.push_back(0.1f);
-		info.push_back(0.f);
-		info.push_back(50.f);
+		std::vector<std::string> info;
+		info.push_back(spriteInserts[i]->GetTextureId());
+		info.push_back(std::to_string(pos.x));
+		info.push_back(std::to_string(pos.y));
+		info.push_back(std::to_string(rect.width * 0.5f));
+		info.push_back(std::to_string(rect.height * 0.5f));
+		info.push_back(std::to_string(0.5f));
+		info.push_back(std::to_string(0.5f));
+		info.push_back(std::to_string(0.1f));
+		info.push_back(std::to_string(0.f));
+		info.push_back(std::to_string(50.f));
+		std::cout << spriteInserts[i]->GetName() << std::endl;
 		if(spriteInserts[i]->GetName() == "Pig")
 		{
-			info.push_back(1);
+			info.push_back(std::to_string(1));
 		}
 		else
 		{
-			info.push_back(0);
+			info.push_back(std::to_string(0));
 		}
 		doc.InsertRow(i + 2, info);
 		doc.Save(fileName);

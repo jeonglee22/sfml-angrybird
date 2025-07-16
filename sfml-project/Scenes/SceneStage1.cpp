@@ -43,7 +43,7 @@ void SceneStage1::Init()
 		birds[i]->SetInitPos({ 80.f - 40.f * i, 660.0f});
 	}
 
-	LoadBlockInfo("StageStructures/Stage1.csv");
+	LoadBlockInfo("graphics/EditorMaps/Map1.csv");
 
 	countUI = (ShootCountUI*)AddGameObject(new ShootCountUI());
 
@@ -167,30 +167,29 @@ void SceneStage1::Draw(sf::RenderWindow& window)
 void SceneStage1::LoadBlockInfo(const std::string& filePath)
 {
 	rapidcsv::Document doc(filePath);
-	blockCount = doc.GetCell<int>(0,0);
-	pigCount = doc.GetCell<int>(1, 0);
+	objCount = doc.GetCell<int>(0,0);
 
 	blocks.clear();
 	pigs.clear();
-	for (int i = 0; i < blockCount; i++)
+	for (int i = 0; i < objCount; i++)
 	{
 		auto row = doc.GetRow<std::string>(i+2);
 		if(std::find(texIds.begin(), texIds.end(), row[0]) == texIds.end())
 			texIds.push_back(row[0]);
-		blocks.push_back((Block*)AddGameObject(new Block(row[0])));
-		blocks[i]->SetBoxPos(std::stof(row[1]), std::stof(row[2]));
-		blocks[i]->SetBoxSize(std::stof(row[3]), std::stof(row[4]));
-		blocks[i]->SetBoxFactor(std::stof(row[5]), std::stof(row[6]), std::stof(row[7]), std::stof(row[8]));
-		blocks[i]->SetHP(std::stoi(row[9]));
-	}
-	for(int i = 0; i < pigCount; i++)
-	{
-		auto row = doc.GetRow<std::string>(blockCount + i + 2);
-		if (std::find(texIds.begin(), texIds.end(), row[0]) == texIds.end())
-			texIds.push_back(row[0]);
-		pigs.push_back((Pig*)AddGameObject(new Pig(row[0], "Pig")));
-		pigs[i]->SetInitPos({ std::stof(row[1]), std::stof(row[2]) });
-		pigs[i]->SetHP(std::stoi(row[9]));
+		if(std::stoi(row[10]) == 0)
+		{
+			blocks.push_back((Block*)AddGameObject(new Block(row[0], "Block")));
+			blocks[blockCount]->SetBoxPos(std::stof(row[1]), std::stof(row[2]));
+			blocks[blockCount]->SetBoxSize(std::stof(row[3]), std::stof(row[4]));
+			blocks[blockCount]->SetBoxFactor(std::stof(row[5]), std::stof(row[6]), std::stof(row[7]), std::stof(row[8]));
+			blocks[blockCount++]->SetHP(std::stoi(row[9]));
+		}
+		else
+		{
+			pigs.push_back((Pig*)AddGameObject(new Pig(row[0], "Pig")));
+			pigs[pigCount]->SetInitPos({ std::stof(row[1]), std::stof(row[2]) });
+			pigs[pigCount++]->SetHP(std::stoi(row[9]));
+		}
 	}
 }
 
@@ -204,7 +203,7 @@ void SceneStage1::CheckPhysicsBodyCollision()
 		b2ShapeId shapeId1 = event.shapeIdA;
 		b2ShapeId shapeId2 = event.shapeIdB;
 		float speed = event.approachSpeed;
-		for (int j = 0; j < blockCount + pigCount; j++)
+		for (int j = 0; j < objCount; j++)
 		{
 			if (j <= blockCount -1 && shapeId1.index1 == blocks[j]->GetShapeId().index1)
 			{
