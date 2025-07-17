@@ -1,5 +1,5 @@
 BLOCK_COUNT,,
-18,,
+28,,
 FILENAME,BLOCK_TYPE,HP
 graphics/EditorObjects/WoodSquareBlock1.png,BlockWood,40
 graphics/EditorObjects/WoodSquareBlock2.png,BlockWood,40
@@ -19,3 +19,13 @@ graphics/EditorObjects/GlassSquareBlock3.png,BlockGlass,10
 graphics/EditorObjects/GlassSquareBlock4.png,BlockGlass,10
 graphics/EditorObjects/GlassStick1.png,BlockGlass,10
 graphics/EditorObjects/GlassStick2.png,BlockGlass,10
+graphics/EditorObjects/WoodMiddle1.png,BlockWood,40
+graphics/EditorObjects/WoodMiddle2.png,BlockWood,40
+graphics/EditorObjects/WoodMiddle3.png,BlockWood,40
+graphics/EditorObjects/WoodPlate1.png,BlockWood,40
+graphics/EditorObjects/WoodPlate2.png,BlockWood,40
+graphics/EditorObjects/WoodPlate3.png,BlockWood,40
+graphics/EditorObjects/WoodSmall1.png,BlockWood,40
+graphics/EditorObjects/WoodSmall2.png,BlockWood,40
+graphics/EditorObjects/WoodSmall3.png,BlockWood,40
+graphics/EditorObjects/WoodSmall4.png,BlockWood,40

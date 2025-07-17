@@ -26,6 +26,7 @@ void SceneEditor::Init()
 	for (int i = 1; i < 5; i++)
 	{
 		texIds.push_back("graphics/EditorObjects/WoodSquareBlock" + std::to_string(i) + ".png");
+		texIds.push_back("graphics/EditorObjects/WoodSmall" + std::to_string(i) + ".png");
 		texIds.push_back("graphics/EditorObjects/StoneSquareBlock" + std::to_string(i) + ".png");
 		texIds.push_back("graphics/EditorObjects/GlassSquareBlock" + std::to_string(i) + ".png");
 	}
@@ -34,6 +35,11 @@ void SceneEditor::Init()
 		texIds.push_back("graphics/EditorObjects/WoodStick" + std::to_string(i) + ".png");
 		texIds.push_back("graphics/EditorObjects/StoneStick" + std::to_string(i) + ".png");
 		texIds.push_back("graphics/EditorObjects/GlassStick" + std::to_string(i) + ".png");
+	}
+	for (int i = 1; i < 4; i++)
+	{
+		texIds.push_back("graphics/EditorObjects/WoodMiddle" + std::to_string(i) + ".png");
+		texIds.push_back("graphics/EditorObjects/WoodPlate" + std::to_string(i) + ".png");
 	}
 
 	background = (BackGround*)AddGameObject(new BackGround("graphics/LevelOne.png", "graphics/Sky.png"));

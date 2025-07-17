@@ -56,9 +56,13 @@ void EditBoxUI::Init()
 
 	plate.setOrigin(sf::Vector2f( bodySize.x * 0.9f, bodySize.y * 0.8f ) * 0.5f);
 	plate.setPosition(bodyPos + platePos);
-	plate.setOutlineColor(sf::Color::Black);
-	plate.setOutlineThickness(5.f);
 	plate.setSize({bodySize.x * 0.9f, bodySize.y * 0.8f});
+
+	aboveplate.setSize({ bodySize.x, bodySize.y * 0.2f-10.f});
+	aboveplate.setOrigin(aboveplate.getSize() * 0.5f + sf::Vector2f(5.f,0.f));
+	aboveplate.setOutlineColor(sf::Color::Black);
+	aboveplate.setOutlineThickness(5.f);
+	aboveplate.setPosition(bodyPos + abovePlatePos);
 
 	blockButton = new Button("graphics/BlockButton.png", "BlockButton");
 	blockButton->SetOrigin(Origins::MC);
@@ -137,8 +141,7 @@ void EditBoxUI::Draw(sf::RenderWindow& window)
 {
 	window.draw(body);
 	window.draw(plate);
-	blockButton->Draw(window);
-	pigButton->Draw(window);
+	
 	for (int i = 0; i < blockCount; i++)
 	{
 		blocks[i]->Draw(window);
@@ -147,6 +150,9 @@ void EditBoxUI::Draw(sf::RenderWindow& window)
 	{
 		pigs[i]->Draw(window);
 	}
+	window.draw(aboveplate);
+	blockButton->Draw(window);
+	pigButton->Draw(window);
 }
 
 SpriteGo* EditBoxUI::GetMousePosSprite(int &hp)

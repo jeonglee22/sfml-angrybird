@@ -9,6 +9,8 @@ class EditBoxUI : public GameObject
 protected:
 	sf::RectangleShape body;
 	sf::RectangleShape plate;
+	sf::RectangleShape aboveplate;
+	sf::RectangleShape belowplate;
 	std::vector<SpriteGo*> blocks;
 	std::vector<sf::Vector2f> blocksInitPos;
 	std::vector<int> blockHPs;
@@ -23,6 +25,8 @@ protected:
 	sf::Vector2f blockButtonPos = { -100.f, -FRAMEWORK.GetWindowSizeF().y * 0.5f + 70.f };
 	sf::Vector2f pigButtonPos = { 100.f, -FRAMEWORK.GetWindowSizeF().y * 0.5f + 70.f };
 	sf::Vector2f platePos = { 0.f, 50.f };
+	sf::Vector2f abovePlatePos = { 0.f, -bodySize.y * 0.4f - 25.f };
+	sf::Vector2f belosePlatePos = { 0.f, 50.f };
 	sf::Vector2f blockinterval = { 150.f,100.f };
 	sf::Vector2f objectsCenterPos = {0.f,0.f};
 
