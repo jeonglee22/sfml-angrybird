@@ -2,6 +2,7 @@
 #include "EditBoxUI.h"
 #include "Block.h"
 #include "Button.h"
+#include "rapidcsv.h"
 #include "Pig.h"
 
 EditBoxUI::EditBoxUI(const std::string& name)
@@ -65,30 +66,8 @@ void EditBoxUI::Init()
 	pigButton = new Button("graphics/PigButton.png", "PigButton");
 	pigButton->SetOrigin(Origins::MC);
 
-	for (int i = 0; i < pigCount; i++)
-	{
-		pigs.push_back(new SpriteGo("graphics/Angrybirds/PigOriginal.png", "Pig"));
-		pigs[i]->SetOrigin(Origins::MC);
-		pigs[i]->SetActive(false);
-	}
-	for (int i = 0; i < blockCount; i++)
-	{
-		if(i <= 3)
-			blocks.push_back(new SpriteGo("graphics/EditorObjects/WoodSquareBlock"+ std::to_string(i + 1) + ".png", "Block"));
-		else if(i <= 5)
-			blocks.push_back(new SpriteGo("graphics/EditorObjects/WoodStick" + std::to_string(i - 3) + ".png", "Block"));
-		else if(i <= 9)
-			blocks.push_back(new SpriteGo("graphics/EditorObjects/StoneSquareBlock" + std::to_string(i - 5) + ".png", "Block"));
-		else if(i <= 11)
-			blocks.push_back(new SpriteGo("graphics/EditorObjects/StoneStick" + std::to_string(i - 9) + ".png", "Block"));
-		else if(i <= 15)
-			blocks.push_back(new SpriteGo("graphics/EditorObjects/GlassSquareBlock" + std::to_string(i - 11) + ".png", "Block"));
-		else if (i <= 17)
-			blocks.push_back(new SpriteGo("graphics/EditorObjects/GlassStick" + std::to_string(i - 15) + ".png", "Block"));
-		blocks[i]->SetOrigin(Origins::MC);
-		blocks[i]->SetActive(false);
-		blocks[i]->SetScale({ 0.7f, 0.7f });
-	}
+	AddPigTypes("StageStructures/pigtype.csv");
+	AddBlockTypes("StageStructures/blocktype.csv");
 
 	auto ShowBlocks = [this]() {
 		for (int i = 0; i < blockCount; i++)
@@ -99,6 +78,7 @@ void EditBoxUI::Init()
 		{
 			pigs[i]->SetActive(false);
 		}
+		ResetObjectsInitPosition();
 	};
 	blockButton->SetButtonFunc(ShowBlocks);
 
@@ -111,6 +91,7 @@ void EditBoxUI::Init()
 		{
 			pigs[i]->SetActive(true);
 		}
+		ResetObjectsInitPosition();
 	};
 	pigButton->SetButtonFunc(ShowPigs);
 }
@@ -129,12 +110,14 @@ void EditBoxUI::Reset()
 	for (int i = 0; i < blockCount; i++)
 	{
 		blocks[i]->Reset();
-		blocks[i]->SetPosition(bodyPos + sf::Vector2f((i%3 - 1) * blockinterval.x, (i / 3 - 2) * blockinterval.y));
+		blocksInitPos.push_back(sf::Vector2f((i % 3 - 1) * blockinterval.x, (i / 3 - 2) * blockinterval.y));
+		blocks[i]->SetPosition(bodyPos + blocksInitPos[i] + objectsCenterPos);
 	}
 	for (int i = 0; i < pigCount; i++)
 	{
 		pigs[i]->Reset();
-		pigs[i]->SetPosition(bodyPos + sf::Vector2f((i % 3 - 1) * blockinterval.x, (i / 3 - 2) * blockinterval.y));
+		pigsInitPos.push_back(sf::Vector2f((i % 3 - 1) * blockinterval.x, (i / 3 - 2) * blockinterval.y));
+		pigs[i]->SetPosition(bodyPos + pigsInitPos[i] + objectsCenterPos);
 	}
 }
 
@@ -142,6 +125,12 @@ void EditBoxUI::Update(float dt)
 {
 	pigButton->Update(dt);
 	blockButton->Update(dt);
+
+	if (InputMgr::GetWheelScroll() != 0)
+	{
+		objectsCenterPos.y += InputMgr::GetWheelScroll() * dt * 3000.f;
+		AddAllObjectsPosition();
+	}
 }
 
 void EditBoxUI::Draw(sf::RenderWindow& window)
@@ -160,29 +149,31 @@ void EditBoxUI::Draw(sf::RenderWindow& window)
 	}
 }
 
-SpriteGo* EditBoxUI::GetMousePosSprite()
+SpriteGo* EditBoxUI::GetMousePosSprite(int &hp)
 {
 	if (SCENE_MGR.GetCurrentScene())
 	{
 		Scene* scene = SCENE_MGR.GetCurrentScene();
 		sf::Vector2f mousePos = scene->ScreenToUi(InputMgr::GetMousePosition());
-		for (auto block : blocks)
+		for (int i = 0; i < blockCount; i++)
 		{
-			if (block->GetActive())
+			if (blocks[i]->GetActive())
 			{
-				if (Utils::PointInTransformBounds(block->GetSprite(), block->GetLocalBounds(), mousePos))
+				if (Utils::PointInTransformBounds(blocks[i]->GetSprite(), blocks[i]->GetLocalBounds(), mousePos))
 				{
-					return block;
+					hp = blockHPs[i];
+					return blocks[i];
 				}
 			}
 		}
-		for (auto pig : pigs)
+		for (int i = 0; i < pigCount; i++)
 		{
-			if (pig->GetActive())
+			if (pigs[i]->GetActive())
 			{
-				if (Utils::PointInTransformBounds(pig->GetSprite(), pig->GetLocalBounds(), mousePos))
+				if (Utils::PointInTransformBounds(pigs[i]->GetSprite(), pigs[i]->GetLocalBounds(), mousePos))
 				{
-					return pig;
+					hp = pigHPs[i];
+					return pigs[i];
 				}
 			}
 		}
@@ -191,5 +182,59 @@ SpriteGo* EditBoxUI::GetMousePosSprite()
 	else
 	{
 		return nullptr;
+	}
+}
+
+void EditBoxUI::AddBlockTypes(const std::string& filePath)
+{
+	rapidcsv::Document doc(filePath);
+	blockCount = doc.GetCell<int>(0,0);
+	for (int i = 0; i < blockCount; i++)
+	{
+		auto row = doc.GetRow<std::string>(i + 2);
+		blocks.push_back(new SpriteGo(row[0], row[1]));
+		blocks[i]->SetOrigin(Origins::MC);
+		blocks[i]->SetActive(false);
+		blocks[i]->SetScale({ 0.7f, 0.7f });
+		blockHPs.push_back(std::stoi(row[2]));
+	}
+}
+
+void EditBoxUI::AddPigTypes(const std::string& filePath)
+{
+	rapidcsv::Document doc(filePath);
+	pigCount = doc.GetCell<int>(0, 0);
+	for (int i = 0; i < pigCount; i++)
+	{
+		auto row = doc.GetRow<std::string>(i + 2);
+		pigs.push_back(new SpriteGo(row[0], row[1]));
+		pigs[i]->SetOrigin(Origins::MC);
+		pigs[i]->SetActive(false);
+		pigHPs.push_back(std::stoi(row[2]));
+	}
+}
+
+void EditBoxUI::AddAllObjectsPosition()
+{
+	for (int i = 0; i < blockCount; i++)
+	{
+		blocks[i]->SetPosition(bodyPos + sf::Vector2f((i % 3 - 1) * blockinterval.x, (i / 3 - 2) * blockinterval.y) + objectsCenterPos);
+	}
+	for (int i = 0; i < pigCount; i++)
+	{
+		pigs[i]->SetPosition(bodyPos + sf::Vector2f((i % 3 - 1) * blockinterval.x, (i / 3 - 2) * blockinterval.y) + objectsCenterPos);
+	}
+}
+
+void EditBoxUI::ResetObjectsInitPosition()
+{
+	objectsCenterPos = { 0.f,0.f };
+	for (int i = 0; i < blockCount; i++)
+	{
+		blocks[i]->SetPosition(bodyPos + blocksInitPos[i] + objectsCenterPos);
+	}
+	for (int i = 0; i < pigCount; i++)
+	{
+		pigs[i]->SetPosition(bodyPos + pigsInitPos[i] + objectsCenterPos);
 	}
 }

@@ -22,7 +22,7 @@ void SceneEditor::Init()
 	texIds.push_back("graphics/save.png");
 	texIds.push_back("graphics/PigButton.png");
 	texIds.push_back("graphics/BlockButton.png");
-	texIds.push_back("graphics/Angrybirds/PigOriginal.png");
+	texIds.push_back("graphics/EditorObjects/PigOriginal.png");
 	for (int i = 1; i < 5; i++)
 	{
 		texIds.push_back("graphics/EditorObjects/WoodSquareBlock" + std::to_string(i) + ".png");
@@ -113,7 +113,7 @@ void SceneEditor::Update(float dt)
 
 	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
 	{
-		spriteChoosed = boxUI->GetMousePosSprite();
+		spriteChoosed = boxUI->GetMousePosSprite(choosedSpriteHp);
 		if (spriteChoosed != nullptr)
 		{
 			isChoosed = true;
@@ -151,6 +151,7 @@ void SceneEditor::Update(float dt)
 				blockCount++;
 			}
 			spriteCount++;
+			HpList.push_back(choosedSpriteHp);
 		}
 		else
 		{
@@ -159,7 +160,6 @@ void SceneEditor::Update(float dt)
 			isChoosed = false;
 		}
 	}
-	std::cout << InputMgr::GetWheelScrollAmount() << std::endl;
 }
 
 void SceneEditor::Draw(sf::RenderWindow& window)
@@ -195,6 +195,7 @@ void SceneEditor::SaveField()
 	rapidcsv::Document doc;
 	doc.SetColumnName(0, "BLOCK_COUNT");
 	doc.InsertRow(0, std::vector<int>{spriteCount});
+	//doc.InsertRow
 	for (int i = 0; i < spriteCount; i++)
 	{
 		sf::Vector2f pos = spriteInserts[i]->GetPosition();
@@ -209,8 +210,7 @@ void SceneEditor::SaveField()
 		info.push_back(std::to_string(0.5f));
 		info.push_back(std::to_string(0.1f));
 		info.push_back(std::to_string(0.f));
-		info.push_back(std::to_string(50.f));
-		std::cout << spriteInserts[i]->GetName() << std::endl;
+		info.push_back(std::to_string(HpList[i]));
 		if(spriteInserts[i]->GetName() == "Pig")
 		{
 			info.push_back(std::to_string(1));

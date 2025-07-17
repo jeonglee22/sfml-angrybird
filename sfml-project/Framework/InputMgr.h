@@ -22,7 +22,7 @@ private:
 	static std::list<int> downKeys;
 	static std::list<int> heldKeys;
 	static std::list<int> upKeys;
-	static float wheelAmount;
+	static int wheelDirection;
 
 	static std::unordered_map<Axis, AxisInfo> axisInfoMap;
 	static sf::Vector2i mousePosition;
@@ -49,6 +49,6 @@ public:
 	static bool GetMouseButton(sf::Mouse::Button key);
 
 	static sf::Vector2i GetMousePosition();
-	static float GetWheelScrollAmount();
+	static int GetWheelScroll();
 };
 

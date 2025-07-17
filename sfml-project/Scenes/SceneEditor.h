@@ -18,6 +18,8 @@ protected:
 	Button* save = nullptr;
 
 	std::vector<SpriteGo*> spriteInserts;
+	std::vector<int> HpList;
+	int choosedSpriteHp = -1;
 	int spriteCount = 0;
 	int blockCount = 0;
 	int pigCount = 0;

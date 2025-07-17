@@ -10,7 +10,11 @@ protected:
 	sf::RectangleShape body;
 	sf::RectangleShape plate;
 	std::vector<SpriteGo*> blocks;
+	std::vector<sf::Vector2f> blocksInitPos;
+	std::vector<int> blockHPs;
 	std::vector<SpriteGo*> pigs;
+	std::vector<sf::Vector2f> pigsInitPos;
+	std::vector<int> pigHPs;
 	Button* blockButton;
 	Button* pigButton;
 
@@ -20,6 +24,7 @@ protected:
 	sf::Vector2f pigButtonPos = { 100.f, -FRAMEWORK.GetWindowSizeF().y * 0.5f + 70.f };
 	sf::Vector2f platePos = { 0.f, 50.f };
 	sf::Vector2f blockinterval = { 150.f,100.f };
+	sf::Vector2f objectsCenterPos = {0.f,0.f};
 
 	int blockCount = 18;
 	int pigCount = 10;
@@ -40,7 +45,15 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	SpriteGo* GetMousePosSprite();
+	std::vector<int> GetBlockHPs() const { return blockHPs; }
+	std::vector<int> GetPigHPs() const { return pigHPs; }
+
+	SpriteGo* GetMousePosSprite(int &hp);
 	sf::RectangleShape GetBody() const { return body; }
+	void AddBlockTypes(const std::string& filePath);
+	void AddPigTypes(const std::string& filePath);
+
+	void AddAllObjectsPosition();
+	void ResetObjectsInitPosition();
 };
 

@@ -8,7 +8,7 @@ std::list<int> InputMgr::upKeys;
 std::unordered_map<Axis, AxisInfo> InputMgr::axisInfoMap;
 
 sf::Vector2i InputMgr::mousePosition;
-float InputMgr::wheelAmount = 0.f;
+int InputMgr::wheelDirection = 0;
 
 void InputMgr::Init()
 {
@@ -32,6 +32,7 @@ void InputMgr::Clear()
 {
 	downKeys.clear();
 	upKeys.clear();
+	wheelDirection = 0;
 }
 
 void InputMgr::UpdateEvent(const sf::Event& ev) 
@@ -68,7 +69,10 @@ void InputMgr::UpdateEvent(const sf::Event& ev)
 	}
 	case sf::Event::MouseWheelScrolled:
 	{
-		wheelAmount = ev.mouseWheelScroll.delta;
+		if (ev.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
+		{
+			wheelDirection = ev.mouseWheelScroll.delta;
+		}
 		break;
 	}
 	}
@@ -96,7 +100,6 @@ void InputMgr::Update(float dt)
 			axisInfo.value = 0.f;
 		}
 	}
-
 }
 
 bool InputMgr::GetKeyDown(sf::Keyboard::Key key)
@@ -178,7 +181,7 @@ sf::Vector2i InputMgr::GetMousePosition()
 	return mousePosition; 
 }
 
-float InputMgr::GetWheelScrollAmount()
+int InputMgr::GetWheelScroll()
 {
-	return wheelAmount;
+	return wheelDirection;
 }
