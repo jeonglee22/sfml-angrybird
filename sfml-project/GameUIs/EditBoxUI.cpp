@@ -89,6 +89,7 @@ void EditBoxUI::Init()
 		}
 		ResetObjectsInitPosition();
 		currentPlate = Plate::Block;
+		scrollBox.setPosition(bodyPos + scrollPos);
 	};
 	blockButton->SetButtonFunc(ShowBlocks);
 
@@ -103,6 +104,7 @@ void EditBoxUI::Init()
 		}
 		ResetObjectsInitPosition();
 		currentPlate = Plate::Pig;
+		scrollBox.setPosition(bodyPos + scrollPos);
 	};
 	pigButton->SetButtonFunc(ShowPigs);
 }
@@ -179,6 +181,10 @@ void EditBoxUI::Update(float dt)
 		float scrollPercent = (scrollBox.getPosition().y - scrollBoxYMin) / (scrollBoxYMax - scrollBoxYMin);
 		objectsCenterPos.y = Utils::Lerp(maxYScroll, currentPlate == Plate::Block ? minBlockYScroll : minPigYScroll, scrollPercent);
 		AddAllObjectsPosition();
+	}
+	else if (InputMgr::GetMouseButtonUp(sf::Mouse::Left) && isScrollMove)
+	{
+		isScrollMove = false;
 	}
 }
 
