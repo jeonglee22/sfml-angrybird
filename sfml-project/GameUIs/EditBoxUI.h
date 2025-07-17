@@ -22,6 +22,7 @@ protected:
 	sf::RectangleShape aboveplate;
 	sf::RectangleShape belowplate;
 
+	std::vector<std::string> texIds;
 	std::vector<SpriteGo*> blocks;
 	std::vector<sf::Vector2f> blocksInitPos;
 	std::vector<int> blockHPs;
@@ -31,11 +32,11 @@ protected:
 	std::vector<SpriteGo*> birds;
 	std::vector<sf::Vector2f> birdsInitPos;
 
-	Button* blockButton;
-	Button* pigButton;
-	Button* birdButton;
+	Button* blockButton = nullptr;
+	Button* pigButton = nullptr;
+	Button* birdButton = nullptr;
 
-	Scene* scene;
+	Scene* scene = nullptr;
 
 	sf::Vector2f bodySize = { 500.f, FRAMEWORK.GetWindowSizeF().y };
 	sf::Vector2f bodyPos = {FRAMEWORK.GetWindowSizeF().x - bodySize.x * 0.5f, FRAMEWORK.GetWindowSizeF().y * 0.5f};
@@ -86,6 +87,7 @@ public:
 	std::vector<int> GetBlockHPs() const { return blockHPs; }
 	std::vector<int> GetPigHPs() const { return pigHPs; }
 	Plate GetCurrentPlate() const { return currentPlate; }
+	std::vector<std::string> GetTexIDs() const{ return texIds; }
 
 	SpriteGo* GetMousePosSprite(int &hp);
 	sf::RectangleShape GetBody() const { return body; }
@@ -96,5 +98,9 @@ public:
 
 	void AddAllObjectsPosition();
 	void ResetObjectsInitPosition();
+
+	void ShowBlocks();
+	void ShowPigs();
+	void ShowBirds();
 };
 

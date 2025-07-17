@@ -7,6 +7,7 @@
 #include "SpriteGo.h"
 #include "RectGo.h"
 #include "Button.h"
+#include "ShootStand.h"
 
 HWND hwnd;
 int SceneEditor::mapNumber = 1;
@@ -23,46 +24,44 @@ void SceneEditor::Init()
 	texIds.push_back("graphics/LevelOne.png");
 	texIds.push_back("graphics/Sky.png");
 	texIds.push_back("graphics/buttonsnontext.png");
+	texIds.push_back("graphics/Angrybirds/ShootStand.png");
+	texIds.push_back("graphics/Angrybirds/StandRight.png");
+	texIds.push_back("graphics/Angrybirds/StandLeft.png");
+	texIds.push_back("graphics/band.png");
+	texIds.push_back("graphics/band2.png");
 	texIds.push_back("graphics/redo.png");
 	texIds.push_back("graphics/PigButton.png");
 	texIds.push_back("graphics/BlockButton.png");
 	texIds.push_back("graphics/BirdButton.png");
-	texIds.push_back("graphics/EditorObjects/PigOriginal.png");
-	texIds.push_back("graphics/EditorObjects/RedBird.png");
-	texIds.push_back("graphics/EditorObjects/YellowBird.png");
-	texIds.push_back("graphics/EditorObjects/BlackBird.png");
-	for (int i = 1; i < 5; i++)
-	{
-		texIds.push_back("graphics/EditorObjects/WoodSquareBlock" + std::to_string(i) + ".png");
-		texIds.push_back("graphics/EditorObjects/WoodSmall" + std::to_string(i) + ".png");
-		texIds.push_back("graphics/EditorObjects/StoneSmall" + std::to_string(i) + ".png");
-		texIds.push_back("graphics/EditorObjects/StoneSquareBlock" + std::to_string(i) + ".png");
-		texIds.push_back("graphics/EditorObjects/GlassSquareBlock" + std::to_string(i) + ".png");
-	}
-	for (int i = 1; i < 3; i++)
-	{
-		texIds.push_back("graphics/EditorObjects/WoodStick" + std::to_string(i) + ".png");
-		texIds.push_back("graphics/EditorObjects/StoneStick" + std::to_string(i) + ".png");
-		texIds.push_back("graphics/EditorObjects/GlassStick" + std::to_string(i) + ".png");
-	}
-	for (int i = 1; i < 4; i++)
-	{
-		texIds.push_back("graphics/EditorObjects/WoodMiddle" + std::to_string(i) + ".png");
-		texIds.push_back("graphics/EditorObjects/WoodPlate" + std::to_string(i) + ".png");
-		texIds.push_back("graphics/EditorObjects/StoneMiddle" + std::to_string(i) + ".png");
-		texIds.push_back("graphics/EditorObjects/StonePlate" + std::to_string(i) + ".png");
-	}
 
 	background = (BackGround*)AddGameObject(new BackGround("graphics/LevelOne.png", "graphics/Sky.png"));
 
 	boxUI = (EditBoxUI*)AddGameObject(new EditBoxUI());
+		
 	undo = (Button*)AddGameObject(new Button("graphics/redo.png"));
 	save = (Button*)AddGameObject(new Button("graphics/buttonsnontext.png"));
 	load = (Button*)AddGameObject(new Button("graphics/buttonsnontext.png"));
+
 	objectBound = (RectGo*)AddGameObject(new RectGo());
 	objectBound->SetColor(sf::Color(0, 0, 0, 100));
+	birdBound = (RectGo*)AddGameObject(new RectGo());
+	birdBound->SetColor(sf::Color(20,20, 20, 100));
+
+	shootStand = (ShootStand*)AddGameObject(new ShootStand());
 
 	Scene::Init();
+
+	std::vector<std::string> texIDs = boxUI->GetTexIDs();
+	for (auto& texId : texIDs)
+		texIds.push_back(texId);
+
+	AddGameObject(shootStand->GetLeftPart());
+	AddGameObject(shootStand->GetRightPart());
+	std::vector<SpriteGo*> band = shootStand->GetBandPart();
+	for (auto part : band)
+	{
+		AddGameObject(part);
+	}
 
 	objectBound->sortingOrder = -1;
 	
@@ -129,11 +128,33 @@ void SceneEditor::Enter()
 	objectBound->SetSize({ backgroundSize.width * 0.5f, backgroundSize.height });
 	objectBound->SetPosition({ backgroundSize.left + backgroundSize.width * 0.75f, backgroundSize.top + backgroundSize.height * 0.5f });
 	objectBound->SetOrigin(sf::Vector2f( backgroundSize.width * 0.5f, backgroundSize.height ) * 0.5f);
+
+	birdBound->SetSize({ 500.f, 100.f });
+	birdBound->SetPosition({0,backgroundSize.top + backgroundSize.height - 130.f});
+	birdBound->SetOrigin(Origins::MR);
 }
 
 void SceneEditor::Update(float dt)
 {
 	Scene::Update(dt);
+
+	if (boxUI->GetCurrentPlate() != currentPlate)
+	{
+		if(boxUI->GetCurrentPlate() == EditBoxUI::Plate::Bird)
+		{
+			worldView.setCenter(birdBoundViewPos);
+			currentViewPos = birdBoundViewPos;
+		}
+		else
+		{
+			if(currentPlate == EditBoxUI::Plate::Bird)
+			{
+				worldView.setCenter(initViewPos);
+				currentViewPos = initViewPos;
+			}
+		}
+		currentPlate = boxUI->GetCurrentPlate();
+	}
 
 	if (InputMgr::GetMouseButtonDown(sf::Mouse::Right))
 	{
@@ -166,7 +187,8 @@ void SceneEditor::Update(float dt)
 		sf::Vector2f mouseUiPos = ScreenToUi(InputMgr::GetMousePosition());
 		sf::Vector2f mouseWorldPos = ScreenToWorld(InputMgr::GetMousePosition());
 		if (Utils::PointInTransformBounds(objectBound->GetRect(), objectBound->GetRect().getLocalBounds(), mouseWorldPos) &&
-			!Utils::PointInTransformBounds(boxUI->GetBody(), boxUI->GetBody().getLocalBounds(), mouseUiPos))
+			!Utils::PointInTransformBounds(boxUI->GetBody(), boxUI->GetBody().getLocalBounds(), mouseUiPos) &&
+			spriteInserts[spriteCount]->GetName() != "Bird")
 		{
 			sf::Vector2f spritePos = spriteInserts[spriteCount]->GetPosition();
 			sf::Vector2f newPos = ScreenToWorld(UiToScreen(spritePos));
@@ -187,6 +209,25 @@ void SceneEditor::Update(float dt)
 			{
 				blockCount++;
 			}
+			spriteCount++;
+			HpList.push_back(choosedSpriteHp);
+		}
+		else if (Utils::PointInTransformBounds(birdBound->GetRect(), birdBound->GetRect().getLocalBounds(), mouseWorldPos) &&
+			!Utils::PointInTransformBounds(boxUI->GetBody(), boxUI->GetBody().getLocalBounds(), mouseUiPos) &&
+				spriteInserts[spriteCount]->GetName() == "Bird")
+		{
+			sf::Vector2f spritePos = spriteInserts[spriteCount]->GetPosition();
+			sf::Vector2f newPos = ScreenToWorld(UiToScreen(spritePos));
+			sf::Vector2f texSize = (sf::Vector2f)TEXTURE_MGR.Get(spriteInserts[spriteCount]->GetTextureId()).getSize();
+			newPos.x = Utils::Clamp(newPos.x,
+				objectBound->GetOrigin().x - objectBound->GetPosition().x + texSize.x,
+				objectBound->GetOrigin().x + objectBound->GetPosition().x - texSize.x);
+			spriteInserts[spriteCount]->SetPosition(newPos);
+			spriteInserts[spriteCount]->sortingLayer = SortingLayers::Foreground;
+			spriteInserts[spriteCount]->sortingOrder = 0;
+			spriteChoosed = nullptr;
+			isChoosed = false;
+			birdCount++;
 			spriteCount++;
 			HpList.push_back(choosedSpriteHp);
 		}
@@ -251,9 +292,13 @@ rapidcsv::Document SceneEditor::SaveFile()
 		{
 			info.push_back(std::to_string(1));
 		}
-		else
+		else if(spriteInserts[i]->GetName() == "Block")
 		{
 			info.push_back(std::to_string(0));
+		}
+		else
+		{
+			info.push_back(std::to_string(2));
 		}
 		doc.InsertRow(i + 2, info);
 	}
@@ -336,7 +381,7 @@ void SceneEditor::LoadFile(const std::string& fileName)
 	for (int i = 0; i < spriteCount; i++)
 	{
 		auto row = doc.GetRow<std::string>(i + 2);
-		spriteInserts.push_back((SpriteGo*)AddGameObject(new SpriteGo(row[0], std::stoi(row[10]) == 0 ? "Block" : "Pig")));
+		spriteInserts.push_back((SpriteGo*)AddGameObject(new SpriteGo(row[0], std::stoi(row[10]) == 0 ? "Block" : (std::stoi(row[10]) == 2 ? "Bird" : "Pig"))));
 		spriteInserts[i]->Reset();
 		spriteInserts[i]->SetOrigin(Origins::MC);
 		spriteInserts[i]->SetPosition({std::stof(row[1]), std::stof(row[2])});

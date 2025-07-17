@@ -82,61 +82,13 @@ void EditBoxUI::Init()
 	AddBlockTypes("StageStructures/blocktype.csv");
 	AddBirdTypes("StageStructures/birdtype.csv");
 
-	auto ShowBlocks = [this]() {
-		for (int i = 0; i < blockCount; i++)
-		{
-			blocks[i]->SetActive(true);
-		}
-		for (int i = 0; i < pigCount; i++)
-		{
-			pigs[i]->SetActive(false);
-		}
-		for (int i = 0; i < birdCount; i++)
-		{
-			birds[i]->SetActive(false);
-		}
-		ResetObjectsInitPosition();
-		currentPlate = Plate::Block;
-		scrollBox.setPosition(bodyPos + scrollPos);
-	};
+	auto ShowBlocks = [this]() { this->ShowBlocks(); };
 	blockButton->SetButtonFunc(ShowBlocks);
 
-	auto ShowPigs = [this]() {
-		for (int i = 0; i < blockCount; i++)
-		{
-			blocks[i]->SetActive(false);
-		}
-		for (int i = 0; i < pigCount; i++)
-		{
-			pigs[i]->SetActive(true);
-		}
-		for (int i = 0; i < birdCount; i++)
-		{
-			birds[i]->SetActive(false);
-		}
-		ResetObjectsInitPosition();
-		currentPlate = Plate::Pig;
-		scrollBox.setPosition(bodyPos + scrollPos);
-	};
+	auto ShowPigs = [this]() { this->ShowPigs(); };
 	pigButton->SetButtonFunc(ShowPigs);
 
-	auto ShowBirds = [this]() {
-		for (int i = 0; i < blockCount; i++)
-		{
-			blocks[i]->SetActive(false);
-		}
-		for (int i = 0; i < pigCount; i++)
-		{
-			pigs[i]->SetActive(false);
-		}
-		for (int i = 0; i < birdCount; i++)
-		{
-			birds[i]->SetActive(true);
-		}
-		ResetObjectsInitPosition();
-		currentPlate = Plate::Bird;
-		scrollBox.setPosition(bodyPos + scrollPos);
-	};
+	auto ShowBirds = [this]() {this->ShowBirds();};
 	birdButton->SetButtonFunc(ShowBirds);
 }
 
@@ -312,6 +264,7 @@ void EditBoxUI::AddBlockTypes(const std::string& filePath)
 		blocks[i]->SetActive(false);
 		blocks[i]->SetScale({ 0.7f, 0.7f });
 		blockHPs.push_back(std::stoi(row[2]));
+		texIds.push_back(row[0]);
 	}
 }
 
@@ -326,6 +279,7 @@ void EditBoxUI::AddPigTypes(const std::string& filePath)
 		pigs[i]->SetOrigin(Origins::MC);
 		pigs[i]->SetActive(false);
 		pigHPs.push_back(std::stoi(row[2]));
+		texIds.push_back(row[0]);
 	}
 }
 
@@ -339,6 +293,7 @@ void EditBoxUI::AddBirdTypes(const std::string& filePath)
 		birds.push_back(new SpriteGo(row[0], row[1]));
 		birds[i]->SetOrigin(Origins::MC);
 		birds[i]->SetActive(false);
+		texIds.push_back(row[0]);
 	}
 }
 
@@ -365,4 +320,62 @@ void EditBoxUI::ResetObjectsInitPosition()
 	{
 		pigs[i]->SetPosition(bodyPos + pigsInitPos[i] + objectsCenterPos);
 	}
+}
+
+void EditBoxUI::ShowBlocks()
+{
+	for (int i = 0; i < blockCount; i++)
+	{
+		blocks[i]->SetActive(true);
+	}
+	for (int i = 0; i < pigCount; i++)
+	{
+		pigs[i]->SetActive(false);
+	}
+	for (int i = 0; i < birdCount; i++)
+	{
+		birds[i]->SetActive(false);
+	}
+	ResetObjectsInitPosition();
+	currentPlate = Plate::Block;
+	scrollBox.setPosition(bodyPos + scrollPos);
+}
+
+void EditBoxUI::ShowPigs()
+{
+	for (int i = 0; i < blockCount; i++)
+	{
+		blocks[i]->SetActive(false);
+	}
+	for (int i = 0; i < pigCount; i++)
+	{
+		pigs[i]->SetActive(true);
+	}
+	for (int i = 0; i < birdCount; i++)
+	{
+		birds[i]->SetActive(false);
+	}
+	ResetObjectsInitPosition();
+	currentPlate = Plate::Pig;
+	scrollBox.setPosition(bodyPos + scrollPos);
+}
+
+void EditBoxUI::ShowBirds()
+{
+	for (int i = 0; i < blockCount; i++)
+	{
+		blocks[i]->SetActive(false);
+	}
+	for (int i = 0; i < pigCount; i++)
+	{
+		pigs[i]->SetActive(false);
+	}
+	for (int i = 0; i < birdCount; i++)
+	{
+		birds[i]->SetActive(true);
+	}
+	ResetObjectsInitPosition();
+	currentPlate = Plate::Bird;
+	scrollBox.setPosition(bodyPos + scrollPos);
+	
 }
