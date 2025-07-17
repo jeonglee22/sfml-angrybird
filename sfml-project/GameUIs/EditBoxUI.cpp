@@ -127,7 +127,7 @@ void EditBoxUI::Init()
 		}
 		for (int i = 0; i < pigCount; i++)
 		{
-			pigs[i]->SetActive(true);
+			pigs[i]->SetActive(false);
 		}
 		for (int i = 0; i < birdCount; i++)
 		{

@@ -40,7 +40,7 @@ void SceneStage1::Init()
 	for(int i =0; i< tryMax; i++)
 	{
 		birds.push_back((Bird*)AddGameObject(new Bird("graphics/Angrybirds/RedBird1.png", "Bird")));
-		birds[i]->SetInitPos({ 80.f - 40.f * i, 660.0f});
+		birds[i]->SetInitPos({ 0.f - 40.f * i, 660.0f});
 	}
 
 	LoadBlockInfo("graphics/EditorMaps/MyMap3.csv");

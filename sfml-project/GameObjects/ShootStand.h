@@ -22,7 +22,7 @@ protected:
 	std::vector<SpriteGo*> Band;
 	Bird* bird = nullptr;
 
-	sf::Vector2f bodyPos = { 150.f, 685.f };
+	sf::Vector2f bodyPos = { 50.f, 685.f };
 	sf::Vector2f leftBodyPos = {9.f,-140.f};
 	sf::Vector2f rightBodyPos = { -7.f,-135.f };
 	sf::Vector2f bandBodyPos = {0.f,-115.f};

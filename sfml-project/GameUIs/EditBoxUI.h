@@ -40,8 +40,8 @@ protected:
 	sf::Vector2f bodySize = { 500.f, FRAMEWORK.GetWindowSizeF().y };
 	sf::Vector2f bodyPos = {FRAMEWORK.GetWindowSizeF().x - bodySize.x * 0.5f, FRAMEWORK.GetWindowSizeF().y * 0.5f};
 
-	sf::Vector2f blockButtonPos = { -100.f, -FRAMEWORK.GetWindowSizeF().y * 0.5f + 70.f };
-	sf::Vector2f pigButtonPos = { 100.f, -FRAMEWORK.GetWindowSizeF().y * 0.5f + 70.f };
+	sf::Vector2f blockButtonPos = { -120.f, -FRAMEWORK.GetWindowSizeF().y * 0.5f + 70.f };
+	sf::Vector2f pigButtonPos = { 120.f, -FRAMEWORK.GetWindowSizeF().y * 0.5f + 70.f };
 	sf::Vector2f birdButtonPos = { 0.f, -FRAMEWORK.GetWindowSizeF().y * 0.5f + 70.f };
 
 	sf::Vector2f platePos = { 0.f, 50.f };
@@ -85,6 +85,7 @@ public:
 
 	std::vector<int> GetBlockHPs() const { return blockHPs; }
 	std::vector<int> GetPigHPs() const { return pigHPs; }
+	Plate GetCurrentPlate() const { return currentPlate; }
 
 	SpriteGo* GetMousePosSprite(int &hp);
 	sf::RectangleShape GetBody() const { return body; }

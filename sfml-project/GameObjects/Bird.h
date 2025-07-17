@@ -23,12 +23,12 @@ protected:
 
 	float minCharge = 30.f;
 	float maxCharge = 70.f;
-	float forceAmount = 800.f;
+	float forceAmount = 1000.f;
 	float flyingDirection = 1.f;
 	float despawnTimeMax = 3.f;
 	float despawnTime = 0.f;
 
-	sf::Vector2f shootPos = { 150.f / SCALE, 570.f / SCALE };
+	sf::Vector2f shootPos = { 50.f / SCALE, 570.f / SCALE };
 
 	bool isRestart = false;
 
