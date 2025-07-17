@@ -107,6 +107,11 @@ bool InputMgr::GetKeyDown(sf::Keyboard::Key key)
 	return Contains(downKeys, key);
 }
 
+bool InputMgr::GetAnyKeyDown()
+{
+	return downKeys.size() > 0;
+}
+
 bool InputMgr::GetKeyUp(sf::Keyboard::Key key)
 {
 	return Contains(upKeys, key);

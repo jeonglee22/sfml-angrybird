@@ -70,10 +70,10 @@ void EditBoxUI::Init()
 	aboveplate.setPosition(bodyPos + abovePlatePos);
 
 	blockButton = new Button("graphics/BlockButton.png", "BlockButton");
-	blockButton->SetOrigin(Origins::MC);
+	blockButton->Init();
 	
 	pigButton = new Button("graphics/PigButton.png", "PigButton");
-	pigButton->SetOrigin(Origins::MC);
+	pigButton->Init();
 
 	AddPigTypes("StageStructures/pigtype.csv");
 	AddBlockTypes("StageStructures/blocktype.csv");

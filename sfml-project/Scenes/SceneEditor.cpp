@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "windows.h"
 #include "rapidcsv.h"
 #include "SceneEditor.h"
 #include "BackGround.h"
@@ -16,10 +17,12 @@ SceneEditor::SceneEditor()
 
 void SceneEditor::Init()
 {
+	fontIds.push_back("fonts/angrybirds-regular.ttf");
+
 	texIds.push_back("graphics/LevelOne.png");
 	texIds.push_back("graphics/Sky.png");
+	texIds.push_back("graphics/buttonsnontext.png");
 	texIds.push_back("graphics/redo.png");
-	texIds.push_back("graphics/save.png");
 	texIds.push_back("graphics/PigButton.png");
 	texIds.push_back("graphics/BlockButton.png");
 	texIds.push_back("graphics/EditorObjects/PigOriginal.png");
@@ -48,8 +51,9 @@ void SceneEditor::Init()
 	background = (BackGround*)AddGameObject(new BackGround("graphics/LevelOne.png", "graphics/Sky.png"));
 
 	boxUI = (EditBoxUI*)AddGameObject(new EditBoxUI());
-	redo = (Button*)AddGameObject(new Button("graphics/redo.png"));
-	save = (Button*)AddGameObject(new Button("graphics/save.png"));
+	undo = (Button*)AddGameObject(new Button("graphics/redo.png"));
+	save = (Button*)AddGameObject(new Button("graphics/buttonsnontext.png"));
+	load = (Button*)AddGameObject(new Button("graphics/buttonsnontext.png"));
 	objectBound = (RectGo*)AddGameObject(new RectGo());
 	objectBound->SetColor(sf::Color(0, 0, 0, 100));
 
@@ -57,8 +61,9 @@ void SceneEditor::Init()
 
 	objectBound->sortingOrder = -1;
 	
-	redo->sortingOrder = 10;
+	undo->sortingOrder = 10;
 	save->sortingOrder = 10;
+	load->sortingOrder = 10;
 }
 
 void SceneEditor::Enter()
@@ -73,7 +78,7 @@ void SceneEditor::Enter()
 
 	Scene::Enter();
 	
-	auto redoFunc = [this]() {
+	auto undoFunc = [this]() {
 		if(spriteCount > 0)
 		{
 			spriteCount--;
@@ -89,10 +94,10 @@ void SceneEditor::Enter()
 			spriteInserts.pop_back();
 		}
 	};
-	redo->SetButtonFunc(redoFunc);
-	redo->SetScale({ 0.75f,0.75f });
-	sf::Vector2f redoButtonSize = (sf::Vector2f)TEXTURE_MGR.Get(redo->GetTextureId()).getSize();
-	redo->SetPosition({ redoButtonSize.x * 0.6f + 80.f, redoButtonSize.y * 0.6f});
+	undo->SetButtonFunc(undoFunc);
+	undo->SetScale({ 0.75f,0.75f });
+	sf::Vector2f redoButtonSize = (sf::Vector2f)TEXTURE_MGR.Get(undo->GetTextureId()).getSize();
+	undo->SetPosition({ redoButtonSize.x * 0.6f + 80.f, redoButtonSize.y * 0.6f});
 
 	auto saveFunc = [this]() { SaveField(); };
 	save->SetButtonFunc(saveFunc);
@@ -146,6 +151,10 @@ void SceneEditor::Update(float dt)
 		{
 			sf::Vector2f spritePos = spriteInserts[spriteCount]->GetPosition();
 			sf::Vector2f newPos = ScreenToWorld(UiToScreen(spritePos));
+			sf::Vector2f texSize = (sf::Vector2f) TEXTURE_MGR.Get(spriteInserts[spriteCount]->GetTextureId()).getSize();
+			newPos.x = Utils::Clamp(newPos.x,
+				objectBound->GetOrigin().x - objectBound->GetPosition().x + texSize.x,
+				objectBound->GetOrigin().x + objectBound->GetPosition().x - texSize.x);
 			spriteInserts[spriteCount]->SetPosition(newPos);
 			spriteInserts[spriteCount]->sortingLayer = SortingLayers::Foreground;
 			spriteInserts[spriteCount]->sortingOrder = 0;
@@ -231,4 +240,11 @@ void SceneEditor::SaveField()
 		doc.InsertRow(i + 2, info);
 		doc.Save(fileName);
 	}
+	mapNumber += 1;
 }
+
+void SceneEditor::LoadField()
+{
+}
+
+

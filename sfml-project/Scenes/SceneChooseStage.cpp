@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SceneChooseStage.h"
 #include "Button.h"
+#include "SpriteGo.h"
 
 SceneChooseStage::SceneChooseStage()
 	: Scene(SceneIds::ChooseStage)
@@ -10,6 +11,11 @@ SceneChooseStage::SceneChooseStage()
 void SceneChooseStage::Init()
 {
 	texIds.push_back("graphics/startbutton.png");
+	texIds.push_back("graphics/image_level_selector1.png");
+
+	fontIds.push_back("fonts/angrybirds-regular.ttf");
+
+	AddGameObject(new SpriteGo("graphics/image_level_selector1.png"));
 
 	for (int i = 0; i < buttonCount; i++)
 	{

@@ -2,11 +2,19 @@
 #include "Scene.h"
 
 class Button;
+class SpriteGo;
 
-class SceneChooseStage :
-    public Scene
+class SceneChooseStage : public Scene
 {
+public:
+	enum class ButtonType
+	{
+		start,
+		home,
+		editor,
+	};
 protected:
+	SpriteGo* background;
 	std::vector<Button*> buttons;
 	int buttonCount = 1;
 
@@ -23,3 +31,9 @@ public:
 	void Update(float dt) override;
 };
 
+struct StartStage1
+{
+	void operator()(){
+		SCENE_MGR.ChangeScene(SceneIds::Stage1);
+	}
+};

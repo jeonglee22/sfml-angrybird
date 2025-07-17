@@ -14,8 +14,9 @@ protected:
 	EditBoxUI* boxUI = nullptr;
 	RectGo* objectBound = nullptr;
 	SpriteGo* spriteChoosed = nullptr;
-	Button* redo = nullptr;
+	Button* undo = nullptr;
 	Button* save = nullptr;
+	Button* load = nullptr;
 
 	std::vector<SpriteGo*> spriteInserts;
 	std::vector<int> HpList;
@@ -55,5 +56,6 @@ public:
 	void ViewControl(const sf::Vector2f& mousePos);
 	void ViewClamp();
 	void SaveField();
+	void LoadField();
 };
 

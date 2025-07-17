@@ -50,6 +50,6 @@ void SceneStart::Update(float dt)
 		text->SetActive(!text->GetActive());
 		viewTime = 0.f;
 	}
-	if (InputMgr::GetMouseButtonUp(sf::Mouse::Left))
+	if (InputMgr::GetAnyKeyDown())
 		SCENE_MGR.ChangeScene(SceneIds::ChooseStage);
 }

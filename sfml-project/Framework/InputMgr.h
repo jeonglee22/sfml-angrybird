@@ -35,6 +35,7 @@ public:
 	static void Update(float dt);
 
 	static bool GetKeyDown(sf::Keyboard::Key key);
+	static bool GetAnyKeyDown();
 	static bool GetKeyUp(sf::Keyboard::Key key);
 	static bool GetKey(sf::Keyboard::Key key);
 

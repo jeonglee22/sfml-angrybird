@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Button.h"
+#include "TextGo.h"
 
 Button::Button(const std::string& texId, const std::string& name)
 	: SpriteGo(texId, name)
@@ -13,6 +14,9 @@ void Button::Init()
 
 	SetOrigin(Origins::MC);
 
+	text = new TextGo("fonts/angrybirds-regular.ttf");
+	text->SetOrigin(Origins::MC);
+
 	SpriteGo::Init();
 }
 
@@ -23,7 +27,11 @@ void Button::Release()
 
 void Button::Reset()
 {
+	text->Reset();
+
 	SpriteGo::Reset();
+	
+	text->SetPosition(position);
 
 	originAlpha = sprite.getColor().a;
 }
@@ -54,6 +62,7 @@ void Button::Update(float dt)
 void Button::Draw(sf::RenderWindow& window)
 {
 	SpriteGo::Draw(window);
+	text->Draw(window);
 }
 
 void Button::DoFunc()
