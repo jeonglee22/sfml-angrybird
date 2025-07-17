@@ -152,12 +152,19 @@ void EditBoxUI::Update(float dt)
 
 	if (InputMgr::GetWheelScroll() != 0)
 	{
-		float newObjectsCenterY = objectsCenterPos.y + InputMgr::GetWheelScroll() * dt * 3000.f;
+		float newObjectsCenterY = objectsCenterPos.y + InputMgr::GetWheelScroll() * dt * 5000.f;
+		float minObjectY = currentPlate == Plate::Block ? minBlockYScroll : minPigYScroll;
 
-		objectsCenterPos.y = Utils::Clamp(newObjectsCenterY, currentPlate == Plate::Block ? minBlockYScroll : minPigYScroll, maxYScroll);
+		objectsCenterPos.y = Utils::Clamp(newObjectsCenterY, minObjectY, maxYScroll);
+		if (maxYScroll - minObjectY > 0.f)
+		{
+			float diff = maxYScroll - minObjectY;
+			float scrollPercent = (objectsCenterPos.y - minObjectY) / diff;
+			scrollBox.setPosition({ scrollBox.getPosition().x , Utils::Lerp(scrollBoxYMin, scrollBoxYMax, 1- scrollPercent) });
+		}
 		AddAllObjectsPosition();
 	}
-	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+	else if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
 	{
 		sf::Vector2f mousePos = scene->ScreenToUi(InputMgr::GetMousePosition());
 		if (Utils::PointInTransformBounds(scrollBox, scrollBox.getLocalBounds(), mousePos))
@@ -165,7 +172,7 @@ void EditBoxUI::Update(float dt)
 			isScrollMove = true;
 		}
 	}
-	if (InputMgr::GetMouseButton(sf::Mouse::Left) && isScrollMove)
+	else if (InputMgr::GetMouseButton(sf::Mouse::Left) && isScrollMove)
 	{
 		sf::Vector2f mousePos = scene->ScreenToUi(InputMgr::GetMousePosition());
 		scrollBox.setPosition({ scrollBox.getPosition().x , Utils::Clamp(mousePos.y, scrollBoxYMin, scrollBoxYMax) });
