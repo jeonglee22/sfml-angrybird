@@ -58,6 +58,11 @@ void EditBoxUI::Init()
 	plate.setPosition(bodyPos + platePos);
 	plate.setSize({bodySize.x * 0.9f, bodySize.y * 0.8f});
 
+	scrollBox.setOrigin(scrollSize * 0.5f);
+	scrollBox.setPosition(bodyPos + scrollPos);
+	scrollBox.setSize(scrollSize);
+	scrollBox.setFillColor(sf::Color(0, 0, 0, 180));
+
 	aboveplate.setSize({ bodySize.x, bodySize.y * 0.2f-10.f});
 	aboveplate.setOrigin(aboveplate.getSize() * 0.5f + sf::Vector2f(5.f,0.f));
 	aboveplate.setOutlineColor(sf::Color::Black);
@@ -83,6 +88,7 @@ void EditBoxUI::Init()
 			pigs[i]->SetActive(false);
 		}
 		ResetObjectsInitPosition();
+		currentPlate = Plate::Block;
 	};
 	blockButton->SetButtonFunc(ShowBlocks);
 
@@ -96,6 +102,7 @@ void EditBoxUI::Init()
 			pigs[i]->SetActive(true);
 		}
 		ResetObjectsInitPosition();
+		currentPlate = Plate::Pig;
 	};
 	pigButton->SetButtonFunc(ShowPigs);
 }
@@ -123,6 +130,19 @@ void EditBoxUI::Reset()
 		pigsInitPos.push_back(sf::Vector2f((i % 3 - 1) * blockinterval.x, (i / 3 - 2) * blockinterval.y));
 		pigs[i]->SetPosition(bodyPos + pigsInitPos[i] + objectsCenterPos);
 	}
+
+	minBlockYScroll = -((blockCount  - 1) / 3 - 4) * blockinterval.y;
+	minPigYScroll = -((pigCount - 1) / 3 - 4) * blockinterval.y;
+	if (minPigYScroll > 0)
+	{
+		minPigYScroll = 0.f;
+	}
+	if (minBlockYScroll > 0)
+	{
+		minBlockYScroll = 0.f;
+	}
+
+	scene = SCENE_MGR.GetCurrentScene();
 }
 
 void EditBoxUI::Update(float dt)
@@ -132,7 +152,25 @@ void EditBoxUI::Update(float dt)
 
 	if (InputMgr::GetWheelScroll() != 0)
 	{
-		objectsCenterPos.y += InputMgr::GetWheelScroll() * dt * 3000.f;
+		float newObjectsCenterY = objectsCenterPos.y + InputMgr::GetWheelScroll() * dt * 3000.f;
+
+		objectsCenterPos.y = Utils::Clamp(newObjectsCenterY, currentPlate == Plate::Block ? minBlockYScroll : minPigYScroll, maxYScroll);
+		AddAllObjectsPosition();
+	}
+	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+	{
+		sf::Vector2f mousePos = scene->ScreenToUi(InputMgr::GetMousePosition());
+		if (Utils::PointInTransformBounds(scrollBox, scrollBox.getLocalBounds(), mousePos))
+		{
+			isScrollMove = true;
+		}
+	}
+	if (InputMgr::GetMouseButton(sf::Mouse::Left) && isScrollMove)
+	{
+		sf::Vector2f mousePos = scene->ScreenToUi(InputMgr::GetMousePosition());
+		scrollBox.setPosition({ scrollBox.getPosition().x , Utils::Clamp(mousePos.y, scrollBoxYMin, scrollBoxYMax) });
+		float scrollPercent = (scrollBox.getPosition().y - scrollBoxYMin) / (scrollBoxYMax - scrollBoxYMin);
+		objectsCenterPos.y = Utils::Lerp(maxYScroll, currentPlate == Plate::Block ? minBlockYScroll : minPigYScroll, scrollPercent);
 		AddAllObjectsPosition();
 	}
 }
@@ -151,6 +189,7 @@ void EditBoxUI::Draw(sf::RenderWindow& window)
 		pigs[i]->Draw(window);
 	}
 	window.draw(aboveplate);
+	window.draw(scrollBox);
 	blockButton->Draw(window);
 	pigButton->Draw(window);
 }

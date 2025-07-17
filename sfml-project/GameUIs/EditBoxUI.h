@@ -3,22 +3,35 @@
 #include "SpriteGo.h"
 
 class Button;
+class Scene;
 
 class EditBoxUI : public GameObject
 {
+public:
+	enum class Plate
+	{
+		Pig,
+		Block,
+	};
+
 protected:
 	sf::RectangleShape body;
 	sf::RectangleShape plate;
+	sf::RectangleShape scrollBox;
 	sf::RectangleShape aboveplate;
 	sf::RectangleShape belowplate;
+
 	std::vector<SpriteGo*> blocks;
 	std::vector<sf::Vector2f> blocksInitPos;
 	std::vector<int> blockHPs;
 	std::vector<SpriteGo*> pigs;
 	std::vector<sf::Vector2f> pigsInitPos;
 	std::vector<int> pigHPs;
+
 	Button* blockButton;
 	Button* pigButton;
+
+	Scene* scene;
 
 	sf::Vector2f bodySize = { 500.f, FRAMEWORK.GetWindowSizeF().y };
 	sf::Vector2f bodyPos = {FRAMEWORK.GetWindowSizeF().x - bodySize.x * 0.5f, FRAMEWORK.GetWindowSizeF().y * 0.5f};
@@ -29,9 +42,21 @@ protected:
 	sf::Vector2f belosePlatePos = { 0.f, 50.f };
 	sf::Vector2f blockinterval = { 150.f,100.f };
 	sf::Vector2f objectsCenterPos = {0.f,0.f};
+	sf::Vector2f scrollSize = { 30.f, 50.f };
+	sf::Vector2f scrollPos = {bodySize.x * 0.5f - 5.f, -bodySize.y * 0.3f};
 
 	int blockCount = 18;
 	int pigCount = 10;
+	Plate currentPlate;
+
+	float minBlockYScroll;
+	float minPigYScroll;
+	float maxYScroll = 0.f;
+
+	float scrollBoxYMin = bodyPos.y-bodySize.y * 0.3f;
+	float scrollBoxYMax = bodySize.y - scrollSize.y * 0.5f;
+
+	bool isScrollMove;
 
 public:
 	EditBoxUI(const std::string& name = "");
