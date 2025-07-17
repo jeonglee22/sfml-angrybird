@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "windows.h"
-#include "rapidcsv.h"
+#include "commdlg.h"
 #include "SceneEditor.h"
 #include "BackGround.h"
 #include "EditBoxUI.h"
@@ -8,6 +8,7 @@
 #include "RectGo.h"
 #include "Button.h"
 
+HWND hwnd;
 int SceneEditor::mapNumber = 1;
 
 SceneEditor::SceneEditor()
@@ -97,13 +98,23 @@ void SceneEditor::Enter()
 	undo->SetButtonFunc(undoFunc);
 	undo->SetScale({ 0.75f,0.75f });
 	sf::Vector2f redoButtonSize = (sf::Vector2f)TEXTURE_MGR.Get(undo->GetTextureId()).getSize();
-	undo->SetPosition({ redoButtonSize.x * 0.6f + 80.f, redoButtonSize.y * 0.6f});
+	undo->SetPosition({ redoButtonSize.x * 0.6f + 160.f, redoButtonSize.y * 0.5f});
 
 	auto saveFunc = [this]() { SaveField(); };
 	save->SetButtonFunc(saveFunc);
-	save->SetScale({ 0.6f,0.6f });
+	save->SetScale({ 0.75f,0.75f });
 	sf::Vector2f saveButtonSize = (sf::Vector2f)TEXTURE_MGR.Get(save->GetTextureId()).getSize();
-	save->SetPosition({ saveButtonSize.x * 0.6f, saveButtonSize.y * 0.5f});
+	save->SetPosition({ saveButtonSize.x * 0.6f, saveButtonSize.y * 0.6f});
+	save->SetTextString("Save");
+	save->SetTextPosition({ 0.f,-5.f });
+	
+	auto loadFunc = [this]() { LoadField(); };
+	load->SetButtonFunc(loadFunc);
+	load->SetScale({ 0.75f,0.75f });
+	sf::Vector2f loadButtonSize = (sf::Vector2f)TEXTURE_MGR.Get(load->GetTextureId()).getSize();
+	load->SetPosition({ loadButtonSize.x * 0.6f + 80.f, loadButtonSize.y * 0.6f});
+	load->SetTextString("Load");
+	load->SetTextPosition({ 0.f,-5.f });
 
 	backgroundSize = background->GetTotalSize();
 
@@ -207,9 +218,8 @@ void SceneEditor::ViewClamp()
 	currentViewPos.y = Utils::Clamp(currentViewPos.y, topLimit, bottomLimit);
 }
 
-void SceneEditor::SaveField()
+rapidcsv::Document SceneEditor::SaveFile()
 {
-	std::string fileName = "graphics/EditorMaps/Map" + std::to_string(SceneEditor::mapNumber) + ".csv";
 	rapidcsv::Document doc;
 	doc.SetColumnName(0, "BLOCK_COUNT");
 	doc.InsertRow(0, std::vector<int>{spriteCount});
@@ -229,7 +239,7 @@ void SceneEditor::SaveField()
 		info.push_back(std::to_string(0.1f));
 		info.push_back(std::to_string(0.f));
 		info.push_back(std::to_string(HpList[i]));
-		if(spriteInserts[i]->GetName() == "Pig")
+		if (spriteInserts[i]->GetName() == "Pig")
 		{
 			info.push_back(std::to_string(1));
 		}
@@ -238,13 +248,102 @@ void SceneEditor::SaveField()
 			info.push_back(std::to_string(0));
 		}
 		doc.InsertRow(i + 2, info);
-		doc.Save(fileName);
 	}
-	mapNumber += 1;
+	return doc;
+}
+
+void SceneEditor::SaveField()
+{
+	rapidcsv::Document doc = SaveFile();
+
+	TCHAR filename[MAX_PATH] = L"";
+	OPENFILENAME ofn;
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = NULL;
+	ofn.lpstrFilter = L"모든 파일\0*.*\0텍스트 파일\0*.csv\0";
+	ofn.lpstrFile = filename;
+	ofn.nMaxFile = MAX_PATH;
+	ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_OVERWRITEPROMPT;
+	ofn.lpstrDefExt = L"csv";
+
+	while(true)
+	{
+		if (GetSaveFileName(&ofn) != NULL)
+		{
+			wsprintf(filename, L"%s 파일을 저장하시겠습니까?", ofn.lpstrFile);
+			MessageBox(hwnd, filename, L"저장 선택", MB_OK);
+
+			std::string stringFileName = tostring(filename);
+			doc.Save(stringFileName);
+			std::cout << stringFileName << std::endl;
+			mapNumber += 1;
+			break;
+		}
+		else
+		{
+			continue;
+		}
+	}
 }
 
 void SceneEditor::LoadField()
 {
+	TCHAR filename[MAX_PATH] = L"";
+
+	OPENFILENAME ofn;
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = NULL;
+	ofn.lpstrFilter = L"모든 파일\0*.*\0텍스트 파일\0*.csv\0";
+	ofn.lpstrFile = filename;
+	ofn.nMaxFile = MAX_PATH;
+	ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
+	ofn.lpstrDefExt = L"csv";
+
+	if (GetOpenFileName(&ofn) != NULL)
+	{
+		wsprintf(filename, L"%s 파일을 열겠습니까?", ofn.lpstrFile);
+		MessageBox(hwnd, filename, L"열기 선택", MB_OK);
+
+		std::string stringFileName = tostring(filename);
+		
+		LoadFile(stringFileName);
+	}
+}
+
+void SceneEditor::LoadFile(const std::string& fileName)
+{
+	rapidcsv::Document doc(fileName);
+	spriteCount = doc.GetCell<int>(0, 0);
+
+	spriteInserts.clear();
+	HpList.clear();
+	for (int i = 0; i < spriteCount; i++)
+	{
+		auto row = doc.GetRow<std::string>(i + 2);
+		spriteInserts.push_back((SpriteGo*)AddGameObject(new SpriteGo(row[0], std::stoi(row[10]) == 0 ? "Block" : "Pig")));
+		spriteInserts[i]->Reset();
+		spriteInserts[i]->SetOrigin(Origins::MC);
+		spriteInserts[i]->SetPosition({std::stof(row[1]), std::stof(row[2])});
+		spriteInserts[i]->sortingLayer = SortingLayers::Foreground;
+		spriteInserts[i]->sortingOrder = 0;
+		HpList.push_back(std::stoi(row[9]));
+	}
+}
+
+std::string SceneEditor::tostring(WCHAR* str)
+{
+	std::string string;
+	wchar_t* oneBlock = str;
+	while (*oneBlock != ' ')
+	{
+		std::string word;
+		string += word.assign(oneBlock, oneBlock + 1);
+		oneBlock++;
+	}
+	return string;
 }
 
 

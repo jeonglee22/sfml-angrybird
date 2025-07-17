@@ -47,6 +47,10 @@ void Button::Update(float dt)
 		if (mouseDistance < sprite.getTexture()->getSize().x * 0.5)
 		{
 			sprite.setColor(sf::Color(sprite.getColor().r, sprite.getColor().g, sprite.getColor().b, originAlpha * 0.5f));
+			text->SetFillColor(sf::Color(text->GetText().getFillColor().r, 
+				text->GetText().getFillColor().g,
+				text->GetText().getFillColor().b,
+				originAlpha * 0.5f));
 			if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
 			{
 				DoFunc();
@@ -55,6 +59,10 @@ void Button::Update(float dt)
 		else
 		{
 			sprite.setColor(sf::Color(sprite.getColor().r, sprite.getColor().g, sprite.getColor().b, originAlpha));
+			text->SetFillColor(sf::Color(text->GetText().getFillColor().r,
+				text->GetText().getFillColor().g,
+				text->GetText().getFillColor().b,
+				originAlpha));
 		}
 	}
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "Scene.h"
+#include "rapidcsv.h"
 
 class BackGround;
 class EditBoxUI;
@@ -55,7 +56,10 @@ public:
 
 	void ViewControl(const sf::Vector2f& mousePos);
 	void ViewClamp();
+	rapidcsv::Document SaveFile();
 	void SaveField();
 	void LoadField();
+	void LoadFile(const std::string& fileName);
+	std::string tostring(wchar_t* str);
 };
 

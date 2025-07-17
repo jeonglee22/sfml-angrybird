@@ -165,18 +165,18 @@ void SceneStage1::Draw(sf::RenderWindow& window)
 }
 
 void SceneStage1::LoadBlockInfo(const std::string& filePath)
-{
+{		
 	rapidcsv::Document doc(filePath);
-	objCount = doc.GetCell<int>(0,0);
+	objCount = doc.GetCell<int>(0, 0);
 
 	blocks.clear();
 	pigs.clear();
 	for (int i = 0; i < objCount; i++)
 	{
-		auto row = doc.GetRow<std::string>(i+2);
-		if(std::find(texIds.begin(), texIds.end(), row[0]) == texIds.end())
+		auto row = doc.GetRow<std::string>(i + 2);
+		if (std::find(texIds.begin(), texIds.end(), row[0]) == texIds.end())
 			texIds.push_back(row[0]);
-		if(std::stoi(row[10]) == 0)
+		if (std::stoi(row[10]) == 0)
 		{
 			blocks.push_back((Block*)AddGameObject(new Block(row[0], "Block")));
 			blocks[blockCount]->SetBoxPos(std::stof(row[1]), std::stof(row[2]));
