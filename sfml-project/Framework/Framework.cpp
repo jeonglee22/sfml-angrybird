@@ -8,7 +8,7 @@ void Framework::Init(int w, int h, const std::string& t)
 
     worldDef.gravity = gravity;
     worldId = b2CreateWorld(&worldDef);
-    b2World_SetHitEventThreshold(worldId, 5.f);
+    b2World_SetHitEventThreshold(worldId, 3.f);
 
 	TEXTURE_MGR.Load(texIds);
 	FONT_MGR.Load(fontIds);

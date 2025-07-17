@@ -43,7 +43,7 @@ void SceneStage1::Init()
 		birds[i]->SetInitPos({ 80.f - 40.f * i, 660.0f});
 	}
 
-	LoadBlockInfo("graphics/EditorMaps/Map1.csv");
+	LoadBlockInfo("graphics/EditorMaps/MyMap3.csv");
 
 	countUI = (ShootCountUI*)AddGameObject(new ShootCountUI());
 
@@ -150,7 +150,6 @@ void SceneStage1::Update(float dt)
 	{
 		ViewFollowing(timeStep);
 	}
-
 #ifdef DEF_DEV
 	if (InputMgr::GetKeyDown(sf::Keyboard::Escape))
 	{

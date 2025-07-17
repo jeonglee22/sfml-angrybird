@@ -75,8 +75,12 @@ void EditBoxUI::Init()
 	pigButton = new Button("graphics/PigButton.png", "PigButton");
 	pigButton->Init();
 
+	birdButton = new Button("graphics/BirdButton.png", "BirdButton");
+	birdButton->Init();
+
 	AddPigTypes("StageStructures/pigtype.csv");
 	AddBlockTypes("StageStructures/blocktype.csv");
+	AddBirdTypes("StageStructures/birdtype.csv");
 
 	auto ShowBlocks = [this]() {
 		for (int i = 0; i < blockCount; i++)
@@ -86,6 +90,10 @@ void EditBoxUI::Init()
 		for (int i = 0; i < pigCount; i++)
 		{
 			pigs[i]->SetActive(false);
+		}
+		for (int i = 0; i < birdCount; i++)
+		{
+			birds[i]->SetActive(false);
 		}
 		ResetObjectsInitPosition();
 		currentPlate = Plate::Block;
@@ -102,11 +110,34 @@ void EditBoxUI::Init()
 		{
 			pigs[i]->SetActive(true);
 		}
+		for (int i = 0; i < birdCount; i++)
+		{
+			birds[i]->SetActive(false);
+		}
 		ResetObjectsInitPosition();
 		currentPlate = Plate::Pig;
 		scrollBox.setPosition(bodyPos + scrollPos);
 	};
 	pigButton->SetButtonFunc(ShowPigs);
+
+	auto ShowBirds = [this]() {
+		for (int i = 0; i < blockCount; i++)
+		{
+			blocks[i]->SetActive(false);
+		}
+		for (int i = 0; i < pigCount; i++)
+		{
+			pigs[i]->SetActive(true);
+		}
+		for (int i = 0; i < birdCount; i++)
+		{
+			birds[i]->SetActive(true);
+		}
+		ResetObjectsInitPosition();
+		currentPlate = Plate::Bird;
+		scrollBox.setPosition(bodyPos + scrollPos);
+	};
+	birdButton->SetButtonFunc(ShowBirds);
 }
 
 void EditBoxUI::Release()
@@ -117,8 +148,11 @@ void EditBoxUI::Reset()
 {
 	pigButton->Reset();
 	blockButton->Reset();
+	birdButton->Reset();
+
 	blockButton->SetPosition(blockButtonPos + bodyPos);
 	pigButton->SetPosition(pigButtonPos + bodyPos);
+	birdButton->SetPosition(birdButtonPos + bodyPos);
 
 	for (int i = 0; i < blockCount; i++)
 	{
@@ -131,6 +165,12 @@ void EditBoxUI::Reset()
 		pigs[i]->Reset();
 		pigsInitPos.push_back(sf::Vector2f((i % 3 - 1) * blockinterval.x, (i / 3 - 2) * blockinterval.y));
 		pigs[i]->SetPosition(bodyPos + pigsInitPos[i] + objectsCenterPos);
+	}
+	for (int i = 0; i < birdCount; i++)
+	{
+		birds[i]->Reset();
+		birdsInitPos.push_back(sf::Vector2f((i % 3 - 1) * blockinterval.x, (i / 3 - 2) * blockinterval.y));
+		birds[i]->SetPosition(bodyPos + birdsInitPos[i] + objectsCenterPos);
 	}
 
 	minBlockYScroll = -((blockCount  - 1) / 3 - 4) * blockinterval.y;
@@ -151,6 +191,7 @@ void EditBoxUI::Update(float dt)
 {
 	pigButton->Update(dt);
 	blockButton->Update(dt);
+	birdButton->Update(dt);
 
 	if (InputMgr::GetWheelScroll() != 0)
 	{
@@ -201,10 +242,15 @@ void EditBoxUI::Draw(sf::RenderWindow& window)
 	{
 		pigs[i]->Draw(window);
 	}
+	for (int i = 0; i < birdCount; i++)
+	{
+		birds[i]->Draw(window);
+	}
 	window.draw(aboveplate);
 	window.draw(scrollBox);
 	blockButton->Draw(window);
 	pigButton->Draw(window);
+	birdButton->Draw(window);
 }
 
 SpriteGo* EditBoxUI::GetMousePosSprite(int &hp)
@@ -232,6 +278,17 @@ SpriteGo* EditBoxUI::GetMousePosSprite(int &hp)
 				{
 					hp = pigHPs[i];
 					return pigs[i];
+				}
+			}
+		}
+		for (int i = 0; i < birdCount; i++)
+		{
+			if (birds[i]->GetActive())
+			{
+				if (Utils::PointInTransformBounds(birds[i]->GetSprite(), birds[i]->GetLocalBounds(), mousePos))
+				{
+					hp = pigHPs[i];
+					return birds[i];
 				}
 			}
 		}
@@ -269,6 +326,19 @@ void EditBoxUI::AddPigTypes(const std::string& filePath)
 		pigs[i]->SetOrigin(Origins::MC);
 		pigs[i]->SetActive(false);
 		pigHPs.push_back(std::stoi(row[2]));
+	}
+}
+
+void EditBoxUI::AddBirdTypes(const std::string& filePath)
+{
+	rapidcsv::Document doc(filePath);
+	birdCount = doc.GetCell<int>(0, 0);
+	for (int i = 0; i < birdCount; i++)
+	{
+		auto row = doc.GetRow<std::string>(i + 2);
+		birds.push_back(new SpriteGo(row[0], row[1]));
+		birds[i]->SetOrigin(Origins::MC);
+		birds[i]->SetActive(false);
 	}
 }
 

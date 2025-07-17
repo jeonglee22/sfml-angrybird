@@ -12,6 +12,7 @@ public:
 	{
 		Pig,
 		Block,
+		Bird,
 	};
 
 protected:
@@ -27,19 +28,26 @@ protected:
 	std::vector<SpriteGo*> pigs;
 	std::vector<sf::Vector2f> pigsInitPos;
 	std::vector<int> pigHPs;
+	std::vector<SpriteGo*> birds;
+	std::vector<sf::Vector2f> birdsInitPos;
 
 	Button* blockButton;
 	Button* pigButton;
+	Button* birdButton;
 
 	Scene* scene;
 
 	sf::Vector2f bodySize = { 500.f, FRAMEWORK.GetWindowSizeF().y };
 	sf::Vector2f bodyPos = {FRAMEWORK.GetWindowSizeF().x - bodySize.x * 0.5f, FRAMEWORK.GetWindowSizeF().y * 0.5f};
+
 	sf::Vector2f blockButtonPos = { -100.f, -FRAMEWORK.GetWindowSizeF().y * 0.5f + 70.f };
 	sf::Vector2f pigButtonPos = { 100.f, -FRAMEWORK.GetWindowSizeF().y * 0.5f + 70.f };
+	sf::Vector2f birdButtonPos = { 0.f, -FRAMEWORK.GetWindowSizeF().y * 0.5f + 70.f };
+
 	sf::Vector2f platePos = { 0.f, 50.f };
 	sf::Vector2f abovePlatePos = { 0.f, -bodySize.y * 0.4f - 25.f };
 	sf::Vector2f belosePlatePos = { 0.f, 50.f };
+
 	sf::Vector2f blockinterval = { 150.f,100.f };
 	sf::Vector2f objectsCenterPos = {0.f,0.f};
 	sf::Vector2f scrollSize = { 30.f, 50.f };
@@ -47,6 +55,7 @@ protected:
 
 	int blockCount = 18;
 	int pigCount = 10;
+	int birdCount = 3;
 	Plate currentPlate;
 
 	float minBlockYScroll;
@@ -81,6 +90,8 @@ public:
 	sf::RectangleShape GetBody() const { return body; }
 	void AddBlockTypes(const std::string& filePath);
 	void AddPigTypes(const std::string& filePath);
+
+	void AddBirdTypes(const std::string& filePath);
 
 	void AddAllObjectsPosition();
 	void ResetObjectsInitPosition();

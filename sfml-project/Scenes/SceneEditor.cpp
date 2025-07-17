@@ -26,7 +26,11 @@ void SceneEditor::Init()
 	texIds.push_back("graphics/redo.png");
 	texIds.push_back("graphics/PigButton.png");
 	texIds.push_back("graphics/BlockButton.png");
+	texIds.push_back("graphics/BirdButton.png");
 	texIds.push_back("graphics/EditorObjects/PigOriginal.png");
+	texIds.push_back("graphics/EditorObjects/RedBird.png");
+	texIds.push_back("graphics/EditorObjects/YellowBird.png");
+	texIds.push_back("graphics/EditorObjects/BlackBird.png");
 	for (int i = 1; i < 5; i++)
 	{
 		texIds.push_back("graphics/EditorObjects/WoodSquareBlock" + std::to_string(i) + ".png");
@@ -87,9 +91,13 @@ void SceneEditor::Enter()
 			{
 				pigCount--;
 			}
-			else
+			else if(spriteInserts[spriteCount]->GetName() == "Block")
 			{
 				blockCount--;
+			}
+			else
+			{
+				birdCount--;
 			}
 			RemoveGameObject(spriteInserts[spriteCount]);
 			spriteInserts.pop_back();
@@ -317,6 +325,11 @@ void SceneEditor::LoadFile(const std::string& fileName)
 {
 	rapidcsv::Document doc(fileName);
 	spriteCount = doc.GetCell<int>(0, 0);
+
+	for (auto sprite : spriteInserts)
+	{
+		RemoveGameObject(sprite);
+	}
 
 	spriteInserts.clear();
 	HpList.clear();
