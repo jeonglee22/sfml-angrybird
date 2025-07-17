@@ -292,13 +292,13 @@ rapidcsv::Document SceneEditor::SaveFile()
 		{
 			info.push_back(std::to_string(1));
 		}
-		else if(spriteInserts[i]->GetName() == "Block")
+		else if(spriteInserts[i]->GetName() == "Bird")
 		{
-			info.push_back(std::to_string(0));
+			info.push_back(std::to_string(2));
 		}
 		else
 		{
-			info.push_back(std::to_string(2));
+			info.push_back(std::to_string(0));
 		}
 		doc.InsertRow(i + 2, info);
 	}

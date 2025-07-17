@@ -37,13 +37,13 @@ void SceneStage1::Init()
 
 	shootStand = (ShootStand*)AddGameObject(new ShootStand());
 
-	for(int i =0; i< tryMax; i++)
-	{
-		birds.push_back((Bird*)AddGameObject(new Bird("graphics/Angrybirds/RedBird1.png", "Bird")));
-		birds[i]->SetInitPos({ 0.f - 40.f * i, 660.0f});
-	}
+	//for(int i =0; i< tryMax; i++)
+	//{
+	//	birds.push_back((Bird*)AddGameObject(new Bird("graphics/Angrybirds/RedBird1.png", "Bird")));
+	//	birds[i]->SetInitPos({ 0.f - 40.f * i, 660.0f});
+	//}
 
-	LoadBlockInfo("graphics/EditorMaps/MyMap3.csv");
+	LoadBlockInfo("graphics/EditorMaps/MyMap2.csv");
 
 	countUI = (ShootCountUI*)AddGameObject(new ShootCountUI());
 
@@ -170,6 +170,7 @@ void SceneStage1::LoadBlockInfo(const std::string& filePath)
 
 	blocks.clear();
 	pigs.clear();
+	birds.clear();
 	for (int i = 0; i < objCount; i++)
 	{
 		auto row = doc.GetRow<std::string>(i + 2);
@@ -183,11 +184,16 @@ void SceneStage1::LoadBlockInfo(const std::string& filePath)
 			blocks[blockCount]->SetBoxFactor(std::stof(row[5]), std::stof(row[6]), std::stof(row[7]), std::stof(row[8]));
 			blocks[blockCount++]->SetHP(std::stoi(row[9]));
 		}
-		else
+		else if(std::stoi(row[10]) == 1)
 		{
 			pigs.push_back((Pig*)AddGameObject(new Pig(row[0], "Pig")));
 			pigs[pigCount]->SetInitPos({ std::stof(row[1]), std::stof(row[2]) });
 			pigs[pigCount++]->SetHP(std::stoi(row[9]));
+		}
+		else
+		{
+			birds.push_back((Bird*)AddGameObject(new Bird(row[0], "Bird")));
+			birds[birdCount++]->SetInitPos({ std::stof(row[1]), 660.f });
 		}
 	}
 }
@@ -202,7 +208,7 @@ void SceneStage1::CheckPhysicsBodyCollision()
 		b2ShapeId shapeId1 = event.shapeIdA;
 		b2ShapeId shapeId2 = event.shapeIdB;
 		float speed = event.approachSpeed;
-		for (int j = 0; j < objCount; j++)
+		for (int j = 0; j < objCount - birdCount; j++)
 		{
 			if (j <= blockCount -1 && shapeId1.index1 == blocks[j]->GetShapeId().index1)
 			{

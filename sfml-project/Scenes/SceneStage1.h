@@ -27,6 +27,7 @@ protected:
 	int blockCount = 0;
 	int pigCount = 0;
 	int objCount = 0;
+	int birdCount = 0;
 
 	int tryCount = 0;
 	int tryMax = 5;
