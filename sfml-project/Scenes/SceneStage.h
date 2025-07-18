@@ -54,6 +54,7 @@ protected:
 	bool isViewMoving = false;
 	bool isZoomOut = false;
 	bool isZoomIn = false;
+	bool isGameOver = false;
 
 	sf::FloatRect backgroundSize;
 
@@ -82,6 +83,8 @@ public:
 	void ViewFollowing(float dt);
 	void ViewClamp();
 	void Restart();
+
+	void ShowGameResult();
 
 	void ZoomIn(float dt);
 	void ZoomOut(float dt);

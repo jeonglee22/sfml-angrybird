@@ -30,7 +30,6 @@ void SceneChooseStage::Init()
 		blockSprites[i]->SetPosition(pos);
 	}
 	blockSprites[0]->SetActive(false);
-	blockSprites[1]->SetActive(false);
 
 	Scene::Init();
 
@@ -49,7 +48,9 @@ void SceneChooseStage::Init()
 			}
 		};
 		stageButtons[i]->SetButtonFunc(func);
+		stageButtons[i]->SetActive(false);
 	}
+	stageButtons[0]->SetActive(true);
 }
 
 void SceneChooseStage::Enter()

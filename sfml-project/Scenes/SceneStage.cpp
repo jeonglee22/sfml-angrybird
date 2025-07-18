@@ -122,7 +122,7 @@ void SceneStage::Update(float dt)
 
 	timeValue += dt;
 	bool following = false;
-	if (timeValue >= timeStep)
+	if (timeValue >= timeStep && !isGameOver)
 	{
 		b2World_Step(FRAMEWORK.GetWorldID(), timeStep, subStepCount);
 
@@ -149,19 +149,21 @@ void SceneStage::Update(float dt)
 	ZoomIn(dt);
 	ZoomOut(dt);
 
+	ShowGameResult();
+
 	if(!birdReady && following)
 	{
 		ViewFollowing(timeStep);
-	}
-#ifdef DEF_DEV
-	if (InputMgr::GetKeyDown(sf::Keyboard::Escape))
-	{
-		Restart();
 	}
 	if (InputMgr::GetKeyDown(sf::Keyboard::BackSpace))
 	{
 		//Restart();
 		SCENE_MGR.ChangeScene(SceneIds::ChooseStage);
+	}
+#ifdef DEF_DEV
+	if (InputMgr::GetKeyDown(sf::Keyboard::Escape))
+	{
+		Restart();
 	}
 #endif
 }
@@ -360,6 +362,29 @@ void SceneStage::Restart()
 
 	timeValue = 0.f;
 	ObjectsReset();
+}
+
+void SceneStage::ShowGameResult()
+{
+	if (birds.size() == 0)
+	{
+		bool result = true;
+		for (auto pig : pigs)
+		{
+			if (!pig->IsDead())
+				result = false;
+		}
+		isGameOver = true;
+		FRAMEWORK.SetTimeScale(0.f);
+		if (result)
+		{
+
+		}
+		else
+		{
+
+		}
+	}
 }
 
 void SceneStage::ZoomIn(float dt)

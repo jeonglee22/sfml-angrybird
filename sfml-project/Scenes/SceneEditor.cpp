@@ -315,29 +315,26 @@ void SceneEditor::SaveField()
 {
 	rapidcsv::Document doc = SaveFile();
 
-	TCHAR filename[MAX_PATH] = L"";
-	OPENFILENAME ofn;
+	CHAR filename[MAX_PATH] = "";
+
+	OPENFILENAMEA ofn;
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
-	ofn.lStructSize = sizeof(ofn);
 	ofn.hwndOwner = NULL;
-	ofn.lpstrFilter = L"모든 파일\0*.*\0텍스트 파일\0*.csv\0";
+	ofn.lpstrFilter = "모든 파일\0*.*\0텍스트 파일\0";
 	ofn.lpstrFile = filename;
 	ofn.nMaxFile = MAX_PATH;
 	ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_OVERWRITEPROMPT;
-	ofn.lpstrDefExt = L"csv";
+	ofn.lpstrDefExt = "csv";
 
 	while(true)
 	{
-		if (GetSaveFileName(&ofn) != NULL)
+		if (GetSaveFileNameA(&ofn) != NULL)
 		{
-			wsprintf(filename, L"%s 파일을 저장하시겠습니까?", ofn.lpstrFile);
-			MessageBox(hwnd, filename, L"저장 선택", MB_OK);
+			sprintf_s(filename, "%s", ofn.lpstrFile);
+			MessageBoxA(hwnd, filename, "Save Choose", MB_OK);
 
-			std::string stringFileName = tostring(filename);
-			doc.Save(stringFileName);
-			std::cout << stringFileName << std::endl;
-			mapNumber += 1;
+			doc.Save(filename);
 			break;
 		}
 		else
@@ -349,26 +346,24 @@ void SceneEditor::SaveField()
 
 void SceneEditor::LoadField()
 {
-	TCHAR filename[MAX_PATH] = L"";
+	CHAR filename[MAX_PATH] = "";
 
-	OPENFILENAME ofn;
+	OPENFILENAMEA ofn;
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
 	ofn.hwndOwner = NULL;
-	ofn.lpstrFilter = L"모든 파일\0*.*\0텍스트 파일\0*.csv\0";
+	ofn.lpstrFilter = "모든 파일\0*.*\0텍스트 파일\0";
 	ofn.lpstrFile = filename;
 	ofn.nMaxFile = MAX_PATH;
 	ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
-	ofn.lpstrDefExt = L"csv";
+	ofn.lpstrDefExt = "csv";
 
-	if (GetOpenFileName(&ofn) != NULL)
+	if (GetOpenFileNameA(&ofn) != NULL)
 	{
-		wsprintf(filename, L"%s 파일을 열겠습니까?", ofn.lpstrFile);
-		MessageBox(hwnd, filename, L"열기 선택", MB_OK);
-
-		std::string stringFileName = tostring(filename);
+		sprintf_s(filename, "%s", ofn.lpstrFile);
+		MessageBoxA(hwnd, filename, "Load Choose", MB_OK);
 		
-		LoadFile(stringFileName);
+		LoadFile(filename);
 	}
 }
 
@@ -396,18 +391,4 @@ void SceneEditor::LoadFile(const std::string& fileName)
 		HpList.push_back(std::stoi(row[9]));
 	}
 }
-
-std::string SceneEditor::tostring(WCHAR* str)
-{
-	std::string string;
-	wchar_t* oneBlock = str;
-	while (*oneBlock != ' ')
-	{
-		std::string word;
-		string += word.assign(oneBlock, oneBlock + 1);
-		oneBlock++;
-	}
-	return string;
-}
-
 
