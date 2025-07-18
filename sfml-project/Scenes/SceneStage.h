@@ -9,6 +9,7 @@ class ShootCountUI;
 class PhysicsBody;
 class ShootStand;
 class BackGround;
+class GameResult;
 
 class SceneStage : public Scene
 {
@@ -19,6 +20,7 @@ protected:
 	ShootStand* shootStand = nullptr;
 	ShootCountUI* countUI = nullptr;
 	BackGround* background = nullptr;
+	GameResult* gameResult = nullptr;
 
 	std::vector<Bird*> birds;
 	std::vector<Block*> blocks;

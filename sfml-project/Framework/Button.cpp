@@ -10,7 +10,7 @@ Button::Button(const std::string& texId, const std::string& name)
 void Button::Init()
 {
 	sortingLayer = SortingLayers::UI;
-	sortingOrder = -1;
+	sortingOrder = 5;
 
 	SetOrigin(Origins::MC);
 

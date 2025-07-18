@@ -7,6 +7,7 @@
 #include "rapidcsv.h"
 #include "PhysicsBody.h"
 #include "ShootStand.h"
+#include "GameResult.h"
 
 SceneStage::SceneStage()
 	: Scene(SceneIds::Stage)
@@ -25,8 +26,13 @@ void SceneStage::Init()
 	texIds.push_back("graphics/Angrybirds/ShootStand.png");
 	texIds.push_back("graphics/Angrybirds/StandRight.png");
 	texIds.push_back("graphics/Angrybirds/StandLeft.png");
+	texIds.push_back("graphics/Home.png");
+	texIds.push_back("graphics/Replay.png");
+	texIds.push_back("graphics/nextstage.png");
+	texIds.push_back("graphics/BirdLaugh.png");
+	texIds.push_back("graphics/PigLaugh.png");
 
-	fontIds.push_back("fonts/DS-DIGIT.ttf");
+	fontIds.push_back("fonts/angrybirds-regular.ttf");
 
 	background = (BackGround*)AddGameObject(new BackGround("graphics/LevelOne.png", "graphics/Sky.png"));
 
@@ -35,6 +41,8 @@ void SceneStage::Init()
 	rightWall = (PhysicsBody*)AddGameObject(new PhysicsBody(PhysicsBody::Type::Invisible));
 
 	shootStand = (ShootStand*)AddGameObject(new ShootStand());
+
+	gameResult = (GameResult*)AddGameObject(new GameResult());
 
 	//for(int i =0; i< tryMax; i++)
 	//{
@@ -65,11 +73,10 @@ void SceneStage::Enter()
 
 	LoadBlockInfo("graphics/EditorMaps/MyMap" + std::to_string(2) + ".csv");
 
-	uiView.setSize(initViewSize);
-	uiView.setCenter(initViewPos);
-
 	initViewPos.x = shootStand->GetPosition().x;
 
+	uiView.setSize(FRAMEWORK.GetWindowSizeF());
+	uiView.setCenter(FRAMEWORK.GetWindowSizeF() * 0.5f);
 	worldView.setSize(initViewSize);
 	worldView.setCenter(initViewPos);
 	currentViewPos = initViewPos;

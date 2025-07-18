@@ -50,7 +50,7 @@ void SpriteGo::Release()
 
 void SpriteGo::Reset()
 {
-	sprite.setTexture(TEXTURE_MGR.Get(textureId));
+	sprite.setTexture(TEXTURE_MGR.Get(textureId), true);
 	Utils::SetOrigin(sprite, originPreset);
 }
 

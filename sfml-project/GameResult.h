@@ -1,17 +1,37 @@
 #pragma once
 #include "GameObject.h"
+#include "TextGo.h"
 
 class TextGo;
 class Button;
+class SpriteGo;
 
-class GameResult: public GameObject
+class GameResult : public GameObject
 {
+public:
+	enum class EndType
+	{
+		GameOver,
+		GameClear
+	};
 protected:
 	sf::RectangleShape body;
+	sf::RectangleShape side;
 
-	TextGo* text;
-	Button* home;
-	Button* restart;
+	TextGo* gameText = nullptr;
+	Button* home = nullptr;
+	Button* restart = nullptr;
+	Button* next = nullptr;
+
+	std::vector<SpriteGo*> laughSprites;
+
+	sf::Vector2f homeButtonPos = { -150.f, 250.f };
+	sf::Vector2f restartButtonPos = {0.f, 250.f};
+	sf::Vector2f nextButtonPos = {150.f, 250.f};
+	sf::Vector2f textPos = {0.f, -200.f};
+	sf::Vector2f laughSpritePosCenter = {0.f, 0.f};
+
+	bool isClear;
 
 public:
 	GameResult(const std::string& name = "");
@@ -28,6 +48,8 @@ public:
 	void Reset() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+
+	void SetTextString(const std::string& str) { gameText->SetString(str); }
 
 };
 
