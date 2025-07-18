@@ -5,6 +5,16 @@
 Bird::Bird(const std::string& texPlayerId, const std::string& name)
 	:PhysicsBody(Type::Bird, texPlayerId, name)
 {
+	if (name == "RedBird")
+	{
+		forceAmount = 700.f;
+		birdType = BirdType::Red;
+	}
+	else if (name == "YelBird")
+	{
+		forceAmount = 1100.f;
+		birdType = BirdType::Yellow;
+	}
 }
 
 void Bird::Init()
@@ -28,8 +38,11 @@ void Bird::Reset()
 
 	bodyDef.position = b2Vec2{ initPos.x, initPos.y };
 	bodyId = b2CreateBody(FRAMEWORK.GetWorldID(), &bodyDef);
+	sf::IntRect bodyRect = sprite.getTextureRect();
 
 	collisionRadius = sprite.getTexture()->getSize().x * 0.5f * 0.8f;
+	//if(birdType == BirdType::Red)
+	//{
 	b2Circle circleBox;
 	circleBox.center = { 0.f, 0.f };
 	circleBox.radius = collisionRadius / SCALE;
@@ -40,6 +53,25 @@ void Bird::Reset()
 	shapeDef.material.rollingResistance = 0.5f;
 	shapeDef.material.restitution = 0.5f;
 	shapeId = b2CreateCircleShape(bodyId, &shapeDef, &circleBox);
+	//}
+	/*else if(birdType == BirdType::Yellow)
+	{
+		b2Polygon triangleBox;
+		b2Vec2 triangle[3];
+		triangle[0] = b2Vec2{0.f,(float)bodyRect.top + bodyRect.height};
+		triangle[1] = b2Vec2{(float)bodyRect.left + bodyRect.width,(float)bodyRect.top + bodyRect.height};
+		triangle[2] = b2Vec2{(float)bodyRect.left + bodyRect.width * 0.5f,0.f};
+		b2Hull hull = b2ComputeHull(triangle, 3);
+
+		triangleBox = b2MakePolygon(&hull, (float)bodyRect.width * 0.5f);
+
+		b2ShapeDef shapeDef = b2DefaultShapeDef();
+		shapeDef.density = .5f;
+		shapeDef.material.friction = 0.6f;
+		shapeDef.material.rollingResistance = 0.5f;
+		shapeDef.material.restitution = 0.5f;
+		shapeId = b2CreatePolygonShape(bodyId, &shapeDef, &triangleBox);
+	}*/
 	b2Shape_EnableHitEvents(shapeId, true);
 
 	SetDisable();
@@ -89,6 +121,11 @@ void Bird::Update(float dt)
 			isShoot = true;
 			isCharging = false;
 		}
+	}
+
+	if (isShoot && isUseAbility && InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+	{
+		UseAbility();
 	}
 
 	if (CheckFinishShoot() && isShoot)
@@ -155,4 +192,22 @@ void Bird::SetInitPos()
 void Bird::SetInitPos(const sf::Vector2f& initPos)
 {
 	this->initPos = initPos / SCALE;
+}
+
+void Bird::UseAbility()
+{
+	switch (birdType)
+	{
+	case BirdType::Yellow:
+	{
+		b2Vec2 velo = b2Body_GetLinearVelocity(bodyId);
+		sf::Vector2f dir = Utils::GetNormal(sf::Vector2f(velo.x, velo.y));
+		b2Vec2 force{ velo.x * 100.f, velo.y * 100.f };
+		b2Body_ApplyForceToCenter(bodyId, force, true);
+		break;
+	}
+	default:
+		break;
+	}
+	isUseAbility = false;
 }

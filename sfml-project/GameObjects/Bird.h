@@ -6,7 +6,7 @@ public:
 	enum class BirdType
 	{
 		None = -1,
-		Original,
+		Red,
 		Yellow,
 
 		TypeCount,
@@ -28,9 +28,12 @@ protected:
 	float despawnTimeMax = 3.f;
 	float despawnTime = 0.f;
 
+	BirdType birdType;
+
 	sf::Vector2f shootPos = { 50.f / SCALE, 570.f / SCALE };
 
 	bool isRestart = false;
+	bool isUseAbility = true;
 
 public:
 	Bird(const std::string& texPlayerId = "", const std::string& name = "");
@@ -59,6 +62,7 @@ public:
 	void SetDisable() { b2Body_Disable(bodyId); }
 	void SetShoot(bool b) { isShoot = b; }
 	void SetRestart(bool re) { isRestart = re; }
+	void SetAbilityUse(bool b) { isUseAbility = b; }
 
 	bool CheckFinishShoot();
 
@@ -66,5 +70,7 @@ public:
 	void SetShootingState();
 	void SetInitPos();
 	void SetInitPos(const sf::Vector2f& initPos);
+
+	void UseAbility();
 };
 

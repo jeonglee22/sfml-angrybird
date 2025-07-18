@@ -63,7 +63,7 @@ void SceneStage::Enter()
 {
 	sf::FloatRect bounds = FRAMEWORK.GetWindowBounds();
 
-	LoadBlockInfo("graphics/EditorMaps/MyMap" + std::to_string(SCENE_MGR.GetStageSelect()) + ".csv");
+	LoadBlockInfo("graphics/EditorMaps/MyMap" + std::to_string(2) + ".csv");
 
 	uiView.setSize(initViewSize);
 	uiView.setCenter(initViewPos);
@@ -183,7 +183,7 @@ void SceneStage::LoadBlockInfo(const std::string& filePath)
 		auto row = doc.GetRow<std::string>(i + 2);
 		if (std::find(texIds.begin(), texIds.end(), row[0]) == texIds.end())
 			texIds.push_back(row[0]);
-		if (std::stoi(row[10]) == 0)
+		if (row[10] == "Block")
 		{
 			blocks.push_back((Block*)AddGameObject(new Block(row[0], "Block")));
 			blocks[blockCount]->SetBoxPos(std::stof(row[1]), std::stof(row[2]));
@@ -192,7 +192,7 @@ void SceneStage::LoadBlockInfo(const std::string& filePath)
 			blocks[blockCount]->SetHP(std::stoi(row[9]));
 			blocks[blockCount++]->Init();
 		}
-		else if(std::stoi(row[10]) == 1)
+		else if(row[10] == "Pig")
 		{
 			pigs.push_back((Pig*)AddGameObject(new Pig(row[0], "Pig")));
 			pigs[pigCount]->SetInitPos({ std::stof(row[1]), std::stof(row[2]) });
@@ -201,7 +201,7 @@ void SceneStage::LoadBlockInfo(const std::string& filePath)
 		}
 		else
 		{
-			birds.push_back((Bird*)AddGameObject(new Bird(row[0], "Bird")));
+			birds.push_back((Bird*)AddGameObject(new Bird(row[0], row[10])));
 			birds[birdCount]->SetInitPos({ std::stof(row[1]), 660.f });
 			birds[birdCount++]->Init();
 		}
@@ -300,9 +300,6 @@ void SceneStage::ViewFollowing(float dt)
 		currentViewSize.x += diff * FRAMEWORK.GetWindowRatio();
 	}
 
-	/*float xDiff = currentViewPos.x - birdPos.x;
-	if (std::abs(xDiff) <= std::numeric_limits<float>::epsilon())
-	{*/
 	b2Vec2 birdVelo = b2Body_GetLinearVelocity(birds[tryCount-1]->GetBodyId());
 	if(std::abs(currentViewPos.x - birdPos.x) <= 1.f) currentViewPos.x = birdPos.x;
 	else
@@ -311,20 +308,13 @@ void SceneStage::ViewFollowing(float dt)
 		{
 			currentViewPos.x = Utils::Lerp(currentViewPos.x, birdPos.x, dt * 3.f);
 			if (currentViewPos.x > birdPos.x) currentViewPos.x = birdPos.x;
-			//currentViewPos.x = birdPos.x;
 		}
 		else if (currentViewPos.x > birdPos.x && birds[tryCount - 1]->GetFlyingDirection() == -1.f)
 		{
 			currentViewPos.x = Utils::Lerp(currentViewPos.x, birdPos.x, dt * 3.f);
 			if (currentViewPos.x < birdPos.x) currentViewPos.x = birdPos.x;
-			//currentViewPos.x = birdPos.x;
 		}
 	}
-	/*}
-	else
-	{
-		currentViewPos.x += (currentViewSize.x * 0.5f - xDiff) * dt * 0.8f;
-	}*/
 	ViewClamp();
 
 	worldView.setCenter(currentViewPos);
@@ -348,20 +338,14 @@ void SceneStage::Restart()
 	worldView.setCenter(initViewPos);
 	currentViewSize = initViewSize;
 	worldView.setSize(initViewSize);
-	for (int i = 0; i < tryMax; i++)
-	{
-		birds[i]->SetRestart(true);
-		birds[i]->SetInitPos();
-		birds[i]->SetShoot(false);
-		birds[i]->SetActive(true);
-	}
+	
+	ObjectsReset();
 	tryCount = 0;
 	birds[tryCount]->SetStartPos();
 	shootStand->SetBird(birds[tryCount]);
 	birdReady = true;
 
 	timeValue = 0.f;
-	ObjectsReset();
 }
 
 void SceneStage::ShowGameResult()
@@ -455,6 +439,14 @@ void SceneStage::CheckObjectsDead()
 
 void SceneStage::ObjectsReset()
 {
+	for (auto bird : birds)
+	{
+		bird->SetRestart(true);
+		bird->SetInitPos();
+		bird->SetShoot(false);
+		bird->SetActive(true);
+		bird->SetAbilityUse(true);
+	}
 	for (auto block : blocks)
 	{
 		block->SetEnable();

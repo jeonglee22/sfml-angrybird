@@ -214,7 +214,7 @@ void SceneEditor::Update(float dt)
 		}
 		else if (Utils::PointInTransformBounds(birdBound->GetRect(), birdBound->GetRect().getLocalBounds(), mouseWorldPos) &&
 			!Utils::PointInTransformBounds(boxUI->GetBody(), boxUI->GetBody().getLocalBounds(), mouseUiPos) &&
-				spriteInserts[spriteCount]->GetName() == "Bird")
+				spriteInserts[spriteCount]->GetName().substr(3) == "Bird")
 		{
 			sf::Vector2f texSize = (sf::Vector2f)TEXTURE_MGR.Get(spriteInserts[spriteCount]->GetTextureId()).getSize();
 			float newPosY = FRAMEWORK.GetWindowBounds().height - birdBound->GetRect().getSize().y;
@@ -296,15 +296,18 @@ rapidcsv::Document SceneEditor::SaveFile()
 		info.push_back(std::to_string(HpList[i]));
 		if (spriteInserts[i]->GetName() == "Pig")
 		{
-			info.push_back(std::to_string(1));
+			info.push_back("Pig");
 		}
-		else if(spriteInserts[i]->GetName() == "Bird")
+		else if(spriteInserts[i]->GetName().substr(3) == "Bird")
 		{
-			info.push_back(std::to_string(2));
+			if(spriteInserts[i]->GetName() == "RedBird")
+				info.push_back("RedBird");
+			else
+				info.push_back("YelBird");
 		}
 		else
 		{
-			info.push_back(std::to_string(0));
+			info.push_back("Block");
 		}
 		doc.InsertRow(i + 2, info);
 	}
@@ -382,7 +385,7 @@ void SceneEditor::LoadFile(const std::string& fileName)
 	for (int i = 0; i < spriteCount; i++)
 	{
 		auto row = doc.GetRow<std::string>(i + 2);
-		spriteInserts.push_back((SpriteGo*)AddGameObject(new SpriteGo(row[0], std::stoi(row[10]) == 0 ? "Block" : (std::stoi(row[10]) == 2 ? "Bird" : "Pig"))));
+		spriteInserts.push_back((SpriteGo*)AddGameObject(new SpriteGo(row[0], row[10])));
 		spriteInserts[i]->Reset();
 		spriteInserts[i]->SetOrigin(Origins::MC);
 		spriteInserts[i]->SetPosition({std::stof(row[1]), std::stof(row[2])});

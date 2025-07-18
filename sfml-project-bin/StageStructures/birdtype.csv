@@ -1,6 +1,6 @@
 PIG_COUNT,,
 3,,
 FILENAME,BLOCK_TYPE,HP
-graphics/EditorObjects/RedBird.png,Bird,100
-graphics/EditorObjects/YellowBird.png,Bird,100
-graphics/EditorObjects/RedBird.png,Bird,100
+graphics/EditorObjects/RedBird.png,RedBird,100
+graphics/EditorObjects/YellowBird.png,YelBird,100
+graphics/EditorObjects/RedBird.png,RedBird,100

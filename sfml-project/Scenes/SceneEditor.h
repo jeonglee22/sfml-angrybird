@@ -68,6 +68,5 @@ public:
 	void SaveField();
 	void LoadField();
 	void LoadFile(const std::string& fileName);
-	std::string tostring(wchar_t* str);
 };
 
