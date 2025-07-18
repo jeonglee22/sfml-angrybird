@@ -62,6 +62,7 @@ public:
 	~SceneStage1() = default;
 
 	void Init() override;
+	void Exit() override;
 	void Enter() override;
 
 	void Update(float dt) override;
@@ -74,6 +75,7 @@ public:
 	void CheckObjectsDead();
 	void ObjectsReset();
 	void SetObjectTransform();
+	void DeleteObjects();
 
 	void ViewControl(const sf::Vector2f& mousePos);
 	void ViewReset(float dt);

@@ -40,6 +40,8 @@ public:
 	void SetTextOrigin(const sf::Vector2f& o) { text->SetOrigin(o); }
 	void SetTextOrigin(const Origins o) { text->SetOrigin(o); }
 
+	void SetInitState();
+
 	sf::FloatRect GetLocalBounds() { return sprite.getLocalBounds(); }
 	sf::FloatRect GetGlobalBounds() { return sprite.getGlobalBounds(); }
 

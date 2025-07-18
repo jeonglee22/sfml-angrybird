@@ -73,6 +73,15 @@ void Button::Draw(sf::RenderWindow& window)
 	text->Draw(window);
 }
 
+void Button::SetInitState()
+{
+	sprite.setColor(sf::Color(sprite.getColor().r, sprite.getColor().g, sprite.getColor().b, originAlpha));
+	text->SetFillColor(sf::Color(text->GetText().getFillColor().r,
+		text->GetText().getFillColor().g,
+		text->GetText().getFillColor().b,
+		originAlpha));
+}
+
 void Button::DoFunc()
 {
 	switch (type)

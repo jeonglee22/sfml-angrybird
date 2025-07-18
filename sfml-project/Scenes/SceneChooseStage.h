@@ -15,8 +15,9 @@ public:
 	};
 protected:
 	SpriteGo* background;
-	std::vector<Button*> buttons;
-	int buttonCount = 1;
+	std::vector<Button*> stageButtons;
+	std::vector<SpriteGo*> blockSprites;
+	int buttonCount = 15;
 
 	sf::Vector2f initViewPos = FRAMEWORK.GetWindowSizeF() * 0.5f;
 	sf::Vector2f initViewSize = FRAMEWORK.GetWindowSizeF();
@@ -29,11 +30,4 @@ public:
 	void Enter() override;
 
 	void Update(float dt) override;
-};
-
-struct StartStage1
-{
-	void operator()(){
-		SCENE_MGR.ChangeScene(SceneIds::Stage1);
-	}
 };

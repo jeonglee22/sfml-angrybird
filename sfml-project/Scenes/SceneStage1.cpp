@@ -42,8 +42,6 @@ void SceneStage1::Init()
 	//	birds[i]->SetInitPos({ 0.f - 40.f * i, 660.0f});
 	//}
 
-	LoadBlockInfo("graphics/EditorMaps/MyMap4.csv");
-
 	Scene::Init();
 
 	AddGameObject(shootStand->GetLeftPart());
@@ -55,9 +53,16 @@ void SceneStage1::Init()
 	}
 }
 
+void SceneStage1::Exit()
+{
+	Scene::Exit();
+}
+
 void SceneStage1::Enter()
 {
 	sf::FloatRect bounds = FRAMEWORK.GetWindowBounds();
+
+	LoadBlockInfo("graphics/EditorMaps/MyMap" + std::to_string(SCENE_MGR.GetStageSelect()) + ".csv");
 
 	uiView.setSize(initViewSize);
 	uiView.setCenter(initViewPos);
@@ -152,6 +157,11 @@ void SceneStage1::Update(float dt)
 	{
 		Restart();
 	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::BackSpace))
+	{
+		//Restart();
+		SCENE_MGR.ChangeScene(SceneIds::ChooseStage);
+	}
 #endif
 }
 
@@ -165,9 +175,7 @@ void SceneStage1::LoadBlockInfo(const std::string& filePath)
 	rapidcsv::Document doc(filePath);
 	objCount = doc.GetCell<int>(0, 0);
 
-	blocks.clear();
-	pigs.clear();
-	birds.clear();
+	DeleteObjects();
 	for (int i = 0; i < objCount; i++)
 	{
 		auto row = doc.GetRow<std::string>(i + 2);
@@ -179,18 +187,21 @@ void SceneStage1::LoadBlockInfo(const std::string& filePath)
 			blocks[blockCount]->SetBoxPos(std::stof(row[1]), std::stof(row[2]));
 			blocks[blockCount]->SetBoxSize(std::stof(row[3]), std::stof(row[4]));
 			blocks[blockCount]->SetBoxFactor(std::stof(row[5]), std::stof(row[6]), std::stof(row[7]), std::stof(row[8]));
-			blocks[blockCount++]->SetHP(std::stoi(row[9]));
+			blocks[blockCount]->SetHP(std::stoi(row[9]));
+			blocks[blockCount++]->Init();
 		}
 		else if(std::stoi(row[10]) == 1)
 		{
 			pigs.push_back((Pig*)AddGameObject(new Pig(row[0], "Pig")));
 			pigs[pigCount]->SetInitPos({ std::stof(row[1]), std::stof(row[2]) });
-			pigs[pigCount++]->SetHP(std::stoi(row[9]));
+			pigs[pigCount]->SetHP(std::stoi(row[9]));
+			pigs[pigCount++]->Init();
 		}
 		else
 		{
 			birds.push_back((Bird*)AddGameObject(new Bird(row[0], "Bird")));
-			birds[birdCount++]->SetInitPos({ std::stof(row[1]), 660.f });
+			birds[birdCount]->SetInitPos({ std::stof(row[1]), 660.f });
+			birds[birdCount++]->Init();
 		}
 	}
 }
@@ -452,4 +463,29 @@ void SceneStage1::SetObjectTransform()
 	{
 		pigs[i]->SetTransform();
 	}
+}
+
+void SceneStage1::DeleteObjects()
+{
+	for (auto block : blocks)
+	{
+		block->SetActive(false);
+		block->SetDisable();
+	}
+	for (auto pig : pigs)
+	{
+		pig->SetActive(false);
+		pig->SetDisable();
+	}
+	for (auto bird : birds)
+	{
+		bird->SetActive(false);
+		bird->SetDisable();
+	}
+	blocks.clear();
+	blockCount = 0;
+	pigs.clear();
+	pigCount = 0;
+	birds.clear();
+	birdCount = 0;
 }
