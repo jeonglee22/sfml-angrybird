@@ -216,20 +216,26 @@ void SceneEditor::Update(float dt)
 			!Utils::PointInTransformBounds(boxUI->GetBody(), boxUI->GetBody().getLocalBounds(), mouseUiPos) &&
 				spriteInserts[spriteCount]->GetName() == "Bird")
 		{
-			sf::Vector2f spritePos = spriteInserts[spriteCount]->GetPosition();
-			sf::Vector2f newPos = ScreenToWorld(UiToScreen(spritePos));
 			sf::Vector2f texSize = (sf::Vector2f)TEXTURE_MGR.Get(spriteInserts[spriteCount]->GetTextureId()).getSize();
-			newPos.x = Utils::Clamp(newPos.x,
-				objectBound->GetOrigin().x - objectBound->GetPosition().x + texSize.x,
-				objectBound->GetOrigin().x + objectBound->GetPosition().x - texSize.x);
-			spriteInserts[spriteCount]->SetPosition(newPos);
-			spriteInserts[spriteCount]->sortingLayer = SortingLayers::Foreground;
-			spriteInserts[spriteCount]->sortingOrder = 0;
-			spriteChoosed = nullptr;
-			isChoosed = false;
-			birdCount++;
-			spriteCount++;
-			HpList.push_back(choosedSpriteHp);
+			float newPosY = FRAMEWORK.GetWindowBounds().height - birdBound->GetRect().getSize().y;
+			float newPosX = -20.f - birdCount * 50.f;
+			if (newPosX < -birdBound->GetRect().getSize().x)
+			{
+				RemoveGameObject(spriteInserts[spriteCount]);
+				spriteInserts.pop_back();
+				isChoosed = false;
+			}
+			else
+			{
+				spriteInserts[spriteCount]->SetPosition({ newPosX, newPosY });
+				spriteInserts[spriteCount]->sortingLayer = SortingLayers::Foreground;
+				spriteInserts[spriteCount]->sortingOrder = 0;
+				spriteChoosed = nullptr;
+				isChoosed = false;
+				birdCount++;
+				spriteCount++;
+				HpList.push_back(choosedSpriteHp);
+			}
 		}
 		else
 		{

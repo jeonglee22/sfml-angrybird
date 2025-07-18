@@ -3,4 +3,4 @@ PIG_COUNT,,
 FILENAME,BLOCK_TYPE,HP
 graphics/EditorObjects/RedBird.png,Bird,100
 graphics/EditorObjects/YellowBird.png,Bird,100
-graphics/EditorObjects/BlackBird.png,Bird,100
+graphics/EditorObjects/RedBird.png,Bird,100

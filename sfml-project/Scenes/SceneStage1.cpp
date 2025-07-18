@@ -85,6 +85,8 @@ void SceneStage1::Enter()
 
 	Scene::Enter();
 
+	tryMax = birdCount;
+
 	//birds[tryCount]->SetBirdEnable();
 	birds[tryCount]->SetStartPos();
 	shootStand->SetBird(birds[tryCount]);
