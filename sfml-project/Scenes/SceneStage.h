@@ -71,7 +71,9 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	bool GetViewMoving() { return isViewMoving; }
+	bool GetViewMoving() const { return isViewMoving; }
+	bool GetGameOver() const { return isGameOver; }
+	void SetGameOver(bool b) { isGameOver = b; }
 
 	void LoadBlockInfo(const std::string& filePath);
 	void CheckPhysicsBodyCollision();

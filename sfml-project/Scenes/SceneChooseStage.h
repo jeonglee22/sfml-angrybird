@@ -19,6 +19,8 @@ protected:
 	std::vector<SpriteGo*> blockSprites;
 	int buttonCount = 15;
 
+	int clearedMaps = 1;
+
 	sf::Vector2f initViewPos = FRAMEWORK.GetWindowSizeF() * 0.5f;
 	sf::Vector2f initViewSize = FRAMEWORK.GetWindowSizeF();
 

@@ -2,6 +2,7 @@
 #include "ShootStand.h"
 #include "Bird.h"
 #include "Scene.h"
+#include "SceneStage.h"
 
 ShootStand::ShootStand(const std::string& name)
 	:PhysicsBody(Type::ShootStand)
@@ -74,7 +75,11 @@ void ShootStand::Update(float dt)
 
 	if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Stage)
 	{
-		Scene* scene = SCENE_MGR.GetCurrentScene();
+		SceneStage* scene = (SceneStage*) SCENE_MGR.GetCurrentScene();
+		if (scene->GetGameOver())
+		{
+			return;
+		}
 
 		if (InputMgr::GetMouseButtonDown(sf::Mouse::Left) && !bird->GetShoot())
 		{

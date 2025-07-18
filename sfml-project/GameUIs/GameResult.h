@@ -50,6 +50,8 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	void SetTextString(const std::string& str) { gameText->SetString(str); }
-
+	void ShowResult();
+	void SetClear(bool b) { isClear = b; }
+	bool GetClear() const { return isClear; }
 };
 

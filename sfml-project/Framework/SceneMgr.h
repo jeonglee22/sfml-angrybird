@@ -9,11 +9,12 @@ protected:
 
 	std::unordered_map<SceneIds, Scene*> scenes;
 
-	SceneIds startScene = SceneIds::Stage;
+	SceneIds startScene = SceneIds::Start;
 	SceneIds currentScene = SceneIds::None;
 	SceneIds nextScene = SceneIds::None;
 
 	int stageSelect = 0;
+	int stageCleared = 1;
 
 public:
 	void Init();
@@ -28,6 +29,8 @@ public:
 
 	void SetStageSelect(int select) { stageSelect = select; }
 	int GetStageSelect() const { return stageSelect; }
+	void SetStageCleared(int clear) { stageCleared = clear; }
+	int GetStageCleared() const { return stageCleared; }
 };
 
 #define SCENE_MGR (SceneMgr::Instance())

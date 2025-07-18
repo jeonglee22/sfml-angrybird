@@ -51,6 +51,7 @@ void SceneChooseStage::Init()
 		stageButtons[i]->SetActive(false);
 	}
 	stageButtons[0]->SetActive(true);
+	clearedMaps = 1;
 }
 
 void SceneChooseStage::Enter()
@@ -66,4 +67,14 @@ void SceneChooseStage::Enter()
 void SceneChooseStage::Update(float dt)
 {
 	Scene::Update(dt);
+
+	if(SCENE_MGR.GetStageCleared() > clearedMaps)
+	{
+		for (int i = clearedMaps; i < SCENE_MGR.GetStageCleared(); i++)
+		{
+			stageButtons[i]->SetActive(true);
+			blockSprites[i]->SetActive(false);
+		}
+		clearedMaps = SCENE_MGR.GetStageCleared();
+	}
 }

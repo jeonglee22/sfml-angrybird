@@ -44,12 +44,6 @@ void SceneStage::Init()
 
 	gameResult = (GameResult*)AddGameObject(new GameResult());
 
-	//for(int i =0; i< tryMax; i++)
-	//{
-	//	birds.push_back((Bird*)AddGameObject(new Bird("graphics/Angrybirds/RedBird1.png", "Bird")));
-	//	birds[i]->SetInitPos({ 0.f - 40.f * i, 660.0f});
-	//}
-
 	Scene::Init();
 
 	AddGameObject(shootStand->GetLeftPart());
@@ -98,14 +92,29 @@ void SceneStage::Enter()
 	tryMax = birdCount;
 
 	//birds[tryCount]->SetBirdEnable();
+	ObjectsReset();
+
+	isShoot = false;
+	birdReady = true;
+	isViewMoving = false;
+	isZoomOut = false;
+	isZoomIn = false;
+	isGameOver = false;
+	tryCount = 0;
+	timeValue = 0.f;
+	viewReset = 0.f;
+
 	birds[tryCount]->SetStartPos();
 	shootStand->SetBird(birds[tryCount]);
 
 	backgroundSize = background->GetTotalSize();
+	gameResult->SetActive(false);
 }
 
 void SceneStage::Update(float dt)
 {
+	ShowGameResult();
+
 	Scene::Update(dt);
 
 	if (tryCount < tryMax)
@@ -156,7 +165,7 @@ void SceneStage::Update(float dt)
 	ZoomIn(dt);
 	ZoomOut(dt);
 
-	ShowGameResult();
+	
 
 	if(!birdReady && following)
 	{
@@ -369,11 +378,30 @@ void SceneStage::ShowGameResult()
 		FRAMEWORK.SetTimeScale(0.f);
 		if (result)
 		{
-
+			gameResult->SetClear(true);
 		}
 		else
 		{
-
+			gameResult->SetClear(false);
+		}
+		gameResult->SetActive(true);
+		gameResult->ShowResult();
+	}
+	else
+	{
+		bool result = true;
+		for (auto pig : pigs)
+		{
+			if (!pig->IsDead())
+				result = false;
+		}
+		if (result)
+		{
+			isGameOver = true;
+			FRAMEWORK.SetTimeScale(0.f);
+			gameResult->SetClear(true);
+			gameResult->SetActive(true);
+			gameResult->ShowResult();
 		}
 	}
 }

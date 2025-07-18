@@ -2,6 +2,7 @@
 #include "GameResult.h"
 #include "SpriteGo.h"
 #include "Button.h"
+#include "SceneStage.h"
 
 GameResult::GameResult(const std::string& name)
 	: GameObject(name)
@@ -70,16 +71,24 @@ void GameResult::Init()
 	home = new Button("graphics/Home.png", "Home");
 	home->Init();
 	auto homeFunc = [this]() {
+		if(isClear && (SCENE_MGR.GetStageSelect() == SCENE_MGR.GetStageCleared()))
+			SCENE_MGR.SetStageCleared(SCENE_MGR.GetStageCleared() + 1);
 		home->SetInitState();
+		SetActive(false);
 		SCENE_MGR.ChangeScene(SceneIds::ChooseStage);
+		FRAMEWORK.SetTimeScale(1.f);
 		};
 	home->SetButtonFunc(homeFunc);
 
 	restart = new Button("graphics/Replay.png", "Replay");
 	restart->Init();
 	auto restartFunc = [this]() {
+		if(isClear && (SCENE_MGR.GetStageSelect() == SCENE_MGR.GetStageCleared()))
+			SCENE_MGR.SetStageCleared(SCENE_MGR.GetStageCleared() + 1);
 		restart->SetInitState();
+		SetActive(false);
 		SCENE_MGR.ChangeScene(SceneIds::Stage);
+		FRAMEWORK.SetTimeScale(1.f);
 		};
 	restart->SetButtonFunc(restartFunc);
 
@@ -89,8 +98,16 @@ void GameResult::Init()
 		if (isClear)
 		{
 			next->SetInitState();
-			SCENE_MGR.SetStageSelect(SCENE_MGR.GetStageSelect() + 1);
+			SetActive(false);
+			if (SCENE_MGR.GetStageSelect() == SCENE_MGR.GetStageCleared())
+			{
+				SCENE_MGR.SetStageCleared(SCENE_MGR.GetStageCleared() + 1);
+				SCENE_MGR.SetStageSelect(SCENE_MGR.GetStageCleared());
+			}
+			else
+				SCENE_MGR.SetStageSelect(SCENE_MGR.GetStageSelect() + 1);
 			SCENE_MGR.ChangeScene(SceneIds::Stage);
+			FRAMEWORK.SetTimeScale(1.f);
 		}
 		};
 	next->SetButtonFunc(nextFunc);
@@ -110,7 +127,6 @@ void GameResult::Reset()
 		laughSprites[i]->Reset();
 		laughSprites[i]->SetPosition(position + laughSpritePosCenter + sf::Vector2f(150.f, 0.f) * (i - 1.f));
 		laughSprites[i]->SetScale({ 2.f, 2.f });
-		laughSprites[i]->SetActive(false);
 	}
 
 	gameText->SetPosition(position + textPos);
@@ -137,27 +153,6 @@ void GameResult::Update(float dt)
 	gameText->Update(dt);
 	for (auto laughSprite : laughSprites)
 		laughSprite->Update(dt);
-
-	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
-	{
-		for (auto laughSprite : laughSprites)
-		{
-			laughSprite->SetTextureId("graphics/PigLaugh.png");
-			gameText->SetString("Game Over!!");
-			laughSprite->Reset();
-			laughSprite->SetActive(true);
-		}
-	}
-	else if (InputMgr::GetMouseButtonDown(sf::Mouse::Right))
-	{
-		for (auto laughSprite : laughSprites)
-		{
-			laughSprite->SetTextureId("graphics/BirdLaugh.png");
-			gameText->SetString("Game Clear!!");
-			laughSprite->Reset();
-			laughSprite->SetActive(true);
-		}
-	}
 }
 
 void GameResult::Draw(sf::RenderWindow& window)
@@ -172,4 +167,22 @@ void GameResult::Draw(sf::RenderWindow& window)
 	home->Draw(window);
 	restart->Draw(window);
 	next->Draw(window);
+}
+
+void GameResult::ShowResult()
+{
+	for (auto laughSprite : laughSprites)
+	{
+		if (isClear)
+		{
+			laughSprite->SetTextureId("graphics/BirdLaugh.png");
+			gameText->SetString("Game Clear!!");
+		}
+		else
+		{
+			laughSprite->SetTextureId("graphics/PigLaugh.png");
+			gameText->SetString("Game Over!!");
+		}
+		laughSprite->Reset();
+	}
 }

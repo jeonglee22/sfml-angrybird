@@ -1,13 +1,14 @@
 #include "stdafx.h"
 #include "Bird.h"
 #include "Scene.h"
+#include "SceneStage.h"
 
 Bird::Bird(const std::string& texPlayerId, const std::string& name)
 	:PhysicsBody(Type::Bird, texPlayerId, name)
 {
 	if (name == "RedBird")
 	{
-		forceAmount = 700.f;
+		forceAmount = 800.f;
 		birdType = BirdType::Red;
 	}
 	else if (name == "YelBird")
@@ -82,7 +83,11 @@ void Bird::Update(float dt)
 	PhysicsBody::Update(dt);
 	if (SCENE_MGR.GetCurrentScene())
 	{
-		Scene* scene = SCENE_MGR.GetCurrentScene();
+		SceneStage* scene = (SceneStage*) SCENE_MGR.GetCurrentScene();
+		if (scene->GetGameOver())
+		{
+			return;
+		}
 		if (InputMgr::GetMouseButtonDown(sf::Mouse::Left) && !isCharging && !isShoot)
 		{
 			if (Utils::PointInTransformBounds(sprite, GetLocalBounds(), scene->ScreenToWorld(InputMgr::GetMousePosition())))
