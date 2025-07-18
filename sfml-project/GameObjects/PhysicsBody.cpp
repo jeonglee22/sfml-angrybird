@@ -18,6 +18,7 @@ void PhysicsBody::Init()
 
 		SetOrigin(Origins::MC);
 	}
+	setBody = false;
 }
 
 void PhysicsBody::Release()
@@ -38,7 +39,7 @@ void PhysicsBody::Reset()
 	{
 		SpriteGo::Reset();
 	}
-	
+
 	sf::FloatRect bounds = FRAMEWORK.GetWindowBounds();
 
 	SetPosition(initPos * SCALE);

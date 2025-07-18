@@ -55,6 +55,7 @@ void SceneStage1::Init()
 
 void SceneStage1::Exit()
 {
+	DeleteObjects();
 	Scene::Exit();
 }
 
@@ -175,7 +176,6 @@ void SceneStage1::LoadBlockInfo(const std::string& filePath)
 	rapidcsv::Document doc(filePath);
 	objCount = doc.GetCell<int>(0, 0);
 
-	DeleteObjects();
 	for (int i = 0; i < objCount; i++)
 	{
 		auto row = doc.GetRow<std::string>(i + 2);
@@ -469,18 +469,18 @@ void SceneStage1::DeleteObjects()
 {
 	for (auto block : blocks)
 	{
-		block->SetActive(false);
 		block->SetDisable();
+		RemoveGameObject(block);
 	}
 	for (auto pig : pigs)
 	{
-		pig->SetActive(false);
 		pig->SetDisable();
+		RemoveGameObject(pig);
 	}
 	for (auto bird : birds)
 	{
-		bird->SetActive(false);
 		bird->SetDisable();
+		RemoveGameObject(bird);
 	}
 	blocks.clear();
 	blockCount = 0;
