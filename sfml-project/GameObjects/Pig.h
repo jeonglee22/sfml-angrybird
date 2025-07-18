@@ -23,8 +23,6 @@ public:
 	int GetHp() { return hp; }
 
 	void SetInitPos(const sf::Vector2f& pos) { SetBoxPos(pos.x, pos.y); }
-	void SetDisable() { b2Body_Disable(bodyId); }
-	void SetEnable() { b2Body_Enable(bodyId); }
 	void SetHP(int hp) { maxHp = hp; }
 
 	void TakeDamage(int damage);

@@ -44,5 +44,8 @@ public:
 	void SetBoxPos(float x, float y);
 	void SetBoxFactor(float fric, float res, float dens = 1.f, float roll = 0.f);
 	void SetTransform();
+
+	void SetDisable() { b2Body_Disable(bodyId); }
+	void SetEnable() { b2Body_Enable(bodyId); b2Body_SetAwake(bodyId, true); }
 };
 

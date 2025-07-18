@@ -59,7 +59,7 @@ void PhysicsBody::Reset()
 	}
 	else
 	{
-		b2Body_SetTransform(bodyId, b2Vec2{ initPos.x, initPos.y }, rotation);
+		b2Body_SetTransform(bodyId, b2Vec2{ initPos.x, initPos.y }, b2Rot_identity);
 		if(bodyType == Type::Invisible)
 		{
 			b2Polygon newBox = b2MakeBox(texSize.x, texSize.y);

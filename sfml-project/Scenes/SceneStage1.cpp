@@ -5,7 +5,6 @@
 #include "Block.h"
 #include "Pig.h"
 #include "rapidcsv.h"
-#include "ShootCountUI.h"
 #include "PhysicsBody.h"
 #include "ShootStand.h"
 
@@ -43,9 +42,7 @@ void SceneStage1::Init()
 	//	birds[i]->SetInitPos({ 0.f - 40.f * i, 660.0f});
 	//}
 
-	LoadBlockInfo("graphics/EditorMaps/MyMap2.csv");
-
-	countUI = (ShootCountUI*)AddGameObject(new ShootCountUI());
+	LoadBlockInfo("graphics/EditorMaps/MyMap4.csv");
 
 	Scene::Init();
 
@@ -90,7 +87,6 @@ void SceneStage1::Enter()
 	//birds[tryCount]->SetBirdEnable();
 	birds[tryCount]->SetStartPos();
 	shootStand->SetBird(birds[tryCount]);
-	countUI->SetCount(birds.size());
 
 	backgroundSize = background->GetTotalSize();
 }
@@ -104,7 +100,6 @@ void SceneStage1::Update(float dt)
 		if (birds[tryCount]->GetShoot() && birdReady)
 		{
 			tryCount++;
-			countUI->SetCount(tryMax - tryCount);
 			birdReady = false;
 		}
 
@@ -348,7 +343,6 @@ void SceneStage1::Restart()
 		birds[i]->SetActive(true);
 	}
 	tryCount = 0;
-	countUI->SetCount(tryMax - tryCount);
 	birds[tryCount]->SetStartPos();
 	shootStand->SetBird(birds[tryCount]);
 	birdReady = true;
