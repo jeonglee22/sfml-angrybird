@@ -10,7 +10,7 @@ class PhysicsBody;
 class ShootStand;
 class BackGround;
 
-class SceneStage1 : public Scene
+class SceneStage : public Scene
 {
 protected:
 	PhysicsBody* ground = nullptr;
@@ -58,8 +58,8 @@ protected:
 	sf::FloatRect backgroundSize;
 
 public:
-	SceneStage1();
-	~SceneStage1() = default;
+	SceneStage();
+	~SceneStage() = default;
 
 	void Init() override;
 	void Exit() override;

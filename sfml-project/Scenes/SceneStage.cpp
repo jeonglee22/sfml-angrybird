@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "SceneStage1.h"
+#include "SceneStage.h"
 #include "BackGround.h"
 #include "Bird.h"
 #include "Block.h"
@@ -8,12 +8,12 @@
 #include "PhysicsBody.h"
 #include "ShootStand.h"
 
-SceneStage1::SceneStage1()
-	: Scene(SceneIds::Stage1)
+SceneStage::SceneStage()
+	: Scene(SceneIds::Stage)
 {
 }
 
-void SceneStage1::Init()
+void SceneStage::Init()
 {
 	sf::FloatRect bounds = FRAMEWORK.GetWindowBounds();
 
@@ -53,13 +53,13 @@ void SceneStage1::Init()
 	}
 }
 
-void SceneStage1::Exit()
+void SceneStage::Exit()
 {
 	DeleteObjects();
 	Scene::Exit();
 }
 
-void SceneStage1::Enter()
+void SceneStage::Enter()
 {
 	sf::FloatRect bounds = FRAMEWORK.GetWindowBounds();
 
@@ -97,7 +97,7 @@ void SceneStage1::Enter()
 	backgroundSize = background->GetTotalSize();
 }
 
-void SceneStage1::Update(float dt)
+void SceneStage::Update(float dt)
 {
 	Scene::Update(dt);
 
@@ -166,12 +166,12 @@ void SceneStage1::Update(float dt)
 #endif
 }
 
-void SceneStage1::Draw(sf::RenderWindow& window)
+void SceneStage::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);
 }
 
-void SceneStage1::LoadBlockInfo(const std::string& filePath)
+void SceneStage::LoadBlockInfo(const std::string& filePath)
 {		
 	rapidcsv::Document doc(filePath);
 	objCount = doc.GetCell<int>(0, 0);
@@ -206,7 +206,7 @@ void SceneStage1::LoadBlockInfo(const std::string& filePath)
 	}
 }
 
-void SceneStage1::CheckPhysicsBodyCollision()
+void SceneStage::CheckPhysicsBodyCollision()
 {
 	b2ContactHitEvent* hitEvents = b2World_GetContactEvents(FRAMEWORK.GetWorldID()).hitEvents;
 	int hitCount = b2World_GetContactEvents(FRAMEWORK.GetWorldID()).hitCount;
@@ -238,7 +238,7 @@ void SceneStage1::CheckPhysicsBodyCollision()
 	}
 }
 
-void SceneStage1::ViewControl(const sf::Vector2f& mousePos)
+void SceneStage::ViewControl(const sf::Vector2f& mousePos)
 {
 	currentViewPos.x += (mouseStart - mousePos).x;
 	currentViewPos.y += (mouseStart - mousePos).y;
@@ -249,7 +249,7 @@ void SceneStage1::ViewControl(const sf::Vector2f& mousePos)
 	worldView.setCenter(currentViewPos);
 }
 
-void SceneStage1::ViewReset(float dt)
+void SceneStage::ViewReset(float dt)
 {
 	if ((initViewPos != currentViewPos || initViewSize != currentViewSize) && birdReady && !birds[tryCount]->GetCharging())
 	{
@@ -280,7 +280,7 @@ void SceneStage1::ViewReset(float dt)
 	}
 }
 
-void SceneStage1::ViewFollowing(float dt)
+void SceneStage::ViewFollowing(float dt)
 {
 	sf::Vector2f birdPos = birds[tryCount-1]->GetPosition();
 	
@@ -329,7 +329,7 @@ void SceneStage1::ViewFollowing(float dt)
 	worldView.setSize(currentViewSize);
 }
 
-void SceneStage1::ViewClamp()
+void SceneStage::ViewClamp()
 {
 	float topLimit = backgroundSize.top + currentViewSize.y * 0.5f;
 	float bottomLimit = backgroundSize.top + backgroundSize.height - currentViewSize.y * 0.5f;
@@ -340,7 +340,7 @@ void SceneStage1::ViewClamp()
 	currentViewPos.y = Utils::Clamp(currentViewPos.y, topLimit, bottomLimit);
 }
 
-void SceneStage1::Restart()
+void SceneStage::Restart()
 {
 	currentViewPos = initViewPos;
 	worldView.setCenter(initViewPos);
@@ -362,7 +362,7 @@ void SceneStage1::Restart()
 	ObjectsReset();
 }
 
-void SceneStage1::ZoomIn(float dt)
+void SceneStage::ZoomIn(float dt)
 {
 	if (InputMgr::GetKey(sf::Keyboard::Z))
 	{
@@ -381,7 +381,7 @@ void SceneStage1::ZoomIn(float dt)
 	}
 }
 
-void SceneStage1::ZoomOut(float dt)
+void SceneStage::ZoomOut(float dt)
 {
 	if (InputMgr::GetKey(sf::Keyboard::X))
 	{
@@ -408,7 +408,7 @@ void SceneStage1::ZoomOut(float dt)
 	}
 }
 
-void SceneStage1::CheckObjectsDead()
+void SceneStage::CheckObjectsDead()
 {
 	for(int i = 0; i< pigCount; i++)
 	{
@@ -428,7 +428,7 @@ void SceneStage1::CheckObjectsDead()
 	}
 }
 
-void SceneStage1::ObjectsReset()
+void SceneStage::ObjectsReset()
 {
 	for (auto block : blocks)
 	{
@@ -448,7 +448,7 @@ void SceneStage1::ObjectsReset()
 	}
 }
 
-void SceneStage1::SetObjectTransform()
+void SceneStage::SetObjectTransform()
 {
 	for (int i = 0; i < tryCount; i++)
 	{
@@ -465,7 +465,7 @@ void SceneStage1::SetObjectTransform()
 	}
 }
 
-void SceneStage1::DeleteObjects()
+void SceneStage::DeleteObjects()
 {
 	for (auto block : blocks)
 	{

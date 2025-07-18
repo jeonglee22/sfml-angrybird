@@ -72,7 +72,7 @@ void ShootStand::Update(float dt)
 {
 	PhysicsBody::Update(dt);
 
-	if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Stage1)
+	if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Stage)
 	{
 		Scene* scene = SCENE_MGR.GetCurrentScene();
 

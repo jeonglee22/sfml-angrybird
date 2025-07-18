@@ -27,7 +27,7 @@ enum class SceneIds
 	Dev1,
 	Dev2,
 	Test,
-	Stage1,
+	Stage,
 	Editor,
 	Count,
 };

@@ -45,7 +45,7 @@ void SceneChooseStage::Init()
 			{
 				stageButtons[i]->SetInitState();
 				SCENE_MGR.SetStageSelect(i + 1);
-				SCENE_MGR.ChangeScene(SceneIds::Stage1);
+				SCENE_MGR.ChangeScene(SceneIds::Stage);
 			}
 		};
 		stageButtons[i]->SetButtonFunc(func);

@@ -78,7 +78,7 @@
     <ClCompile Include="Scenes\Scenebox2dTest.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\SceneStage1.cpp">
+    <ClCompile Include="Scenes\SceneStage.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="GameUIs\ShootCountUI.cpp">
@@ -109,6 +109,15 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Scenes\SceneChooseStage.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GameUIs\EditBoxUI.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\RectGo.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\SceneEditor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -185,7 +194,7 @@
     <ClInclude Include="Scenes\Scenebox2dTest.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\SceneStage1.h">
+    <ClInclude Include="Scenes\SceneStage.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="GameUIs\ShootCountUI.h">
@@ -216,6 +225,15 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\SceneChooseStage.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameUIs\EditBoxUI.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\RectGo.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\SceneEditor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -162,7 +162,7 @@
     <ClCompile Include="Scenes\SceneEditor.cpp" />
     <ClCompile Include="Scenes\SceneChooseStage.cpp" />
     <ClCompile Include="Scenes\SceneStart.cpp" />
-    <ClCompile Include="Scenes\SceneStage1.cpp" />
+    <ClCompile Include="Scenes\SceneStage.cpp" />
     <ClCompile Include="Scenes\Scenebox2dTest.cpp" />
     <ClCompile Include="Scenes\SceneDev1.cpp" />
     <ClCompile Include="Scenes\SceneDev2.cpp" />
@@ -204,7 +204,7 @@
     <ClInclude Include="Scenes\SceneEditor.h" />
     <ClInclude Include="Scenes\SceneChooseStage.h" />
     <ClInclude Include="Scenes\SceneStart.h" />
-    <ClInclude Include="Scenes\SceneStage1.h" />
+    <ClInclude Include="Scenes\SceneStage.h" />
     <ClInclude Include="Scenes\Scenebox2dTest.h" />
     <ClInclude Include="Scenes\SceneDev1.h" />
     <ClInclude Include="Scenes\SceneDev2.h" />
