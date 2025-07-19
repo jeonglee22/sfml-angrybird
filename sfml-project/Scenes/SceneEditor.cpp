@@ -387,10 +387,13 @@ void SceneEditor::LoadFile(const std::string& fileName)
 
 	spriteInserts.clear();
 	HpList.clear();
+	birdCount = 0;
 	for (int i = 0; i < spriteCount; i++)
 	{
 		auto row = doc.GetRow<std::string>(i + 2);
 		spriteInserts.push_back((SpriteGo*)AddGameObject(new SpriteGo(row[0], row[10])));
+		if (row[10].length() > 6 && row[10].substr(3) == "Bird")
+			birdCount++;
 		spriteInserts[i]->Reset();
 		spriteInserts[i]->SetOrigin(Origins::MC);
 		spriteInserts[i]->SetPosition({std::stof(row[1]), std::stof(row[2])});

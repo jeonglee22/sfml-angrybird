@@ -42,8 +42,8 @@ void SceneStage::Init()
 	soundIds.push_back("Sounds/building/Wood/Wooddamage.wav");
 	soundIds.push_back("Sounds/building/Glass/Glassdestroyed.wav");
 	soundIds.push_back("Sounds/building/Glass/Glassdamage.wav");
-	soundIds.push_back("Sounds/building/Rock/Rockdestroyed.wav");
-	soundIds.push_back("Sounds/building/Rock/Rockdamage.wav");
+	soundIds.push_back("Sounds/building/Stone/Stonedestroyed.wav");
+	soundIds.push_back("Sounds/building/Stone/Stonedamage.wav");
 	soundIds.push_back("Sounds/Pig/Pigdamage.wav");
 	soundIds.push_back("Sounds/Pig/Pigdestroyed.wav");
 	soundIds.push_back("Sounds/bird/Red/Redflying.wav");
@@ -104,7 +104,7 @@ void SceneStage::Enter()
 {
 	sf::FloatRect bounds = FRAMEWORK.GetWindowBounds();
 
-	LoadInfo("Stage/Map" + std::to_string(1) + ".csv");
+	LoadInfo("Stage/Map" + std::to_string(15) + ".csv");
 
 	initViewPos.x = shootStand->GetPosition().x;
 
