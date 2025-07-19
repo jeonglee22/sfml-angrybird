@@ -34,6 +34,10 @@ protected:
 
 	bool isRestart = false;
 	bool isUseAbility = true;
+	bool isPlayFlySound = true;
+
+	std::string flyingSound;
+	std::string abilitySound;
 
 public:
 	Bird(const std::string& texPlayerId = "", const std::string& name = "");
@@ -72,5 +76,16 @@ public:
 	void SetInitPos(const sf::Vector2f& initPos);
 
 	void UseAbility();
+
+	void SetFlyingSound(const std::string& s) { flyingSound = s; }
+	void PlayFlyingSound() {
+		if (isPlayFlySound)
+		{
+			isPlayFlySound = false;
+			SOUND_MGR.PlaySfx(flyingSound);
+		}
+	}
+	void SetAbilitySound(const std::string& s) { abilitySound = s; }
+	void PlayabilitySound() { SOUND_MGR.PlaySfx(abilitySound); }
 };
 

@@ -34,6 +34,7 @@ void Bird::Reset()
 {
 	SpriteGo::Reset();
 
+	isPlayFlySound = true;
 	SetPosition(initPos * SCALE);
 	SetRotation(0.f);
 
@@ -125,10 +126,13 @@ void Bird::Update(float dt)
 			b2Body_ApplyForceToCenter(bodyId, b2Vec2{ Force.x, Force.y }, true);
 			isShoot = true;
 			isCharging = false;
+			PlayFlyingSound();
 		}
-		if (isShoot && isUseAbility && !FRAMEWORK.GetPauseFrame() && InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+		if (isShoot && isUseAbility && !FRAMEWORK.GetPauseFrame() && 
+			InputMgr::GetMouseButtonDown(sf::Mouse::Left) && !CheckFinishShoot())
 		{
 			UseAbility();
+			PlayabilitySound();
 		}
 	}
 

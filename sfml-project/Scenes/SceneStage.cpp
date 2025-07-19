@@ -46,6 +46,12 @@ void SceneStage::Init()
 	soundIds.push_back("Sounds/building/Rock/Rockdamage.wav");
 	soundIds.push_back("Sounds/Pig/Pigdamage.wav");
 	soundIds.push_back("Sounds/Pig/Pigdestroyed.wav");
+	soundIds.push_back("Sounds/bird/Red/Redflying.wav");
+	soundIds.push_back("Sounds/bird/Yel/Yelflying.wav");
+	soundIds.push_back("Sounds/bird/Yel/specialboost.wav");
+	soundIds.push_back("Sounds/Level/stageclear.mp3");
+	soundIds.push_back("Sounds/Level/stagefailed.mp3");
+	soundIds.push_back("Sounds/Level/stagestart.mp3");
 
 	background = (BackGround*)AddGameObject(new BackGround("graphics/LevelOne.png", "graphics/Sky.png"));
 
@@ -124,6 +130,8 @@ void SceneStage::Enter()
 
 	Scene::Enter();
 
+	SOUND_MGR.PlaySfx("Sounds/Level/stagestart.mp3");
+
 	tryMax = birdCount;
 
 	//birds[tryCount]->SetBirdEnable();
@@ -139,11 +147,15 @@ void SceneStage::Enter()
 	tryCount = 0;
 	timeValue = 0.f;
 	viewReset = 0.f;
+	gameOverTime = 0.f;
 
 	birds[tryCount]->SetStartPos();
 	shootStand->SetBird(birds[tryCount]);
 
 	backgroundSize = background->GetTotalSize();
+
+	gameResult->SetClearSound("Sounds/Level/stageclear.mp3");
+	gameResult->SetFailSound("Sounds/Level/stagefailed.mp3");
 	gameResult->SetActive(false);
 	gamePause->SetActive(false);
 }
@@ -152,7 +164,7 @@ void SceneStage::Update(float dt)
 {
 	if(birdReady || CheckAllBirdUsed())
 	{
-		ShowGameResult();
+		ShowGameResult(dt);
 	}
 
 	Scene::Update(dt);
@@ -267,6 +279,11 @@ void SceneStage::LoadInfo(const std::string& filePath)
 		{
 			birds.push_back((Bird*)AddGameObject(new Bird(row[0], row[10])));
 			birds[birdCount]->SetInitPos({ std::stof(row[1]), 660.f });
+			birds[birdCount]->SetFlyingSound("Sounds/bird/" + row[10].substr(0, 3) + "/" + row[10].substr(0,3) + "flying.wav");
+			if(birds[birdCount]->GetName() == "YelBird")
+			{
+				birds[birdCount]->SetAbilitySound("Sounds/bird/Yel/specialboost.wav");
+			}
 			birds[birdCount++]->Init();
 		}
 	}
@@ -403,7 +420,7 @@ void SceneStage::Restart()
 	timeValue = 0.f;
 }
 
-void SceneStage::ShowGameResult()
+void SceneStage::ShowGameResult(float dt)
 {
 	if (tryCount == tryMax)
 	{
@@ -413,18 +430,23 @@ void SceneStage::ShowGameResult()
 			if (!pig->IsDead())
 				result = false;
 		}
-		isGameOver = true;
-		FRAMEWORK.SetTimeScale(0.f);
-		if (result)
+		gameOverTime += dt;
+		if(gameOverTime > gameOverTimeMax)
 		{
-			gameResult->SetClear(true);
+			gameOverTime = 0.f;
+			isGameOver = true;
+			FRAMEWORK.SetTimeScale(0.f);
+			if (result)
+			{
+				gameResult->SetClear(true);
+			}
+			else
+			{
+				gameResult->SetClear(false);
+			}
+			gameResult->SetActive(true);
+			gameResult->ShowResult();
 		}
-		else
-		{
-			gameResult->SetClear(false);
-		}
-		gameResult->SetActive(true);
-		gameResult->ShowResult();
 	}
 	else
 	{
@@ -436,11 +458,16 @@ void SceneStage::ShowGameResult()
 		}
 		if (result)
 		{
-			isGameOver = true;
-			FRAMEWORK.SetTimeScale(0.f);
-			gameResult->SetClear(true);
-			gameResult->SetActive(true);
-			gameResult->ShowResult();
+			gameOverTime += dt;
+			if (gameOverTime > gameOverTimeMax)
+			{
+				gameOverTime = 0.f;
+				isGameOver = true;
+				FRAMEWORK.SetTimeScale(0.f);
+				gameResult->SetClear(true);
+				gameResult->SetActive(true);
+				gameResult->ShowResult();
+			}
 		}
 	}
 }

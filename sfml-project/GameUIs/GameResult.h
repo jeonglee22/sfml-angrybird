@@ -32,6 +32,11 @@ protected:
 	sf::Vector2f laughSpritePosCenter = {0.f, 0.f};
 
 	bool isClear;
+	bool isPlayClearSound = true;
+	bool isPlayFailSound = true;
+
+	std::string clearSound;
+	std::string failSound;
 
 public:
 	GameResult(const std::string& name = "");
@@ -53,5 +58,22 @@ public:
 	void ShowResult();
 	void SetClear(bool b) { isClear = b; }
 	bool GetClear() const { return isClear; }
+
+	void SetClearSound(const std::string& s) { clearSound = s; }
+	void PlayClearSound() { 
+		if(isPlayClearSound)
+		{
+			isPlayClearSound = false;
+			SOUND_MGR.PlaySfx(clearSound);
+		}
+	}
+	void SetFailSound(const std::string& s) { failSound = s; }
+	void PlayFailSound() {
+		if (isPlayFailSound)
+		{
+			isPlayFailSound = false;
+			SOUND_MGR.PlaySfx(failSound);
+		}
+	}
 };
 

@@ -143,6 +143,9 @@ void GameResult::Reset()
 	next->SetPosition(position + nextButtonPos);
 	next->SetScale({ 0.7f,0.7f });
 	next->Reset();
+
+	isPlayClearSound = true;
+	isPlayFailSound = true;
 }
 
 void GameResult::Update(float dt)
@@ -175,11 +178,13 @@ void GameResult::ShowResult()
 	{
 		if (isClear)
 		{
+			PlayClearSound();
 			laughSprite->SetTextureId("graphics/BirdLaugh.png");
 			gameText->SetString("Game Clear!!");
 		}
 		else
 		{
+			PlayFailSound();
 			laughSprite->SetTextureId("graphics/PigLaugh.png");
 			gameText->SetString("Game Over!!");
 		}

@@ -45,6 +45,9 @@ protected:
 	float viewResetMax = 2.0f;
 	float viewReset = 0.f;
 
+	float gameOverTimeMax = 1.0f;
+	float gameOverTime = 0.f;
+
 	sf::Vector2f mouseStart;
 	sf::Vector2f mouseEnd;
 
@@ -95,7 +98,7 @@ public:
 	void ViewClamp();
 	void Restart();
 
-	void ShowGameResult();
+	void ShowGameResult(float dt);
 	bool CheckAllBirdUsed();
 
 	void ZoomIn(float dt);
