@@ -16,6 +16,8 @@ void SceneStart::Init()
 
 	fontIds.push_back("fonts/angrybirds-regular.ttf");
 
+	soundIds.push_back("Sounds/Music/main_theme.mp3");
+
 	AddGameObject(new SpriteGo("graphics/startImage.png"));
 	text = (TextGo*)AddGameObject(new TextGo("fonts/angrybirds-regular.ttf"));
 	text->SetOrigin(Origins::MC);
@@ -36,6 +38,9 @@ void SceneStart::Enter()
 	worldView.setCenter(initViewPos);
 
 	Scene::Enter();
+
+	SOUND_MGR.PlayBgm(SOUNDBUFFER_MGR.Get("Sounds/Music/main_theme.mp3"));
+	SOUND_MGR.SetBgmVolume(30.f);
 
 	text->SetPosition(initViewPos + sf::Vector2f(0.f, 300.f));
 }

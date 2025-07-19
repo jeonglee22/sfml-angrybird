@@ -16,6 +16,8 @@ void SceneChooseStage::Init()
 
 	fontIds.push_back("fonts/angrybirds-regular.ttf");
 
+	soundIds.push_back("Sounds/Music/main_theme.mp3");
+
 	AddGameObject(new SpriteGo("graphics/image_level_selector1.png"));
 
 	for (int i = 0; i < buttonCount; i++)
@@ -62,6 +64,8 @@ void SceneChooseStage::Enter()
 	worldView.setCenter(initViewPos);
 
 	Scene::Enter();
+
+	SOUND_MGR.PlayBgm("Sounds/Music/main_theme.mp3");
 }
 
 void SceneChooseStage::Update(float dt)

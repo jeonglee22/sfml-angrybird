@@ -354,16 +354,7 @@ void SceneStage::ViewFollowing(float dt)
 	if(std::abs(currentViewPos.x - birdPos.x) <= 1.f) currentViewPos.x = birdPos.x;
 	else
 	{
-		if (currentViewPos.x < birdPos.x && birds[tryCount - 1]->GetFlyingDirection() == 1.f)
-		{
-			currentViewPos.x = Utils::Lerp(currentViewPos.x, birdPos.x, dt * 3.f);
-			if (currentViewPos.x > birdPos.x) currentViewPos.x = birdPos.x;
-		}
-		else if (currentViewPos.x > birdPos.x && birds[tryCount - 1]->GetFlyingDirection() == -1.f)
-		{
-			currentViewPos.x = Utils::Lerp( birdPos.x, currentViewPos.x, dt * 3.f);
-			if (currentViewPos.x < birdPos.x) currentViewPos.x = birdPos.x;
-		}
+		currentViewPos.x = Utils::Lerp(currentViewPos.x, birdPos.x, dt * 3.f);
 	}
 	ViewClamp();
 
