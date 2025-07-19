@@ -8,6 +8,8 @@
 #include "PhysicsBody.h"
 #include "ShootStand.h"
 #include "GameResult.h"
+#include "GamePause.h"
+#include "Button.h"
 
 SceneStage::SceneStage()
 	: Scene(SceneIds::Stage)
@@ -31,6 +33,7 @@ void SceneStage::Init()
 	texIds.push_back("graphics/nextstage.png");
 	texIds.push_back("graphics/BirdLaugh.png");
 	texIds.push_back("graphics/PigLaugh.png");
+	texIds.push_back("graphics/pauseButton.png");
 
 	fontIds.push_back("fonts/angrybirds-regular.ttf");
 
@@ -43,6 +46,24 @@ void SceneStage::Init()
 	shootStand = (ShootStand*)AddGameObject(new ShootStand());
 
 	gameResult = (GameResult*)AddGameObject(new GameResult());
+	gamePause = (GamePause*)AddGameObject(new GamePause());
+
+	pauseButton = (Button*)AddGameObject(new Button("graphics/pauseButton.png"));
+	auto pauseFunc = [this]() {
+		if(!gamePause->GetActive())
+		{
+			gamePause->SetActive(true);
+			FRAMEWORK.SetTimeScale(0.f);
+			isGamePause = true;
+		}
+		else
+		{
+			gamePause->SetActive(false);
+			FRAMEWORK.SetTimeScale(1.f);
+			isGamePause = false;
+		}
+	};
+	pauseButton->SetButtonFunc(pauseFunc);
 
 	Scene::Init();
 
@@ -87,6 +108,8 @@ void SceneStage::Enter()
 	rightWall->SetBoxPos(bounds.width * -1.f - 150.f, bounds.height * 0.5);
 	rightWall->SetBoxFactor(0.8f, 0.5f);
 
+	pauseButton->SetPosition({ 50.f,50.f });
+
 	Scene::Enter();
 
 	tryMax = birdCount;
@@ -109,6 +132,7 @@ void SceneStage::Enter()
 
 	backgroundSize = background->GetTotalSize();
 	gameResult->SetActive(false);
+	gamePause->SetActive(false);
 }
 
 void SceneStage::Update(float dt)
@@ -116,6 +140,11 @@ void SceneStage::Update(float dt)
 	ShowGameResult();
 
 	Scene::Update(dt);
+
+	if (isGameOver || isGamePause)
+	{
+		return;
+	}
 
 	if (tryCount < tryMax)
 	{
@@ -138,7 +167,7 @@ void SceneStage::Update(float dt)
 
 	timeValue += dt;
 	bool following = false;
-	if (timeValue >= timeStep && !isGameOver)
+	if (timeValue >= timeStep)
 	{
 		b2World_Step(FRAMEWORK.GetWorldID(), timeStep, subStepCount);
 

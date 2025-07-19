@@ -84,7 +84,7 @@ void Bird::Update(float dt)
 	if (SCENE_MGR.GetCurrentScene())
 	{
 		SceneStage* scene = (SceneStage*) SCENE_MGR.GetCurrentScene();
-		if (scene->GetGameOver())
+		if (scene->GetGameOver() || scene->GetGamePause())
 		{
 			return;
 		}

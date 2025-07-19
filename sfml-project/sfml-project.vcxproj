@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GamePause.cpp" />
     <ClCompile Include="GameUIs\GameResult.cpp" />
     <ClCompile Include="GameUIs\EditBoxUI.cpp" />
     <ClCompile Include="Framework\Button.cpp" />
@@ -180,6 +181,7 @@
     <ClCompile Include="Framework\Variables.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GamePause.h" />
     <ClInclude Include="GameUIs\GameResult.h" />
     <ClInclude Include="GameUIs\EditBoxUI.h" />
     <ClInclude Include="Framework\Button.h" />

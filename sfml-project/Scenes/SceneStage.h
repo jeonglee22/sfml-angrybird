@@ -5,11 +5,13 @@ class SpriteGo;
 class Bird;
 class Block;
 class Pig;
+class Button;
 class ShootCountUI;
 class PhysicsBody;
 class ShootStand;
 class BackGround;
 class GameResult;
+class GamePause;
 
 class SceneStage : public Scene
 {
@@ -21,6 +23,8 @@ protected:
 	ShootCountUI* countUI = nullptr;
 	BackGround* background = nullptr;
 	GameResult* gameResult = nullptr;
+	GamePause* gamePause = nullptr;
+	Button* pauseButton = nullptr;
 
 	std::vector<Bird*> birds;
 	std::vector<Block*> blocks;
@@ -57,6 +61,7 @@ protected:
 	bool isZoomOut = false;
 	bool isZoomIn = false;
 	bool isGameOver = false;
+	bool isGamePause = false;
 
 	sf::FloatRect backgroundSize;
 
@@ -74,6 +79,8 @@ public:
 	bool GetViewMoving() const { return isViewMoving; }
 	bool GetGameOver() const { return isGameOver; }
 	void SetGameOver(bool b) { isGameOver = b; }
+	bool GetGamePause() const { return isGamePause; }
+	void SetGamePause(bool b) { isGamePause = b; }
 
 	void LoadBlockInfo(const std::string& filePath);
 	void CheckPhysicsBodyCollision();
