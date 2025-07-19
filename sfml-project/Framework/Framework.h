@@ -12,6 +12,7 @@ protected:
 	float windowRatio;
 
 	float timeStep = 1.0f / 60.0f;
+	bool isPauseFrame;
 
 	b2Vec2 gravity = { 0.f, 9.8f };
 	b2WorldDef worldDef = b2DefaultWorldDef();
@@ -53,6 +54,8 @@ public:
 	b2WorldId GetWorldID() const { return worldId; }
 	float GetTimeStep() const { return timeStep; }
 	float GetWindowRatio() const { return windowRatio; }
+	void SetPauseFrame(bool b) { isPauseFrame = b; }
+	bool GetPauseFrame() const { return isPauseFrame; }
 
 	virtual void Init(int w, int h, const std::string& t);
 	virtual void Do();

@@ -82,7 +82,7 @@ public:
 	bool GetGamePause() const { return isGamePause; }
 	void SetGamePause(bool b) { isGamePause = b; }
 
-	void LoadBlockInfo(const std::string& filePath);
+	void LoadInfo(const std::string& filePath);
 	void CheckPhysicsBodyCollision();
 	void CheckObjectsDead();
 	void ObjectsReset();

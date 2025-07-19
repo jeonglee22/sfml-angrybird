@@ -30,6 +30,8 @@ void Framework::Do()
         time += deltaTime;
         realTime = realDeltaTime;
 
+        isPauseFrame = false;
+
         InputMgr::Clear();
         sf::Event event;
         while (window.pollEvent(event))

@@ -54,12 +54,14 @@ void SceneStage::Init()
 		{
 			gamePause->SetActive(true);
 			FRAMEWORK.SetTimeScale(0.f);
+			FRAMEWORK.SetPauseFrame(true);
 			isGamePause = true;
 		}
 		else
 		{
 			gamePause->SetActive(false);
 			FRAMEWORK.SetTimeScale(1.f);
+			FRAMEWORK.SetPauseFrame(true);
 			isGamePause = false;
 		}
 	};
@@ -86,7 +88,7 @@ void SceneStage::Enter()
 {
 	sf::FloatRect bounds = FRAMEWORK.GetWindowBounds();
 
-	LoadBlockInfo("graphics/EditorMaps/MyMap" + std::to_string(2) + ".csv");
+	LoadInfo("graphics/EditorMaps/MyMap" + std::to_string(2) + ".csv");
 
 	initViewPos.x = shootStand->GetPosition().x;
 
@@ -143,6 +145,7 @@ void SceneStage::Update(float dt)
 
 	if (isGameOver || isGamePause)
 	{
+		FRAMEWORK.SetPauseFrame(true);
 		return;
 	}
 
@@ -218,7 +221,7 @@ void SceneStage::Draw(sf::RenderWindow& window)
 	Scene::Draw(window);
 }
 
-void SceneStage::LoadBlockInfo(const std::string& filePath)
+void SceneStage::LoadInfo(const std::string& filePath)
 {		
 	rapidcsv::Document doc(filePath);
 	objCount = doc.GetCell<int>(0, 0);
@@ -356,7 +359,7 @@ void SceneStage::ViewFollowing(float dt)
 		}
 		else if (currentViewPos.x > birdPos.x && birds[tryCount - 1]->GetFlyingDirection() == -1.f)
 		{
-			currentViewPos.x = Utils::Lerp(currentViewPos.x, birdPos.x, dt * 3.f);
+			currentViewPos.x = Utils::Lerp( birdPos.x, currentViewPos.x, dt * 3.f);
 			if (currentViewPos.x < birdPos.x) currentViewPos.x = birdPos.x;
 		}
 	}

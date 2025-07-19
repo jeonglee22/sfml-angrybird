@@ -126,11 +126,10 @@ void Bird::Update(float dt)
 			isShoot = true;
 			isCharging = false;
 		}
-	}
-
-	if (isShoot && isUseAbility && InputMgr::GetMouseButtonDown(sf::Mouse::Left))
-	{
-		UseAbility();
+		if (isShoot && isUseAbility && !FRAMEWORK.GetPauseFrame() && InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+		{
+			UseAbility();
+		}
 	}
 
 	if (CheckFinishShoot() && isShoot)
