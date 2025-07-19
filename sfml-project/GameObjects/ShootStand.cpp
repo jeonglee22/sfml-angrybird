@@ -88,6 +88,7 @@ void ShootStand::Update(float dt)
 				mouseStart = bird->GetPosition();
 				SetBandActive(true);
 				isShoot = true;
+				SOUND_MGR.PlaySfx(streched);
 			}
 		}
 		if (InputMgr::GetMouseButton(sf::Mouse::Left) && isShoot)

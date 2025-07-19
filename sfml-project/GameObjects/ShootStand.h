@@ -34,6 +34,8 @@ protected:
 
 	bool isShoot = false;
 
+	std::string streched = "Sounds/slingshotStreched.wav";
+
 public:
 	ShootStand(const std::string& name = "");
 	~ShootStand() override = default;

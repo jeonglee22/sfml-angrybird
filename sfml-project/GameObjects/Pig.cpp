@@ -23,6 +23,7 @@ void Pig::Reset()
 {
 	SpriteGo::Reset();
 
+	isPlayDestroySound = true;
 	hp = maxHp;
 
 	SetPosition(initPos * SCALE);
@@ -66,6 +67,7 @@ void Pig::Draw(sf::RenderWindow& window)
 void Pig::TakeDamage(int damage)
 {
 	hp = Utils::Clamp(hp - damage, 0, maxHp);
+	PlayDamageSound();
 	if (hp == 0)
 	{
 		isDead = true;

@@ -8,6 +8,10 @@ protected:
 	int hp = 0;
 	int maxHp = 100;
 	bool isDead = false;
+	bool isPlayDestroySound = true;
+
+	std::string destroySound;
+	std::string damageSound;
 
 public:
 	Pig(const std::string& texId, const std::string& name = "");
@@ -29,5 +33,16 @@ public:
 
 	bool IsDead() { return isDead; }
 	void SetNotDead() { isDead = false; }
+
+	void SetDestroySound(const std::string& s) { destroySound = s; }
+	void PlayDestroySound() {
+		if (isPlayDestroySound)
+		{
+			isPlayDestroySound = false;
+			SOUND_MGR.PlaySfx(destroySound);
+		}
+	}
+	void SetDamageSound(const std::string& s) { damageSound = s; }
+	void PlayDamageSound() { SOUND_MGR.PlaySfx(damageSound); }
 };
 

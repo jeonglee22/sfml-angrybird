@@ -262,7 +262,7 @@ void EditBoxUI::AddBlockTypes(const std::string& filePath)
 		blocks.push_back(new SpriteGo(row[0], row[1]));
 		blocks[i]->SetOrigin(Origins::MC);
 		blocks[i]->SetActive(false);
-		blocks[i]->SetScale({ 0.7f, 0.7f });
+		blocks[i]->SetScale({ 0.6f, 0.6f });
 		blockHPs.push_back(std::stoi(row[2]));
 		texIds.push_back(row[0]);
 	}

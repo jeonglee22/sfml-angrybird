@@ -307,7 +307,12 @@ rapidcsv::Document SceneEditor::SaveFile()
 		}
 		else
 		{
-			info.push_back("Block");
+			if (spriteInserts[i]->GetName() == "BlockWood")
+				info.push_back("BlockWood");
+			else if(spriteInserts[i]->GetName() == "BlockGlass")
+				info.push_back("BlockGlass");
+			else
+				info.push_back("BlockStone");
 		}
 		doc.InsertRow(i + 2, info);
 	}

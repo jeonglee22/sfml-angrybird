@@ -37,6 +37,16 @@ void SceneStage::Init()
 
 	fontIds.push_back("fonts/angrybirds-regular.ttf");
 
+	soundIds.push_back("Sounds/slingshotStreched.wav");
+	soundIds.push_back("Sounds/building/Wood/Wooddestroyed.wav");
+	soundIds.push_back("Sounds/building/Wood/Wooddamage.wav");
+	soundIds.push_back("Sounds/building/Glass/Glassdestroyed.wav");
+	soundIds.push_back("Sounds/building/Glass/Glassdamage.wav");
+	soundIds.push_back("Sounds/building/Rock/Rockdestroyed.wav");
+	soundIds.push_back("Sounds/building/Rock/Rockdamage.wav");
+	soundIds.push_back("Sounds/Pig/Pigdamage.wav");
+	soundIds.push_back("Sounds/Pig/Pigdestroyed.wav");
+
 	background = (BackGround*)AddGameObject(new BackGround("graphics/LevelOne.png", "graphics/Sky.png"));
 
 	ground = (PhysicsBody*)AddGameObject(new PhysicsBody(PhysicsBody::Type::Invisible));
@@ -88,7 +98,7 @@ void SceneStage::Enter()
 {
 	sf::FloatRect bounds = FRAMEWORK.GetWindowBounds();
 
-	LoadInfo("graphics/EditorMaps/MyMap" + std::to_string(2) + ".csv");
+	LoadInfo("Stage/Map" + std::to_string(1) + ".csv");
 
 	initViewPos.x = shootStand->GetPosition().x;
 
@@ -233,20 +243,24 @@ void SceneStage::LoadInfo(const std::string& filePath)
 		auto row = doc.GetRow<std::string>(i + 2);
 		if (std::find(texIds.begin(), texIds.end(), row[0]) == texIds.end())
 			texIds.push_back(row[0]);
-		if (row[10] == "Block")
+		if (row[10].substr(0,5) == "Block")
 		{
-			blocks.push_back((Block*)AddGameObject(new Block(row[0], "Block")));
+			blocks.push_back((Block*)AddGameObject(new Block(row[0], row[10])));
 			blocks[blockCount]->SetBoxPos(std::stof(row[1]), std::stof(row[2]));
 			blocks[blockCount]->SetBoxSize(std::stof(row[3]), std::stof(row[4]));
 			blocks[blockCount]->SetBoxFactor(std::stof(row[5]), std::stof(row[6]), std::stof(row[7]), std::stof(row[8]));
 			blocks[blockCount]->SetHP(std::stoi(row[9]));
+			blocks[blockCount]->SetDamageSound("Sounds/building/" + row[10].substr(5) + "/" + row[10].substr(5) +"damage.wav");
+			blocks[blockCount]->SetDestroySound("Sounds/building/" + row[10].substr(5) + "/" + row[10].substr(5) + "destroyed.wav");
 			blocks[blockCount++]->Init();
 		}
 		else if(row[10] == "Pig")
 		{
-			pigs.push_back((Pig*)AddGameObject(new Pig(row[0], "Pig")));
+			pigs.push_back((Pig*)AddGameObject(new Pig(row[0], row[10])));
 			pigs[pigCount]->SetInitPos({ std::stof(row[1]), std::stof(row[2]) });
 			pigs[pigCount]->SetHP(std::stoi(row[9]));
+			pigs[pigCount]->SetDamageSound("Sounds/Pig/Pigdamage.wav");
+			pigs[pigCount]->SetDestroySound("Sounds/Pig/Pigdestroyed.wav");
 			pigs[pigCount++]->Init();
 		}
 		else
@@ -496,6 +510,7 @@ void SceneStage::CheckObjectsDead()
 	{
 		if (pigs[i]->IsDead())
 		{
+			pigs[i]->PlayDestroySound();
 			pigs[i]->SetDisable();
 			pigs[i]->SetActive(false);
 		}
@@ -504,6 +519,7 @@ void SceneStage::CheckObjectsDead()
 	{
 		if (blocks[i]->IsDead())
 		{
+			blocks[i]->PlayDestroySound();
 			blocks[i]->SetDisable();
 			blocks[i]->SetActive(false);
 		}

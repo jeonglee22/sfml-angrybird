@@ -23,6 +23,7 @@ void Block::Reset()
 {
 	PhysicsBody::Reset();
 
+	isPlayDestroySound = true;
 	hp = maxHp;
 }
 
@@ -39,6 +40,7 @@ void Block::Draw(sf::RenderWindow& window)
 void Block::TakeDamage(int damage)
 {
 	hp = Utils::Clamp(hp - damage, 0, maxHp);
+	PlayDamageSound();
 	if (hp == 0)
 	{
 		isDead = true;

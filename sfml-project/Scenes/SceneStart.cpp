@@ -39,7 +39,7 @@ void SceneStart::Enter()
 
 	Scene::Enter();
 
-	SOUND_MGR.PlayBgm(SOUNDBUFFER_MGR.Get("Sounds/Music/main_theme.mp3"));
+	//SOUND_MGR.PlayBgm(SOUNDBUFFER_MGR.Get("Sounds/Music/main_theme.mp3"));
 	SOUND_MGR.SetBgmVolume(30.f);
 
 	text->SetPosition(initViewPos + sf::Vector2f(0.f, 300.f));
