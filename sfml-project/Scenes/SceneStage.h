@@ -96,6 +96,7 @@ public:
 	void Restart();
 
 	void ShowGameResult();
+	bool CheckAllBirdUsed();
 
 	void ZoomIn(float dt);
 	void ZoomOut(float dt);

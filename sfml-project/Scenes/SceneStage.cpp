@@ -125,6 +125,7 @@ void SceneStage::Enter()
 	isZoomOut = false;
 	isZoomIn = false;
 	isGameOver = false;
+	isGamePause = false;
 	tryCount = 0;
 	timeValue = 0.f;
 	viewReset = 0.f;
@@ -139,7 +140,10 @@ void SceneStage::Enter()
 
 void SceneStage::Update(float dt)
 {
-	ShowGameResult();
+	if(birdReady || CheckAllBirdUsed())
+	{
+		ShowGameResult();
+	}
 
 	Scene::Update(dt);
 
@@ -157,7 +161,7 @@ void SceneStage::Update(float dt)
 			birdReady = false;
 		}
 
-		if (tryCount > 0 && birds[tryCount-1]->CheckFinishShoot() && !birdReady)
+		if (tryCount > 0 && birds[tryCount-1]->CheckFinishShoot() && !birdReady && tryCount < tryMax)
 		{
 			birds[tryCount]->SetStartPos();
 			shootStand->SetBird(birds[tryCount]);
@@ -196,8 +200,6 @@ void SceneStage::Update(float dt)
 
 	ZoomIn(dt);
 	ZoomOut(dt);
-
-	
 
 	if(!birdReady && following)
 	{
@@ -398,7 +400,7 @@ void SceneStage::Restart()
 
 void SceneStage::ShowGameResult()
 {
-	if (birds.size() == 0)
+	if (tryCount == tryMax)
 	{
 		bool result = true;
 		for (auto pig : pigs)
@@ -436,6 +438,19 @@ void SceneStage::ShowGameResult()
 			gameResult->ShowResult();
 		}
 	}
+}
+
+bool SceneStage::CheckAllBirdUsed()
+{
+	bool allUsed = true;
+	for (auto bird : birds)
+	{
+		if (bird->GetActive())
+		{
+			allUsed = false;
+		}
+	}
+	return allUsed;
 }
 
 void SceneStage::ZoomIn(float dt)
