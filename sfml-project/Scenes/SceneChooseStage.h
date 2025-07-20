@@ -14,7 +14,9 @@ public:
 		editor,
 	};
 protected:
-	SpriteGo* background;
+	SpriteGo* background = nullptr;
+	Button* edit = nullptr;
+
 	std::vector<Button*> stageButtons;
 	std::vector<SpriteGo*> blockSprites;
 	int buttonCount = 15;
@@ -32,4 +34,6 @@ public:
 	void Enter() override;
 
 	void Update(float dt) override;
+
+	void GoEditScene();
 };

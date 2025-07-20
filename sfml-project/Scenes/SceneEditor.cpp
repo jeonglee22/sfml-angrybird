@@ -41,6 +41,7 @@ void SceneEditor::Init()
 	undo = (Button*)AddGameObject(new Button("graphics/redo.png"));
 	save = (Button*)AddGameObject(new Button("graphics/buttonsnontext.png"));
 	load = (Button*)AddGameObject(new Button("graphics/buttonsnontext.png"));
+	home = (Button*)AddGameObject(new Button("graphics/buttonsnontext.png"));
 
 	objectBound = (RectGo*)AddGameObject(new RectGo());
 	objectBound->SetColor(sf::Color(0, 0, 0, 100));
@@ -68,6 +69,7 @@ void SceneEditor::Init()
 	undo->sortingOrder = 10;
 	save->sortingOrder = 10;
 	load->sortingOrder = 10;
+	home->sortingOrder = 10;
 }
 
 void SceneEditor::Enter()
@@ -90,7 +92,7 @@ void SceneEditor::Enter()
 			{
 				pigCount--;
 			}
-			else if(spriteInserts[spriteCount]->GetName() == "Block")
+			else if(spriteInserts[spriteCount]->GetName().substr(0,5) == "Block")
 			{
 				blockCount--;
 			}
@@ -105,13 +107,13 @@ void SceneEditor::Enter()
 	undo->SetButtonFunc(undoFunc);
 	undo->SetScale({ 0.75f,0.75f });
 	sf::Vector2f redoButtonSize = (sf::Vector2f)TEXTURE_MGR.Get(undo->GetTextureId()).getSize();
-	undo->SetPosition({ redoButtonSize.x * 0.6f + 160.f, redoButtonSize.y * 0.5f});
+	undo->SetPosition({ redoButtonSize.x * 0.6f + 300.f, redoButtonSize.y * 0.5f});
 
 	auto saveFunc = [this]() { SaveField(); };
 	save->SetButtonFunc(saveFunc);
 	save->SetScale({ 0.75f,0.75f });
 	sf::Vector2f saveButtonSize = (sf::Vector2f)TEXTURE_MGR.Get(save->GetTextureId()).getSize();
-	save->SetPosition({ saveButtonSize.x * 0.6f, saveButtonSize.y * 0.6f});
+	save->SetPosition({ saveButtonSize.x * 0.6f + 200.f, saveButtonSize.y * 0.6f});
 	save->SetTextString("Save");
 	save->SetTextPosition({ 0.f,-5.f });
 	
@@ -119,9 +121,17 @@ void SceneEditor::Enter()
 	load->SetButtonFunc(loadFunc);
 	load->SetScale({ 0.75f,0.75f });
 	sf::Vector2f loadButtonSize = (sf::Vector2f)TEXTURE_MGR.Get(load->GetTextureId()).getSize();
-	load->SetPosition({ loadButtonSize.x * 0.6f + 80.f, loadButtonSize.y * 0.6f});
+	load->SetPosition({ loadButtonSize.x * 0.6f + 100.f, loadButtonSize.y * 0.6f});
 	load->SetTextString("Load");
 	load->SetTextPosition({ 0.f,-5.f });
+
+	auto homeFunc = [this]() { GoMainScene(); };
+	home->SetButtonFunc(homeFunc);
+	home->SetScale({ 0.75f,0.75f });
+	sf::Vector2f homeButtonSize = (sf::Vector2f)TEXTURE_MGR.Get(home->GetTextureId()).getSize();
+	home->SetPosition({ homeButtonSize.x * 0.6f, homeButtonSize.y * 0.6f});
+	home->SetTextString("Home");
+	home->SetTextPosition({ 0.f,-5.f });
 
 	backgroundSize = background->GetTotalSize();
 
@@ -324,6 +334,8 @@ void SceneEditor::SaveField()
 	rapidcsv::Document doc = SaveFile();
 
 	CHAR filename[MAX_PATH] = "";
+	CHAR currentFilePos[MAX_PATH] = "";
+	GetCurrentDirectoryA(MAX_PATH, currentFilePos);
 
 	OPENFILENAMEA ofn;
 	ZeroMemory(&ofn, sizeof(ofn));
@@ -343,6 +355,7 @@ void SceneEditor::SaveField()
 			MessageBoxA(hwnd, filename, "Save Choose", MB_OK);
 
 			doc.Save(filename);
+			SetCurrentDirectoryA(currentFilePos);
 			break;
 		}
 		else
@@ -355,6 +368,8 @@ void SceneEditor::SaveField()
 void SceneEditor::LoadField()
 {
 	CHAR filename[MAX_PATH] = "";
+	CHAR currentFilePos[MAX_PATH] = "";
+	GetCurrentDirectoryA(MAX_PATH, currentFilePos);
 
 	OPENFILENAMEA ofn;
 	ZeroMemory(&ofn, sizeof(ofn));
@@ -372,6 +387,8 @@ void SceneEditor::LoadField()
 		MessageBoxA(hwnd, filename, "Load Choose", MB_OK);
 		
 		LoadFile(filename);
+
+		SetCurrentDirectoryA(currentFilePos);
 	}
 }
 
@@ -401,5 +418,10 @@ void SceneEditor::LoadFile(const std::string& fileName)
 		spriteInserts[i]->sortingOrder = 0;
 		HpList.push_back(std::stoi(row[9]));
 	}
+}
+
+void SceneEditor::GoMainScene()
+{
+	SCENE_MGR.ChangeScene(SceneIds::ChooseStage);
 }
 

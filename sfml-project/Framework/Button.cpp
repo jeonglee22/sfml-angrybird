@@ -97,4 +97,5 @@ void Button::DoFunc()
 	default:
 		break;
 	}
+	SetInitState();
 }

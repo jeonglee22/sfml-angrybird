@@ -104,7 +104,7 @@ void SceneStage::Enter()
 {
 	sf::FloatRect bounds = FRAMEWORK.GetWindowBounds();
 
-	LoadInfo("Stage/Map" + std::to_string(15) + ".csv");
+	LoadInfo("Stage/Map" + std::to_string(SCENE_MGR.GetStageSelect()) + ".csv");
 
 	initViewPos.x = shootStand->GetPosition().x;
 

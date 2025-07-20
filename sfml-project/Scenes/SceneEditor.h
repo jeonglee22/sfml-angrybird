@@ -22,6 +22,7 @@ protected:
 	Button* undo = nullptr;
 	Button* save = nullptr;
 	Button* load = nullptr;
+	Button* home = nullptr;
 
 	std::vector<SpriteGo*> spriteInserts;
 	std::vector<int> HpList;
@@ -68,5 +69,6 @@ public:
 	void SaveField();
 	void LoadField();
 	void LoadFile(const std::string& fileName);
+	void GoMainScene();
 };
 
